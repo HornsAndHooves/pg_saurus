@@ -1,0 +1,60 @@
+= PgComment
+
+In any PostgreSQL database where the Rails app is not the only consumer, it is very helpful to have comments on the various database entities.  PgComment adds methods to migrations to set and remove comments on columns and tables.
+
+Obviously, only the PostgreSQL adapter is supported.
+
+== Warning
+
+This is highly experimental.  If it blows up your Rails app, I will point and laugh.
+
+== Installation
+
+TODO: finish up once I publish and fix any initial bugs.
+
+== Usage
+
+PgComment adds four methods to migrations:
+
+* set_table_comment(table_name, comment)
+* remove_table_comment(table_name)
+* set_column_comment(table_name, column_name, comment)
+* remove_column_comment(table_name, column_name, comment)
+
+Set a comment on the given table.
+
+    set_table_comment :phone_numbers, 'This table stores phone numbers that conform to the North American Numbering Plan.'
+
+Sets a comment on a given column of a given table.
+
+    set_column_comment :phone_numbers, :npa, 'Numbering Plan Area Code - Allowed ranges: [2-9] for first digit, [0-9] for second and third digit.'
+
+Removes any comment from the given table.
+
+    remove_table_comment :phone_numbers
+
+Removes any comment from the given column of a given table.
+
+    remove_column_comment :phone_numbers, :npa
+
+PgComment also adds extra methods to change_table.
+
+Set comments:
+
+    change_table :phone_numbers do |t|
+        t.set_table_comment 'This table stores phone numbers that conform to the North American Numbering Plan.'
+        t.set_column_comment :npa, 'Numbering Plan Area Code - Allowed ranges: [2-9] for first digit, [0-9] for second and third digit.'
+    end
+
+Remove comments:
+
+    change_table :phone_numbers do |t|
+        t.remove_table_comment
+        t.remove_column_comment :npa
+    end
+
+== License
+
+Copyright (c) 2011 Arthur Shagall
+
+Released under the MIT License.  See LICENSE for details.
