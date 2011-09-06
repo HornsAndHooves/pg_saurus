@@ -8,6 +8,8 @@ Obviously, only the PostgreSQL adapter is supported.
 
 This is highly experimental.  If it blows up your Rails app, I will point and laugh.
 
+This has only been tested on Ruby 1.9.2 and JRuby 1.6.4.
+
 == Installation
 
 TODO: finish up once I publish and fix any initial bugs.
