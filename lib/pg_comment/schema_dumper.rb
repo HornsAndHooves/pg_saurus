@@ -17,12 +17,14 @@ module PgComment
       unless (comments = @connection.comments(table_name)).empty?
         comment_statements = comments.map do |row|
           column_name = row[0]
-          comment = row[1].gsub(/'/, "\\\\'")
+          comment = row[1]
+          
           if column_name
-            "  set_column_comment '#{table_name}', '#{column_name}', '#{comment}'"
+            "  set_column_comment '#{table_name}', '#{column_name}', '#{comment.gsub(/'/, "\\\\'")}'"
           else
             "  set_table_comment '#{table_name}', '#{comment}'"
           end
+
         end
 
         stream.puts comment_statements.join("\n")

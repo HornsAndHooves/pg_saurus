@@ -42,7 +42,7 @@ LEFT OUTER JOIN pg_attribute a ON c.oid = a.attrelid AND a.attnum = d.objsubid
 WHERE c.relkind = 'r' AND c.relname = '#{table_name}'
                          }
         com.map do |row|
-          [ row['column_name'], row['description'] ]
+          [ row['column_name'], row['comment'] ]
         end
       end
     end
