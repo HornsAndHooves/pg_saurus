@@ -12,7 +12,9 @@ This has only been tested on Ruby 1.9.2 and JRuby 1.6.4.
 
 == Installation
 
-TODO: finish up once I publish and fix any initial bugs.
+Assuming you're using RubyGems:
+
+    gem install pg_comment
 
 == Usage
 
