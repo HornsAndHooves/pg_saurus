@@ -6,7 +6,7 @@ Obviously, only the PostgreSQL adapter is supported.
 
 == Warning
 
-This is highly experimental.  If it blows up your Rails app, I will point and laugh.
+This is still experimental.  If it blows up your Rails app, I will gladly welcome your bug reports.
 
 This has only been tested on Ruby 1.9.2 and JRuby 1.6.4.
 

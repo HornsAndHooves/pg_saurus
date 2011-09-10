@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.version     = PgComment::VERSION
   s.authors     = ["Arthur Shagall"]
   s.email       = ["arthur.shagall@gmail.com"]
-  s.homepage    = ""
+  s.homepage    = "https://github.com/albertosaurus/pg_comment"
   s.summary     = 'Postgres Comments for Rails'
   s.description = 'Adds helper methods to migrations and pulls out comments into schema.rb'
 
