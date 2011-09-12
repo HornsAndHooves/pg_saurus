@@ -8,9 +8,9 @@ require 'pg_comment/schema_dumper'
 class SchemaDumperTest < Test::Unit::TestCase
   class SchemaDumpContainer
     def initialize
-      @connection = FakeConnection.new( :comments => [[nil, 'table comment'],
+      @connection = FakeConnection.new( :comments => [[nil, 'table\'s comment'],
                                                       ['c1', 'column1 comment'],
-                                                      ['c2', 'column2 comment']] )
+                                                      ['c2', 'column\'s comment']] )
     end
 
     def self.alias_method_chain(*args)
@@ -33,9 +33,9 @@ class SchemaDumperTest < Test::Unit::TestCase
 
   def setup
     @fake_table = 'my_table'
-    @expected = ["  set_table_comment '#{@fake_table}', 'table comment'",
+    @expected = ["  set_table_comment '#{@fake_table}', 'table\\'s comment'",
                  "  set_column_comment '#{@fake_table}', 'c1', 'column1 comment'",
-                 "  set_column_comment '#{@fake_table}', 'c2', 'column2 comment'"].join("\n")
+                 "  set_column_comment '#{@fake_table}', 'c2', 'column\\'s comment'"].join("\n")
   end
 
   def test_dump_comments

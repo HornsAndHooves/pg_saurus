@@ -17,10 +17,9 @@ module PgComment
       unless (comments = @connection.comments(table_name)).empty?
         comment_statements = comments.map do |row|
           column_name = row[0]
-          comment = row[1]
-          
+          comment = row[1].gsub(/'/, "\\\\'")
           if column_name
-            "  set_column_comment '#{table_name}', '#{column_name}', '#{comment.gsub(/'/, "\\\\'")}'"
+            "  set_column_comment '#{table_name}', '#{column_name}', '#{comment}'"
           else
             "  set_table_comment '#{table_name}', '#{comment}'"
           end
