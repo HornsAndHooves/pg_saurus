@@ -20,4 +20,4 @@ module PgComment
   end
 end
 
-require 'pg_comment/railtie' if defined?(Rails)
+require 'pg_comment/engine' if defined?(Rails)

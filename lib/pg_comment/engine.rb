@@ -1,5 +1,5 @@
 module PgComment
-  class Railtie < Rails::Railtie
+  class Engine < Rails::Engine
     initializer 'pg_comment.load_adapter' do
       ActiveSupport.on_load :active_record do
         ActiveRecord::ConnectionAdapters.module_eval do

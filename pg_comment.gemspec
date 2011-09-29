@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.email       = ["arthur.shagall@gmail.com"]
   s.homepage    = "https://github.com/albertosaurus/pg_comment"
   s.summary     = 'Postgres Comments for Rails'
-  s.description = 'Adds helper methods to migrations and pulls out comments into schema.rb'
+  s.description = 'Extends Rails migrations to support setting column and table comments.  Pulls out comments into schema.rb'
 
   s.rubyforge_project = "pg_comment"
 
