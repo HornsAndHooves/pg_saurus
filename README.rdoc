@@ -1,6 +1,6 @@
 = PgComment
 
-In any PostgreSQL database where the Rails app is not the only consumer, it is very helpful to have comments on the various database entities.  PgComment adds methods to migrations to set and remove comments on columns and tables.
+In any PostgreSQL database where the Rails app is not the only consumer, it is very helpful to have comments on the various elements of the schema.  PgComment extends the migrations DSL with methods to set and remove comments on columns and tables.  It also dumps those comments into your schema.rb.
 
 Obviously, only the PostgreSQL adapter is supported.
 
@@ -20,7 +20,11 @@ All bug reports are welcome.
 
 == Installation
 
-Assuming you're using RubyGems:
+Add the following to the Gemfile of your Rails app:
+
+    gem 'pg_comment'
+
+Alternatively you can manually install from RubyGems:
 
     gem install pg_comment
 
@@ -33,6 +37,9 @@ PgComment adds five methods to migrations:
 * set_column_comment(table_name, column_name, comment)
 * remove_column_comment(table_name, column_name, comment)
 * set_column_comments(table_name, comments)
+* remove_column_comments(table_name, *comments)
+
+=== Examples
 
 Set a comment on the given table.
 
@@ -55,6 +62,10 @@ Set comments on multiple columns in the table.
     set_column_comments :phone_numbers, :npa => 'Numbering Plan Area Code - Allowed ranges: [2-9] for first digit, [0-9] for second and third digit.',
                                         :nxx => 'Central Office Number'
 
+Remove comments from multiple columns in the table.
+
+    remove_column_comments :phone_numbers, :npa, :nxx
+
 PgComment also adds extra methods to change_table.
 
 Set comments:
@@ -74,6 +85,10 @@ Remove comments:
     change_table :phone_numbers do |t|
         t.remove_table_comment
         t.remove_column_comment :npa
+    end
+
+    change_table :phone_numbers do |t|
+      t.remove_column_comments :npa, :nxx
     end
 
 == License
