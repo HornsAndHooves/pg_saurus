@@ -56,6 +56,15 @@ module PgComment
       def remove_column_comment(column_name)
         @base.remove_column_comment(@table_name, column_name)
       end
+
+      # Removes any comments from the given columns
+      #
+      # ===== Example
+      # ====== Remove comment from the npa and nxx columns
+      #   t.remove_column_comment :npa, :nxx
+      def remove_column_comments(*column_names)
+        @base.remove_column_comments(@table_name, *column_names)
+      end
     end
   end
 end

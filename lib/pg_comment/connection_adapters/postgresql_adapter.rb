@@ -30,6 +30,12 @@ module PgComment
         sql = "COMMENT ON COLUMN #{quote_table_name(table_name)}.#{quote_column_name(column_name)} IS NULL;"
         execute sql
       end
+
+      def remove_column_comments(table_name, *column_names)
+        column_names.each do |column_name|
+          remove_column_comment table_name, column_name
+        end
+      end
 =begin
 --Fetch all comments
 SELECT c.relname as table_name, a.attname as column_name, d.description as comment
