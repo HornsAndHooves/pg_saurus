@@ -26,12 +26,13 @@ Assuming you're using RubyGems:
 
 == Usage
 
-PgComment adds four methods to migrations:
+PgComment adds five methods to migrations:
 
 * set_table_comment(table_name, comment)
 * remove_table_comment(table_name)
 * set_column_comment(table_name, column_name, comment)
 * remove_column_comment(table_name, column_name, comment)
+* set_column_comments(table_name, comments)
 
 Set a comment on the given table.
 
@@ -49,6 +50,11 @@ Removes any comment from the given column of a given table.
 
     remove_column_comment :phone_numbers, :npa
 
+Set comments on multiple columns in the table.
+
+    set_column_comments :phone_numbers, :npa => 'Numbering Plan Area Code - Allowed ranges: [2-9] for first digit, [0-9] for second and third digit.',
+                                        :nxx => 'Central Office Number'
+
 PgComment also adds extra methods to change_table.
 
 Set comments:
@@ -56,6 +62,11 @@ Set comments:
     change_table :phone_numbers do |t|
         t.set_table_comment 'This table stores phone numbers that conform to the North American Numbering Plan.'
         t.set_column_comment :npa, 'Numbering Plan Area Code - Allowed ranges: [2-9] for first digit, [0-9] for second and third digit.'
+    end
+
+    change_table :phone_numbers do |t|
+        t.set_column_comments :npa => 'Numbering Plan Area Code - Allowed ranges: [2-9] for first digit, [0-9] for second and third digit.',
+                              :nxx => 'Central Office Number'
     end
 
 Remove comments:

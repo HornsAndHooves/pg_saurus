@@ -15,6 +15,12 @@ module PgComment
         execute sql
       end
 
+      def set_column_comments(table_name, comments)
+        comments.each_pair do |column_name, comment|
+          set_column_comment table_name, column_name, comment
+        end
+      end
+
       def remove_table_comment(table_name)
         sql = "COMMENT ON TABLE #{quote_table_name(table_name)} IS NULL;"
         execute sql

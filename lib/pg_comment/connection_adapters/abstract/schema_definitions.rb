@@ -38,6 +38,16 @@ module PgComment
         @base.set_column_comment(@table_name, column_name, comment)
       end
 
+      # Sets comments on multiple columns.  'comments' is a hash of column_name => comment pairs.
+      #
+      # ===== Example
+      # ====== Setting comments on the columns of the phone_numbers table
+      #  t.set_column_comments :npa => 'Numbering Plan Area Code - Allowed ranges: [2-9] for first digit, [0-9] for second and third digit.',
+      #                        :nxx => 'Central Office Number'
+      def set_column_comments(comments)
+        @base.set_column_comments(@table_name, comments)
+      end
+
       # Removes any comment for a given column
       #
       # ===== Example
