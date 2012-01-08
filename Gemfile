@@ -7,8 +7,8 @@ gemspec
 
 # jquery-rails is used by the dummy application
 gem "jquery-rails"
+gem 'rspec-rails'
 
 group :development, :test do
   gem 'ruby-debug'
-  gem 'rspec-rails'
 end
