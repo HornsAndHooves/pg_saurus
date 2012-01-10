@@ -1,14 +1,32 @@
 module ActiveRecord
   module ConnectionAdapters
+    # Patched methods::
+    #   * indexes
     class PostgreSQLAdapter
-
       # Returns an array of indexes for the given table.
+      #
+      # == Patch reason:
+      # Since {ActiveRecord::SchemaDumper#tables} patched to process tables
+      # with schema prefix {#indexes} method receives table_name as "<schema>.<table>".
+      # So it should know how to handle table names with schema prefix.
+      #
+      # == Patch:
+      #   schemas = schema_search_path.split(/,/).map { |p| quote(p) }.join(',')
+      # Changed to:
+      #   if table_name =~ /\./
+      #     schemas, table = table_name.split(".")
+      #     schemas = "'#{schemas}'"
+      #   else
+      #     schemas = schema_search_path.split(/,/).map { |p| quote(p) }.join(',')
+      #     table = table_name
+      #   end
       def indexes(table_name, name = nil)
-        # schemas = schema_search_path.split(/,/).map { |p| quote(p) }.join(',')
         if table_name =~ /\./
-          schema, table = table_name.split(".")
+          schemas, table = table_name.split(".")
+          schemas = "'#{schemas}'"
         else
-          schema, table = "public", table_name
+          schemas = schema_search_path.split(/,/).map { |p| quote(p) }.join(',')
+          table = table_name
         end
 
         result = query(<<-SQL, name)
@@ -19,7 +37,7 @@ module ActiveRecord
           WHERE i.relkind = 'i'
             AND d.indisprimary = 'f'
             AND t.relname = '#{table}'
-            AND i.relnamespace IN (SELECT oid FROM pg_namespace WHERE nspname IN ('#{schema}') )
+            AND i.relnamespace IN (SELECT oid FROM pg_namespace WHERE nspname IN (#{schemas}) )
          ORDER BY i.relname
         SQL
 

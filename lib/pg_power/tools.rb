@@ -1,4 +1,10 @@
 module PgPower
+  # Provides number of methods to work is PostgreSQL DB.
+  # Usage:
+  #   PgPower::Tools.create_schema "services"  # => create new PG schema "services"
+  #   PgPower::Tools.create_schema "nets"
+  #   PgPower::Tools.drop_schema "services"    # => remove the schema
+  #   PgPower::Tools.schemas                   # => ["public", "information_schema", "nets"]
   module Tools
     extend self
 
