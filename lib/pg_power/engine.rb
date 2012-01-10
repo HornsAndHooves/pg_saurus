@@ -4,6 +4,7 @@ module PgPower
     initializer 'pg_power' do
       ActiveSupport.on_load(:active_record) do
         require 'pg_power/active_record/schema_dumper'
+        require 'pg_power/active_record/connection_adapters/postgresql_adapter'
 
         ActiveRecord::ConnectionAdapters.module_eval do
           include PgPower::Schema::SchemaStatements

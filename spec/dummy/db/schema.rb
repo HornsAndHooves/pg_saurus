@@ -18,11 +18,15 @@ ActiveRecord::Schema.define(:version => 20120106163831) do
     t.string "version", :null => false
   end
 
+  add_index "public.schema_migrations", ["version"], :name => "unique_schema_migrations", :unique => true
+
   create_table "public.users", :force => true do |t|
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "public.users", ["name"], :name => "index_users_on_name"
 
   create_table "demography.citizens", :force => true do |t|
     t.integer  "country_id"
@@ -30,6 +34,9 @@ ActiveRecord::Schema.define(:version => 20120106163831) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "demography.citizens", ["country_id"], :name => "index_demography.citizens_on_country_id"
+  add_index "demography.citizens", ["user_id"], :name => "index_demography.citizens_on_user_id"
 
   create_table "demography.countries", :force => true do |t|
     t.string   "name"

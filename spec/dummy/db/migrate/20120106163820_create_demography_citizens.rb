@@ -6,5 +6,8 @@ class CreateDemographyCitizens < ActiveRecord::Migration
 
       t.timestamps
     end
+
+    add_index('demography.citizens', :country_id)
+    add_index('demography.citizens', :user_id)
   end
 end
