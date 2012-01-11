@@ -1,5 +1,5 @@
 module PgPower
-  # Provides number of methods to work is PostgreSQL DB.
+  # Provides utility methods to work with PostgreSQL databases.
   # Usage:
   #   PgPower::Tools.create_schema "services"  # => create new PG schema "services"
   #   PgPower::Tools.create_schema "nets"
