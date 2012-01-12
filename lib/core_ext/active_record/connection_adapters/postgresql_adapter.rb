@@ -6,9 +6,10 @@ module ActiveRecord
       # Returns an array of indexes for the given table.
       #
       # == Patch reason:
-      # Since {ActiveRecord::SchemaDumper#tables} patched to process tables
-      # with schema prefix {#indexes} method receives table_name as "<schema>.<table>".
-      # So it should know how to handle table names with schema prefix.
+      # Since {ActiveRecord::SchemaDumper#tables} is patched to process tables
+      # with a schema prefix, the {#indexes} method receives table_name as
+      # "<schema>.<table>". This patch allows it to handle table names with
+      # a schema prefix.
       #
       # == Patch:
       #   schemas = schema_search_path.split(/,/).map { |p| quote(p) }.join(',')
