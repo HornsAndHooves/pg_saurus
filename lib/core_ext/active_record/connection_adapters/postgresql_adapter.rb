@@ -12,23 +12,10 @@ module ActiveRecord
       # a schema prefix.
       #
       # == Patch:
-      #   schemas = schema_search_path.split(/,/).map { |p| quote(p) }.join(',')
-      # Changed to:
-      #   if table_name =~ /\./
-      #     schemas, table = table_name.split(".")
-      #     schemas = "'#{schemas}'"
-      #   else
-      #     schemas = schema_search_path.split(/,/).map { |p| quote(p) }.join(',')
-      #     table = table_name
-      #   end
+      # Search using provided schema if table_name includes schema name.
       def indexes(table_name, name = nil)
-        if table_name =~ /\./
-          schemas, table = table_name.split(".")
-          schemas = "'#{schemas}'"
-        else
-          schemas = schema_search_path.split(/,/).map { |p| quote(p) }.join(',')
-          table = table_name
-        end
+        schema, table = extract_schema_and_table(table_name)
+        schemas = schema ? "ARRAY['#{schema}']" : 'current_schemas(false)'
 
         result = query(<<-SQL, name)
           SELECT distinct i.relname, d.indisunique, d.indkey, t.oid
@@ -38,7 +25,7 @@ module ActiveRecord
           WHERE i.relkind = 'i'
             AND d.indisprimary = 'f'
             AND t.relname = '#{table}'
-            AND i.relnamespace IN (SELECT oid FROM pg_namespace WHERE nspname IN (#{schemas}) )
+            AND i.relnamespace IN (SELECT oid FROM pg_namespace WHERE nspname = ANY (#{schemas}) )
          ORDER BY i.relname
         SQL
 
