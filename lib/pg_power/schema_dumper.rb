@@ -14,7 +14,7 @@ module PgPower
     def tables_with_schemas(stream)
       schemas(stream)
       tables_without_schemas(stream)
-      not_public_schema_tables(stream)
+      non_public_schema_tables(stream)
     end
 
     # Generates code to create schemas.
@@ -35,25 +35,25 @@ module PgPower
     private :schema
 
     # Dumps tables from schemas other than public
-    def not_public_schema_tables(stream)
-      get_not_public_schema_table_names.each do |name|
+    def non_public_schema_tables(stream)
+      get_non_public_schema_table_names.each do |name|
         table(name, stream)
       end
     end
-    private :not_public_schema_tables
+    private :non_public_schema_tables
 
-    # Returns the list of not public schema tables
+    # Returns the list of non public schema tables
     # Usage:
-    #   tables # => ['demography.countries', 'demography.cities', 'politics.members']
-    def get_not_public_schema_table_names
+    #   get_non_public_schema_table_names # => ['demography.countries', 'demography.cities', 'politics.members']
+    def get_non_public_schema_table_names
       result = @connection.query(<<-SQL, 'SCHEMA')
-        SELECT schemaname, tablename
+        SELECT schemaname || '.' || tablename
         FROM pg_tables
         WHERE schemaname NOT IN ('pg_catalog', 'information_schema', 'public')
       SQL
-      result.map {|row| "#{row[0]}.#{row[1]}" }
+      result.flatten
     end
-    private :get_not_public_schema_table_names
+    private :get_non_public_schema_table_names
 
   end
 end

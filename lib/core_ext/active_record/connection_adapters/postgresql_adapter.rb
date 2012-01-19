@@ -1,5 +1,6 @@
 module ActiveRecord
   module ConnectionAdapters
+    # Patched version:  3.1.3
     # Patched methods::
     #   * indexes
     class PostgreSQLAdapter
