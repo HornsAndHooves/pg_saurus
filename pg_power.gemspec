@@ -7,15 +7,13 @@ require "pg_power/version"
 Gem::Specification.new do |s|
   s.name        = "pg_power"
   s.version     = PgPower::VERSION
-  s.authors     = ["TODO: Your name"]
-  s.email       = ["TODO: Your email"]
-  s.homepage    = "TODO"
-  s.summary     = "TODO: Summary of PgPower."
-  s.description = "TODO: Description of PgPower."
+  s.authors     = ["Potapov Sergey"]
+  s.email       = ["blake131313@gmail.com"]
+  s.summary     = "ActiveRecord extensions for PostgreSQL."
+  s.description = "ActiveRecord extensions for PostgreSQL. Provides useful tools and ability to create/drop schemas in migrations."
 
-  s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.rdoc"]
+  s.files = Dir["{app,config,db,lib}/**/*"] + ["Rakefile", "README.markdown"]
 
   s.add_dependency "rails", "~> 3.1.3"
-
   s.add_development_dependency "pg"
 end
