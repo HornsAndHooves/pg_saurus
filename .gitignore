@@ -8,3 +8,12 @@ spec/dummy/log/*.log
 spec/dummy/tmp/
 
 .idea
+
+# exclude everything in tmp
+tmp/*
+# except the metric_fu directory
+!tmp/metric_fu/
+# but exclude everything *in* the metric_fu directory
+tmp/metric_fu/*
+# except for the _data directory to track metrical outputs
+!tmp/metric_fu/_data/
