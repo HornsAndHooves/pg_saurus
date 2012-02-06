@@ -32,3 +32,14 @@ desc 'Run specs'
 task 'spec' => ['db:drop', 'db:create', 'db:migrate', 'app:spec']
 task :default => :spec
 #task :default => 'app:spec'
+
+
+# pg comment 
+require "bundler/gem_tasks"
+require "rake/testtask"
+
+Rake::TestTask.new do |t|
+  t.libs << "test"
+  t.test_files = FileList['test/*test.rb']
+  t.verbose = true
+end
