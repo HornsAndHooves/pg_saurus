@@ -70,7 +70,7 @@ Remove comments from multiple columns in the table.
 
     remove_column_comments :phone_numbers, :npa, :nxx
 
-PgComment also adds extra methods to change_table.
+PgPower also adds extra methods to change_table.
 
 Set comments:
 
