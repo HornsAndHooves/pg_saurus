@@ -3,7 +3,8 @@ require File.expand_path("../dummy/config/environment", __FILE__)
 require 'rspec/rails'
 require 'rspec/autorun'
 
-Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
+
+Dir["#{File.expand_path('../', __FILE__)}/support/**/*.rb"].each {|f| require f}
 
 RSpec.configure do |config|
   config.mock_with :rspec

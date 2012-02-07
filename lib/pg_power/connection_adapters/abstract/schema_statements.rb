@@ -1,9 +1,9 @@
-module PgComment
+module PgPower
   module ConnectionAdapters
     module SchemaStatements
       def self.included(base)
         base::AbstractAdapter.class_eval do
-          include PgComment::ConnectionAdapters::AbstractAdapter
+          include PgPower::ConnectionAdapters::AbstractAdapter
         end
       end
     end

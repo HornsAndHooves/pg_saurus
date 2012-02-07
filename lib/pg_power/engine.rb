@@ -20,6 +20,18 @@ module PgPower
           end
         end
 
+
+        # pg_comment
+        ActiveRecord::ConnectionAdapters.module_eval do
+          include PgPower::ConnectionAdapters::SchemaStatements
+          include PgPower::ConnectionAdapters::SchemaDefinitions
+        end
+
+        conf_name = ActiveRecord::Base.connection_pool.spec.config[:adapter]
+        if conf_name == 'postgresql' then
+          require 'pg_power/connection_adapters/postgresql_adapter'
+        end
+
       end
     end 
   end

@@ -1,4 +1,4 @@
-module PgComment
+module PgPower
   module ConnectionAdapters
     module PostgreSQLAdapter
       def supports_comments?
@@ -36,23 +36,20 @@ module PgComment
           remove_column_comment table_name, column_name
         end
       end
-=begin
---Fetch all comments
-SELECT c.relname as table_name, a.attname as column_name, d.description as comment
-FROM pg_description d
-JOIN pg_class c ON c.oid = d.objoid
-LEFT OUTER JOIN pg_attribute a ON c.oid = a.attrelid AND a.attnum = d.objsubid
-WHERE c.relkind = 'r'
-ORDER BY c.relname
-=end
+
       def comments(table_name)
-        com = select_all %{
-SELECT a.attname AS column_name, d.description AS comment
-FROM pg_description d
-JOIN pg_class c on c.oid = d.objoid
-LEFT OUTER JOIN pg_attribute a ON c.oid = a.attrelid AND a.attnum = d.objsubid
-WHERE c.relkind = 'r' AND c.relname = '#{table_name}'
-                         }
+        relation_name, schema_name = table_name.split(".", 2).reverse
+        schema_name ||= "public" 
+
+        com = select_all <<-SQL
+          SELECT a.attname AS column_name, d.description AS comment
+          FROM pg_description d
+            JOIN pg_class c on c.oid = d.objoid
+            LEFT OUTER JOIN pg_attribute a ON c.oid = a.attrelid AND a.attnum = d.objsubid
+            JOIN pg_namespace ON c.relnamespace = pg_namespace.oid
+          WHERE c.relkind = 'r' AND c.relname = '#{relation_name}' AND
+            pg_namespace.nspname = '#{schema_name}'
+        SQL
         com.map do |row|
           [ row['column_name'], row['comment'] ]
         end
@@ -64,7 +61,7 @@ end
 [:PostgreSQLAdapter, :JdbcAdapter].each do |adapter|
   begin
     ActiveRecord::ConnectionAdapters.const_get(adapter).class_eval do
-      include PgComment::ConnectionAdapters::PostgreSQLAdapter
+      include PgPower::ConnectionAdapters::PostgreSQLAdapter
     end
   rescue
   end
