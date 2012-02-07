@@ -1,9 +1,16 @@
 # PgPower
 
-ActiveRecord extension to get more from PostgreSQL.
+ActiveRecord extension to get more from PostgreSQL:
+
+* Create/drop schemas
+* Set/remove comments on columns and tables.
+
+## Environment notes
+
+It was tested with Rails 3.1.3 and Ruby 1.8.7.
 
 
-## Migrations
+## Schemas
 
 ### Create schema
 
@@ -22,6 +29,70 @@ Use schema prefix in you table name:
 
     create_table "demography.countries" do |t|
       # columns goes here
+    end
+
+## Comments
+
+Provides next methods to manage comments:
+
+* set\_table\_comment(table\_name, comment)
+* remove\_table\_comment(table\_name)
+* set\_column\_comment(table\_name, column\_name, comment)
+* remove\_column\_comment(table\_name, column\_name, comment)
+* set\_column\_comments(table\_name, comments)
+* remove\_column\_comments(table\_name, *comments)
+
+
+### Examples
+
+Set a comment on the given table.
+
+    set_table_comment :phone_numbers, 'This table stores phone numbers that conform to the North American Numbering Plan.'
+
+Sets a comment on a given column of a given table.
+
+    set_column_comment :phone_numbers, :npa, 'Numbering Plan Area Code - Allowed ranges: [2-9] for first digit, [0-9] for second and third digit.'
+
+Removes any comment from the given table.
+
+    remove_table_comment :phone_numbers
+
+Removes any comment from the given column of a given table.
+
+    remove_column_comment :phone_numbers, :npa
+
+Set comments on multiple columns in the table.
+
+    set_column_comments :phone_numbers, :npa => 'Numbering Plan Area Code - Allowed ranges: [2-9] for first digit, [0-9] for second and third digit.',
+                                        :nxx => 'Central Office Number'
+
+Remove comments from multiple columns in the table.
+
+    remove_column_comments :phone_numbers, :npa, :nxx
+
+PgComment also adds extra methods to change_table.
+
+Set comments:
+
+    change_table :phone_numbers do |t|
+        t.set_table_comment 'This table stores phone numbers that conform to the North American Numbering Plan.'
+        t.set_column_comment :npa, 'Numbering Plan Area Code - Allowed ranges: [2-9] for first digit, [0-9] for second and third digit.'
+    end
+
+    change_table :phone_numbers do |t|
+        t.set_column_comments :npa => 'Numbering Plan Area Code - Allowed ranges: [2-9] for first digit, [0-9] for second and third digit.',
+                              :nxx => 'Central Office Number'
+    end
+
+Remove comments:
+
+    change_table :phone_numbers do |t|
+        t.remove_table_comment
+        t.remove_column_comment :npa
+    end
+
+    change_table :phone_numbers do |t|
+      t.remove_column_comments :npa, :nxx
     end
 
 ## Tools
@@ -47,7 +118,11 @@ Add next syntax to create table:
       # columns goes here
     end
 
+## Credits
+
+* [Potapov Sergey](https://github.com/greyblake) - schema support
+* [Arthur Shagall](https://github.com/albertosaurus) - thanks for [pg_comment](https://github.com/albertosaurus/pg_comment)
+
 ## Copyright
 
-* Copyright (c) 2012 TMX Credit.
-* Author: Potapov Sergey.
+Copyright (c) 2012 TMX Credit.
