@@ -9,3 +9,4 @@ gemspec
 gem 'rspec-rails'
 gem 'ruby-debug'
 gem 'yard'
+gem 'foreigner'
