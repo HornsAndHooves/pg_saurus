@@ -12,7 +12,7 @@ module PgCommentGetter
         INNER JOIN pg_namespace ON pg_class.relnamespace = pg_namespace.oid
       WHERE pg_class.relname = '#{table}' AND
         pg_namespace.nspname = '#{schema}' AND
-	pg_desc.objsubid = 0  --means table
+        pg_desc.objsubid = 0  --means table
     SQL
   end
 
