@@ -1,5 +1,6 @@
-# Provides methods to fetch comment messages on tables and columns
-module PgExporer
+# Provides methods to fetch meta information about DB like comments and
+# foreign keys. It's used in test purpose.
+module PgPower::Explorer
   extend self
 
   def get_table_comment(table_name)
