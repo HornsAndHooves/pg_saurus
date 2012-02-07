@@ -7,5 +7,6 @@ gemspec
 
 # development/test
 gem 'rspec-rails'
+gem 'rcov'
 gem 'ruby-debug'
 gem 'yard'

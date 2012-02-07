@@ -80,6 +80,7 @@ GEM
       thor (~> 0.14.6)
     rake (0.9.2.2)
     rbx-require-relative (0.0.5)
+    rcov (1.0.0)
     rdoc (3.12)
       json (~> 1.4)
     rspec (2.7.0)
@@ -120,6 +121,7 @@ PLATFORMS
 DEPENDENCIES
   pg
   pg_power!
+  rcov
   rspec-rails
   ruby-debug
   yard
