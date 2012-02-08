@@ -24,5 +24,10 @@ describe ActiveRecord::SchemaDumper do
       @dump.should =~ /add_index "demography\.citizens", \["country_id"\]/
       @dump.should =~ /add_index "demography\.citizens", \["user_id"\]/
     end
+
+    it 'foreign keys' do
+      @dump.should =~ /add_foreign_key "demography\.citizens", "users"/
+      @dump.should =~ /add_foreign_key "pets", "users"/
+    end
   end
 end

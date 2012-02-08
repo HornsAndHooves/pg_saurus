@@ -15,7 +15,8 @@ ActiveRecord::Schema.define(:version => 20120208114020) do
   create_schema "demography"
 
   create_table "pets", :force => true do |t|
-    t.string "name"
+    t.string  "name"
+    t.integer "user_id"
   end
 
   create_table "users", :force => true do |t|
@@ -27,6 +28,8 @@ ActiveRecord::Schema.define(:version => 20120208114020) do
   end
 
   add_index "users", ["name"], :name => "index_users_on_name"
+
+  add_foreign_key "pets", "users", :name => "pets_user_id_fk"
 
   create_table "demography.countries", :force => true do |t|
     t.string   "name"
@@ -60,5 +63,7 @@ ActiveRecord::Schema.define(:version => 20120208114020) do
   set_column_comment 'demography.citizens', 'last_name', 'Last name'
 
   set_column_comment 'demography.countries', 'name', 'Country name'
+
+  add_foreign_key "demography.citizens", "users", :name => "demography.citizens_user_id_fk"
 
 end
