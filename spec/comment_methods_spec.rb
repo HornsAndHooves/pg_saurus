@@ -60,4 +60,12 @@ describe 'Comment methods' do
     end
   end
 
+  describe '#remove_column_comments' do
+    it 'removes comment on columns' do
+      PgCommentGetter.get_column_comment("demography.citizens", "bio").should be_nil
+      PgCommentGetter.get_column_comment("demography.citizens", "birthday").should be_nil
+    end
+
+  end
+
 end

@@ -5,6 +5,8 @@ class CreateDemographyCitizens < ActiveRecord::Migration
       t.integer :user_id
       t.string :first_name 
       t.string :last_name
+      t.date :birthday
+      t.text :bio
 
       t.timestamps
     end
@@ -18,6 +20,8 @@ class CreateDemographyCitizens < ActiveRecord::Migration
 
     set_column_comments 'demography.citizens',
       :first_name => "First name",
-      :last_name  => "Last name"
+      :last_name  => "Last name",
+      :birthday   => "Birthday",
+      :bio        => "Biography"
   end
 end
