@@ -28,7 +28,7 @@ describe 'Comment methods' do
   end
 
 
-  describe '#set_column_tables' do
+  describe '#set_column_comments' do
     it 'sets comments on columns' do
       PgCommentGetter.get_column_comment("users", "email").should == "Email address"
       PgCommentGetter.get_column_comment("users", "phone_number").should == "Phone number"
