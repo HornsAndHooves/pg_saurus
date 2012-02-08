@@ -1,3 +1,5 @@
+# Provides methods to extend {ActiveRecord::ConnectionAdapters::Table}
+# to support comments feature.
 module PgPower::ConnectionAdapters::Table::CommentMethods
   # Sets the comment on the table
   #

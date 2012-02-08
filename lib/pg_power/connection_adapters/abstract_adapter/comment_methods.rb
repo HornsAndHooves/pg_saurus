@@ -1,3 +1,5 @@
+# Extends {ActiveRecord::ConnectionAdapters::AbstractAdapter} with
+# empty methods for comments feature.
 module PgPower::ConnectionAdapters::AbstractAdapter::CommentMethods
   def supports_comments?
     false

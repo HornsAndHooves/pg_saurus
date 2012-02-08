@@ -1,3 +1,5 @@
+# Provides methods to extend {ActiveRecord::ConnectionAdapters::Table}
+# to support pg_power features.
 module PgPower::ConnectionAdapters::Table
   extend ActiveSupport::Autoload
   extend ActiveSupport::Concern

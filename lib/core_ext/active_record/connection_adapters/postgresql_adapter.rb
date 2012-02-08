@@ -1,5 +1,5 @@
-module ActiveRecord
-  module ConnectionAdapters
+module ActiveRecord # :nodoc:
+  module ConnectionAdapters # :nodoc:
     # Patched version:  3.1.3
     # Patched methods::
     #   * indexes

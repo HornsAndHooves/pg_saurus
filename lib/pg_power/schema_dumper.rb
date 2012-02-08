@@ -1,3 +1,6 @@
+# Provides methods to extend {ActiveRecord::SchemaDumper} to appropriately
+# build schema.rb file with schemas, foreign keys and comments on columns
+# and tables.
 module PgPower::SchemaDumper
   extend ActiveSupport::Autoload
   extend ActiveSupport::Concern

@@ -2,6 +2,7 @@
 log/*.log
 pkg/
 .yardoc/*
+doc/*
 
 coverage/*
 

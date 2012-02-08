@@ -1,11 +1,11 @@
-# Obtains {#add_foreign_key} and {#remove_foreign_key} methods provided by 
-# foreigner gem to correctly calculate column name when table with schema
-# prefix is passed.
+# Provides methods to extend {ActiveRecord::ConnectionAdapters::PostgreSQLAdapter}
+# to support foreign keys feature.
 module PgPower::ConnectionAdapters::PostgreSQLAdapter::ForeignerMethods
   def supports_foreign_keys?
     true
   end
 
+  # Fetches information about foreign keys related to passed table.
   # @param [String, Symbol] table_name name of table (e.g. "users", "music.bands")
   # @return [Foreigner::ConnectionAdapters::ForeignKeyDefinition] 
   def foreign_keys(table_name)
@@ -39,15 +39,27 @@ module PgPower::ConnectionAdapters::PostgreSQLAdapter::ForeignerMethods
     end
   end
 
+  # Disables triggers and drops tables.
   def drop_table(*args)
     disable_referential_integrity { super }
   end
 
+  # Adds foreign key.
+  #
+  # == Options:
+  # * :column
+  # * :primary_key
+  # * :dependent
+  #
+  # @param [String, Symbol] from_table 
+  # @param [String, Symbol] to_table
+  # @param [Hash] options
   def add_foreign_key(from_table, to_table, options = {})
     sql = "ALTER TABLE #{quote_table_name(from_table)} #{add_foreign_key_sql(from_table, to_table, options)}"
     execute(sql)
   end
 
+  # Returns chunk of SQL to add foreign key based on table names and options.
   def add_foreign_key_sql(from_table, to_table, options = {})
     column = options[:column] || "#{to_table.to_s.split('.').last.singularize}_id"
     foreign_key_name = foreign_key_name(from_table, column, options)
@@ -64,10 +76,14 @@ module PgPower::ConnectionAdapters::PostgreSQLAdapter::ForeignerMethods
     sql
   end
 
+  # Removes foreign key.
+  # @param [String, Symbol] table
+  # @param [Hash] options
   def remove_foreign_key(table, options)
     execute "ALTER TABLE #{quote_table_name(table)} #{remove_foreign_key_sql(table, options)}"
   end
 
+  # Returns chunk of SQL to  remove foreign key based on table name and options.
   def remove_foreign_key_sql(table, options)
     if Hash === options
       foreign_key_name = foreign_key_name(table, options[:column], options)
@@ -81,6 +97,7 @@ module PgPower::ConnectionAdapters::PostgreSQLAdapter::ForeignerMethods
 
 
 
+  # Builds default name for constraint
   def foreign_key_name(table, column, options = {})
     if options[:name]
       options[:name]
