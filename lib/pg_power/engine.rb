@@ -14,9 +14,12 @@ module PgPower
           end
         end
 
-        ActiveRecord::ConnectionAdapters.module_eval do
-          include PgPower::ConnectionAdapters::SchemaStatements
-          include PgPower::ConnectionAdapters::SchemaDefinitions
+        ActiveRecord::ConnectionAdapters::Table.module_eval do
+          include PgPower::ConnectionAdapters::Table
+        end
+
+        ActiveRecord::ConnectionAdapters::AbstractAdapter.module_eval do
+          include PgPower::ConnectionAdapters::AbstractAdapter
         end
 
         conf_name = ActiveRecord::Base.connection_pool.spec.config[:adapter]
