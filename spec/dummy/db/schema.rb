@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120207163652) do
+ActiveRecord::Schema.define(:version => 20120208114020) do
 
   create_schema "demography"
 
@@ -40,6 +40,8 @@ ActiveRecord::Schema.define(:version => 20120207163652) do
     t.integer  "user_id"
     t.string   "first_name"
     t.string   "last_name"
+    t.date     "birthday"
+    t.text     "bio"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
