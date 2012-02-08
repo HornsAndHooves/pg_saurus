@@ -2,8 +2,9 @@
 
 ActiveRecord extension to get more from PostgreSQL:
 
-* Create/drop schemas
+* Create/drop schemas.
 * Set/remove comments on columns and tables.
+* Use foreign keys.
 
 ## Environment notes
 
@@ -94,6 +95,27 @@ Remove comments:
     change_table :phone_numbers do |t|
       t.remove_column_comments :npa, :nxx
     end
+
+## Foreign keys
+
+We imported some code of [foreigner](https://github.com/matthuhiggins/foreigner)
+gem and patched it to be schema-aware. So you should disable `foreigner` in your 
+Gemfile if you want to use `pg_power`.
+
+The syntax is compatible with `foreigner`:
+
+
+Add foreign key from `comments` to `posts` using `post_id` column as key by default:
+    add_foreign_key(:comments, :posts)
+
+Specify key explicitly:
+    add_foreign_key(:comments, :posts, :column => :blog_post_id)
+
+Specify name of foreign key constraint:
+    add_foreign_key(:comments, :posts, :name => "comments_posts_fk")
+
+It works with schemas as expected:
+    add_foreign_key('blog.comments', 'blog.posts')
 
 ## Tools
 
