@@ -10,3 +10,6 @@ gem 'rspec-rails'
 gem 'rcov'
 gem 'ruby-debug'
 gem 'yard'
+
+gem 'pg'
+#gem 'activerecord-jdbcpostgresql-adapter'

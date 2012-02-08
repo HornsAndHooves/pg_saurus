@@ -1,5 +1,6 @@
 development:
   adapter: postgresql
+  #adapter: jdbcpostgresql
   encoding: unicode
   database: pg_power_dummy_development
   pool: 5
@@ -9,6 +10,7 @@ development:
 
 test:
   adapter: postgresql
+  #adapter: jdbcpostgresql
   encoding: unicode
   database: pg_power_dummy_test
   pool: 5

@@ -1,8 +1,11 @@
 module PgPower
+  # :nodoc
   class Engine < Rails::Engine
 
     initializer 'pg_power' do
       ActiveSupport.on_load(:active_record) do
+        # load monkey patches
+        require PgPower::Engine.root + 'lib/core_ext/active_record/connection_adapters/postgresql_adapter'
 
         ActiveRecord::SchemaDumper.class_eval do
           include PgPower::SchemaDumper
@@ -22,25 +25,18 @@ module PgPower
           include PgPower::ConnectionAdapters::AbstractAdapter
         end
 
-        conf_name = ActiveRecord::Base.connection_pool.spec.config[:adapter]
-        PgPower::Engine.patch_pg_adapter! if conf_name == 'postgresql'
+        if defined?(ActiveRecord::ConnectionAdapters::JdbcAdapter)
+          sql_adapter_class = ActiveRecord::ConnectionAdapters::JdbcAdapter
+        else
+          sql_adapter_class = ActiveRecord::ConnectionAdapters::PostgreSQLAdapter
+        end
+
+        sql_adapter_class.class_eval do
+          include PgPower::ConnectionAdapters::PostgreSQLAdapter
+        end
+
       end
     end 
-
-
-    def self.patch_pg_adapter!
-      # load monkey patches
-      require PgPower::Engine.root + 'lib/core_ext/active_record/connection_adapters/postgresql_adapter'
-
-      [:PostgreSQLAdapter, :JdbcAdapter].each do |adapter|
-        begin
-          ActiveRecord::ConnectionAdapters.const_get(adapter).class_eval do
-            include PgPower::ConnectionAdapters::PostgreSQLAdapter
-          end
-        rescue NameError
-        end
-      end
-    end
 
   end
 end

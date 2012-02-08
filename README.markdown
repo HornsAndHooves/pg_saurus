@@ -140,6 +140,10 @@ Add next syntax to create table:
       # columns goes here
     end
 
+Support for JRuby:
+
+* Jdbc driver provides its own `create_schema(schema, user)` method - solve conflicts.
+
 ## Credits
 
 * [Potapov Sergey](https://github.com/greyblake) - schema support
