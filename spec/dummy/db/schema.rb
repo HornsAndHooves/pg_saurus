@@ -29,8 +29,6 @@ ActiveRecord::Schema.define(:version => 20120208114020) do
 
   add_index "users", ["name"], :name => "index_users_on_name"
 
-  add_foreign_key "pets", "users", :name => "pets_user_id_fk"
-
   create_table "demography.countries", :force => true do |t|
     t.string   "name"
     t.string   "continent"
@@ -64,6 +62,8 @@ ActiveRecord::Schema.define(:version => 20120208114020) do
 
   set_column_comment 'demography.countries', 'name', 'Country name'
 
-  add_foreign_key "demography.citizens", "users", :name => "demography.citizens_user_id_fk"
+ add_foreign_key "demography.citizens", "users", :name => "demography_citizens_user_id_fk"
+
+ add_foreign_key "pets", "users", :name => "pets_user_id_fk"
 
 end

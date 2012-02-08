@@ -2,29 +2,10 @@
 # foreigner gem to correctly calculate column name when table with schema
 # prefix is passed.
 module PgPower::ConnectionAdapters::PostgreSQLAdapter::ForeignerMethods
-  # Forces {#add_foreign_key} to use :column option calculated from
-  # table name if it was not passed explicitly.
-  def add_foreign_key_sql_with_column(from_table, to_table, options = {})
-    column = "#{to_table.to_s.split('.').last.singularize}_id"
-    options[:column] ||= column
-    add_foreign_key_sql_without_column(from_table, to_table, options)
+  def supports_foreign_keys?
+    true
   end
 
-
-  # Forces {#remove_foreign_key} to use :column option calculated from
-  # table name if it was not passed explicitly.
-  def remove_foreign_key_sql_with_column(table, options_or_table)
-    if Hash === options_or_table
-      options = options_or_table
-    else
-      column = "#{options_or_table.to_s.split('.').last.singularize}_id"
-      options = {:column => column}
-    end
-    remove_foreign_key_sql_without_column(table, options)
-  end
-
-  # Redefinition of {Foreigner::ConnectionAdapters::PostgreSQLAdapter#foreign_keys}.
-  # Processes table_name with schema prefix correctly.
   # @param [String, Symbol] table_name name of table (e.g. "users", "music.bands")
   # @return [Foreigner::ConnectionAdapters::ForeignKeyDefinition] 
   def foreign_keys(table_name)
@@ -44,7 +25,7 @@ module PgPower::ConnectionAdapters::PostgreSQLAdapter::ForeignerMethods
       AND t3.nspname = #{quoted_schema}
       ORDER BY c.conname
     SQL
-    
+
     fk_info.map do |row|
       options = {:column => row['column'], :name => row['name'], :primary_key => row['primary_key']}
 
@@ -54,7 +35,69 @@ module PgPower::ConnectionAdapters::PostgreSQLAdapter::ForeignerMethods
         when 'r' then :restrict
       end
 
-      Foreigner::ConnectionAdapters::ForeignKeyDefinition.new(table_name, row['to_table'], options)
+      PgPower::ConnectionAdapters::ForeignKeyDefinition.new(table_name, row['to_table'], options)
     end
   end
+
+  def drop_table(*args)
+    disable_referential_integrity { super }
+  end
+
+  def add_foreign_key(from_table, to_table, options = {})
+    sql = "ALTER TABLE #{quote_table_name(from_table)} #{add_foreign_key_sql(from_table, to_table, options)}"
+    execute(sql)
+  end
+
+  def add_foreign_key_sql(from_table, to_table, options = {})
+    column = options[:column] || "#{to_table.to_s.split('.').last.singularize}_id"
+    foreign_key_name = foreign_key_name(from_table, column, options)
+    primary_key = options[:primary_key] || "id"
+    dependency = dependency_sql(options[:dependent])
+
+    sql =
+      "ADD CONSTRAINT #{quote_column_name(foreign_key_name)} " +
+      "FOREIGN KEY (#{quote_column_name(column)}) " +
+      "REFERENCES #{quote_table_name(ActiveRecord::Migrator.proper_table_name(to_table))}(#{primary_key})"
+    sql << " #{dependency}" if dependency.present?
+    sql << " #{options[:options]}" if options[:options]
+
+    sql
+  end
+
+  def remove_foreign_key(table, options)
+    execute "ALTER TABLE #{quote_table_name(table)} #{remove_foreign_key_sql(table, options)}"
+  end
+
+  def remove_foreign_key_sql(table, options)
+    if Hash === options
+      foreign_key_name = foreign_key_name(table, options[:column], options)
+    else
+      column = "#{options.to_s.split('.').last.singularize}_id"
+      foreign_key_name = foreign_key_name(table, column)
+    end
+
+    "DROP CONSTRAINT #{quote_column_name(foreign_key_name)}"
+  end
+
+
+
+  def foreign_key_name(table, column, options = {})
+    if options[:name]
+      options[:name]
+    else
+      prefix = table.gsub(".", "_")
+      "#{prefix}_#{column}_fk"
+    end
+  end
+  private :foreign_key_name
+
+  def dependency_sql(dependency)
+    case dependency
+      when :nullify then "ON DELETE SET NULL"
+      when :delete then "ON DELETE CASCADE"
+      when :restrict then "ON DELETE RESTRICT"
+      else ""
+    end
+  end
+  private :dependency_sql
 end

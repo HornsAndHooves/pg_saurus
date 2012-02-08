@@ -11,11 +11,6 @@ module PgPower
       include SchemaMethods
       include CommentMethods
       include ForeignerMethods
-
-      included do
-        alias_method_chain :add_foreign_key_sql   , :column
-        alias_method_chain :remove_foreign_key_sql, :column
-      end
     end
   end
 end

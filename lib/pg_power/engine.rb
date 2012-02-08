@@ -28,7 +28,6 @@ module PgPower
     def self.patch_pg_adapter!
       # load monkey patches
       require PgPower::Engine.root + 'lib/core_ext/active_record/connection_adapters/postgresql_adapter'
-      require 'pg_power/connection_adapters/postgresql_adapter'
 
       [:PostgreSQLAdapter, :JdbcAdapter].each do |adapter|
         begin

@@ -13,6 +13,6 @@ module PgPower::SchemaDumper
   included do
     alias_method_chain :tables, :schemas
     alias_method_chain :tables, :comments
-    alias_method_chain :tables, :non_public_foreign_keys
+    alias_method_chain :tables, :foreign_keys
   end
 end

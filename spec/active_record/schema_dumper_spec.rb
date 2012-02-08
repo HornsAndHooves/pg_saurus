@@ -26,8 +26,8 @@ describe ActiveRecord::SchemaDumper do
     end
 
     it 'foreign keys' do
-      @dump.should =~ /add_foreign_key "demography\.citizens", "users"/
-      @dump.should =~ /add_foreign_key "pets", "users"/
+      @dump.should =~ /^\s*add_foreign_key "demography\.citizens", "users", :name => "demography_citizens_user_id_fk"$/
+      @dump.should =~ /^\s*add_foreign_key "pets", "users", :name => "pets_user_id_fk"$/
     end
   end
 end

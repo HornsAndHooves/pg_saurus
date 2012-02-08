@@ -1,11 +1,9 @@
-module PgPower::Migration::CommandRecorder
+module PgPower::ConnectionAdapters::AbstractAdapter
   extend ActiveSupport::Autoload
 
-  autoload :SchemaMethods
   autoload :CommentMethods
   autoload :ForeignerMethods
 
-  include SchemaMethods
   include CommentMethods
   include ForeignerMethods
 end

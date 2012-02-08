@@ -7,8 +7,8 @@ require "pg_power/version"
 Gem::Specification.new do |s|
   s.name        = "pg_power"
   s.version     = PgPower::VERSION
-  s.authors     = ["Potapov Sergey"]
-  s.email       = ["blake131313@gmail.com"]
+  s.authors     = ["Potapov Sergey"       , "Arthur Shagall"]
+  s.email       = ["blake131313@gmail.com", "arthur.shagall@gmail.com"]
   s.summary     = "ActiveRecord extensions for PostgreSQL."
   s.description = "ActiveRecord extensions for PostgreSQL. Provides useful tools and ability to create/drop schemas in migrations."
 

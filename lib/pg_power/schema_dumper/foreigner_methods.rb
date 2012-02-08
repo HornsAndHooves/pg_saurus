@@ -1,9 +1,12 @@
 module PgPower::SchemaDumper::ForeignerMethods
 
-  def tables_with_non_public_foreign_keys(stream)
-    tables_without_non_public_foreign_keys(stream)
+  def tables_with_foreign_keys(stream)
+    tables_without_foreign_keys(stream)
 
-    get_non_public_schema_table_names.sort.each do |table|
+    table_names = @connection.tables.sort
+    table_names += get_non_public_schema_table_names.sort
+
+    table_names.sort.each do |table|
       next if ['schema_migrations', ignore_tables].flatten.any? do |ignored|
         case ignored
         when String; table == ignored
@@ -16,4 +19,31 @@ module PgPower::SchemaDumper::ForeignerMethods
     end
   end
 
+
+
+  def foreign_keys(table_name, stream)
+    if (foreign_keys = @connection.foreign_keys(table_name)).any?
+      add_foreign_key_statements = foreign_keys.map do |foreign_key|
+        statement_parts = [ ('add_foreign_key ' + foreign_key.from_table.inspect) ]
+        statement_parts << foreign_key.to_table.inspect
+        statement_parts << (':name => ' + foreign_key.options[:name].inspect)
+
+        if foreign_key.options[:column] != "#{foreign_key.to_table.singularize}_id"
+          statement_parts << (':column => ' + foreign_key.options[:column].inspect)
+        end
+        if foreign_key.options[:primary_key] != 'id'
+          statement_parts << (':primary_key => ' + foreign_key.options[:primary_key].inspect)
+        end
+        if foreign_key.options[:dependent].present?
+          statement_parts << (':dependent => ' + foreign_key.options[:dependent].inspect)
+        end
+
+        ' ' + statement_parts.join(', ')
+      end
+
+      stream.puts add_foreign_key_statements.sort.join("\n")
+      stream.puts
+    end
+  end
+  private :foreign_keys
 end
