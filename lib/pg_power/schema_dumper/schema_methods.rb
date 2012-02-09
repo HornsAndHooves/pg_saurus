@@ -14,8 +14,8 @@ module PgPower::SchemaDumper::SchemaMethods
   def schemas(stream)
     # Don't create "public" schema since it exists by default.
     schema_names = PgPower::Tools.schemas - ["public", "information_schema"]
-    schema_names.each do |schema|
-      schema(schema, stream)
+    schema_names.each do |schema_name|
+      schema(schema_name, stream)
     end
     stream << "\n"
   end

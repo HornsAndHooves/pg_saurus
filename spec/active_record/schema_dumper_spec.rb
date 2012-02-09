@@ -29,11 +29,13 @@ describe ActiveRecord::SchemaDumper do
 
     context 'Foreign keys' do
       it 'dumps from public schema' do
-        @dump.should =~ /^\s*add_foreign_key "pets", "users", :name => "pets_user_id_fk"$/
+        @dump.should =~ /^\s*add_foreign_key "pets", "public.users", :name => "pets_user_id_fk"/
       end
 
       it 'dumps from non public schemas' do
-        @dump.should =~ /^\s*add_foreign_key "demography\.citizens", "users", :name => "demography_citizens_user_id_fk"$/
+        @dump.should =~ /^\s*add_foreign_key "demography\.citizens", "public.users", :name => "demography_citizens_user_id_fk"/
+        @dump.should =~ /add_foreign_key "demography.cities", "demography.countries"/
+
       end
     end
 

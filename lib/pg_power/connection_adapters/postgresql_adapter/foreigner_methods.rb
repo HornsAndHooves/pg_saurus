@@ -13,13 +13,18 @@ module PgPower::ConnectionAdapters::PostgreSQLAdapter::ForeignerMethods
     quoted_schema = schema ? "'#{schema}'" : "ANY (current_schemas(false))" 
 
     fk_info = select_all <<-SQL
-      SELECT t2.relname AS to_table, a1.attname AS column, a2.attname AS primary_key, c.conname AS name, c.confdeltype AS dependency
+      SELECT nsp.nspname || '.' || t2.relname AS to_table,
+             a1.attname    AS column     ,
+             a2.attname    AS primary_key,
+             c.conname     AS name       ,
+             c.confdeltype AS dependency
       FROM pg_constraint c
       JOIN pg_class t1 ON c.conrelid = t1.oid
       JOIN pg_class t2 ON c.confrelid = t2.oid
       JOIN pg_attribute a1 ON a1.attnum = c.conkey[1] AND a1.attrelid = t1.oid
       JOIN pg_attribute a2 ON a2.attnum = c.confkey[1] AND a2.attrelid = t2.oid
       JOIN pg_namespace t3 ON c.connamespace = t3.oid
+      JOIN pg_namespace nsp ON nsp.oid = t2.relnamespace
       WHERE c.contype = 'f'
       AND t1.relname = '#{relation}'
       AND t3.nspname = #{quoted_schema}
