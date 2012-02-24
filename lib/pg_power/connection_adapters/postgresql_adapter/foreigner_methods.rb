@@ -64,23 +64,22 @@ module PgPower::ConnectionAdapters::PostgreSQLAdapter::ForeignerMethods
   # @param [String, Symbol] to_table
   # @param [Hash] options
   def add_foreign_key(from_table, to_table, options = {})
+    options[:column] ||= foreign_key_column_id_from_table_name(to_table)
     sql = "ALTER TABLE #{quote_table_name(from_table)} #{add_foreign_key_sql(from_table, to_table, options)}"
     execute(sql)
 
-    index_col_id = options[:column] || foreign_key_column_id_from_table_name(to_table)
-    add_index(from_table, index_col_id) unless options[:exclude_index] or index_exists?(from_table, index_col_id)
+    add_index(from_table, options[:column]) unless options[:exclude_index] or index_exists?(from_table, options[:column])
   end
 
   # Returns chunk of SQL to add foreign key based on table names and options.
   def add_foreign_key_sql(from_table, to_table, options = {})
-    column = options[:column] || foreign_key_column_id_from_table_name(to_table)
-    foreign_key_name = foreign_key_name(from_table, column, options)
+    foreign_key_name = foreign_key_name(from_table, options[:column], options)
     primary_key = options[:primary_key] || "id"
     dependency = dependency_sql(options[:dependent])
 
     sql =
       "ADD CONSTRAINT #{quote_column_name(foreign_key_name)} " +
-      "FOREIGN KEY (#{quote_column_name(column)}) " +
+      "FOREIGN KEY (#{quote_column_name(options[:column])}) " +
       "REFERENCES #{quote_table_name(ActiveRecord::Migrator.proper_table_name(to_table))}(#{primary_key})"
     sql << " #{dependency}" if dependency.present?
     sql << " #{options[:options]}" if options[:options]
