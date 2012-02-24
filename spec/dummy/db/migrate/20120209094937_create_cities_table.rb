@@ -5,6 +5,6 @@ class CreateCitiesTable < ActiveRecord::Migration
       t.integer :name
     end
 
-    add_foreign_key "demography.cities", "demography.countries"
+    add_foreign_key "demography.cities", "demography.countries", :exclude_index => true
   end
 end

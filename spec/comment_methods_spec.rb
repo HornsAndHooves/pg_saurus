@@ -8,12 +8,11 @@ describe 'Comment methods' do
       comment.should == "Information about users"
     end
 
-    it "sets comment on non public schema table" do
+    it "sets comment on table of non-public schema" do
       comment = PgPower::Explorer.get_table_comment "demography.citizens"
       comment.should == "Citizens Info"
     end
   end
-
 
   describe '#set_column_comment' do
     it "sets comment on column"  do
@@ -21,12 +20,11 @@ describe 'Comment methods' do
       comment.should == "User name"
     end
 
-    it "sets comment on column of non public schema"  do
+    it "sets comment on column of non-public schema" do
       comment = PgPower::Explorer.get_column_comment "demography.citizens", "country_id"
       comment.should == "Country key"
     end
   end
-
 
   describe '#set_column_comments' do
     it 'sets comments on columns' do
@@ -34,21 +32,20 @@ describe 'Comment methods' do
       PgPower::Explorer.get_column_comment("users", "phone_number").should == "Phone number"
     end
 
-    it "sets comments on columns of non public schemas" do
+    it "sets comments on columns of non-public schemas" do
       PgPower::Explorer.get_column_comment("demography.citizens", "first_name").should == "First name"
       PgPower::Explorer.get_column_comment("demography.citizens", "last_name").should == "Last name"
     end
   end
 
-
-  # In migrations comments were set and then removed. 
+  # In migrations comments were set and then removed.
   # These tests suppose that #set_table_comment works as expected.
   describe '#remove_table_comment' do
     it 'removes comment on table' do
       PgPower::Explorer.get_table_comment("pets").should be_nil
     end
 
-    it 'removes comment on table of non public schema' do
+    it 'removes comment on table of non-public schema' do
       PgPower::Explorer.get_table_comment("demography.countries").should be_nil
     end
   end
@@ -65,7 +62,6 @@ describe 'Comment methods' do
       PgPower::Explorer.get_column_comment("demography.citizens", "bio").should be_nil
       PgPower::Explorer.get_column_comment("demography.citizens", "birthday").should be_nil
     end
-
   end
 
 end

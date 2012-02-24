@@ -7,10 +7,10 @@ module PgPower::ConnectionAdapters::PostgreSQLAdapter::ForeignerMethods
 
   # Fetches information about foreign keys related to passed table.
   # @param [String, Symbol] table_name name of table (e.g. "users", "music.bands")
-  # @return [Foreigner::ConnectionAdapters::ForeignKeyDefinition] 
+  # @return [Foreigner::ConnectionAdapters::ForeignKeyDefinition]
   def foreign_keys(table_name)
     relation, schema = table_name.to_s.split('.', 2).reverse
-    quoted_schema = schema ? "'#{schema}'" : "ANY (current_schemas(false))" 
+    quoted_schema = schema ? "'#{schema}'" : "ANY (current_schemas(false))"
 
     fk_info = select_all <<-SQL
       SELECT nsp.nspname || '.' || t2.relname AS to_table,
@@ -51,22 +51,29 @@ module PgPower::ConnectionAdapters::PostgreSQLAdapter::ForeignerMethods
 
   # Adds foreign key.
   #
+  # Ensures that an index is created for the foreign key, unless :exclude_index is true.
+  # Never removes indices.
+  #
   # == Options:
   # * :column
   # * :primary_key
   # * :dependent
+  # * :exclude_index [Boolean]
   #
-  # @param [String, Symbol] from_table 
+  # @param [String, Symbol] from_table
   # @param [String, Symbol] to_table
   # @param [Hash] options
   def add_foreign_key(from_table, to_table, options = {})
     sql = "ALTER TABLE #{quote_table_name(from_table)} #{add_foreign_key_sql(from_table, to_table, options)}"
     execute(sql)
+
+    index_col_id = options[:column] || foreign_key_column_id_from_table_name(to_table)
+    add_index(from_table, index_col_id) unless options[:exclude_index] or index_exists?(from_table, index_col_id)
   end
 
   # Returns chunk of SQL to add foreign key based on table names and options.
   def add_foreign_key_sql(from_table, to_table, options = {})
-    column = options[:column] || "#{to_table.to_s.split('.').last.singularize}_id"
+    column = options[:column] || foreign_key_column_id_from_table_name(to_table)
     foreign_key_name = foreign_key_name(from_table, column, options)
     primary_key = options[:primary_key] || "id"
     dependency = dependency_sql(options[:dependent])
@@ -100,7 +107,11 @@ module PgPower::ConnectionAdapters::PostgreSQLAdapter::ForeignerMethods
     "DROP CONSTRAINT #{quote_column_name(foreign_key_name)}"
   end
 
-
+  # Builds the foreign key column id from the referenced table
+  def foreign_key_column_id_from_table_name(table)
+    "#{table.to_s.split('.').last.singularize}_id"
+  end
+  private :foreign_key_column_id_from_table_name
 
   # Builds default name for constraint
   def foreign_key_name(table, column, options = {})
