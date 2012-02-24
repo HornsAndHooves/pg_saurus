@@ -14,12 +14,14 @@ module ActiveRecord # :nodoc:
       #
       # == Patch:
       # Search using provided schema if table_name includes schema name.
+      #
+      #  TODO add notes for index patch
       def indexes(table_name, name = nil)
         schema, table = extract_schema_and_table(table_name)
         schemas = schema ? "ARRAY['#{schema}']" : 'current_schemas(false)'
 
         result = query(<<-SQL, name)
-          SELECT distinct i.relname, d.indisunique, d.indkey, t.oid
+          SELECT distinct i.relname, d.indisunique, d.indkey,  pg_get_indexdef(d.indexrelid), t.oid
           FROM pg_class t
           INNER JOIN pg_index d ON t.oid = d.indrelid
           INNER JOIN pg_class i ON d.indexrelid = i.oid
@@ -30,12 +32,12 @@ module ActiveRecord # :nodoc:
          ORDER BY i.relname
         SQL
 
-
         result.map do |row|
           index_name = row[0]
           unique = row[1] == 't'
           indkey = row[2].split(" ")
-          oid = row[3]
+          inddef = row[3]
+          oid = row[4]
 
           columns = Hash[query(<<-SQL, "Columns for index #{row[0]} on #{table_name}")]
           SELECT a.attnum, a.attname
@@ -45,7 +47,10 @@ module ActiveRecord # :nodoc:
           SQL
 
           column_names = columns.values_at(*indkey).compact
-          column_names.empty? ? nil : IndexDefinition.new(table_name, index_name, unique, column_names)
+          # TODO write documentation
+          where = inddef.scan(/WHERE (.+)$/).flatten[0]
+
+          column_names.empty? ? nil : PgPower::ConnectionAdapters::IndexDefinition.new(table_name, index_name, unique, column_names, [], where)
         end.compact
       end
 

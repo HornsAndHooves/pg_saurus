@@ -4,7 +4,9 @@ module PgPower::ConnectionAdapters::AbstractAdapter
 
   autoload :CommentMethods
   autoload :ForeignerMethods
+  autoload :IndexMethods
 
   include CommentMethods
   include ForeignerMethods
+  include IndexMethods
 end

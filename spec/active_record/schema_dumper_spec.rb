@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe ActiveRecord::SchemaDumper do
-  
+
   describe '.dump' do
     before(:all) do
       stream = StringIO.new
@@ -17,13 +17,18 @@ describe ActiveRecord::SchemaDumper do
       it 'dumps tables from non public schemas' do
         @dump.should =~ /create_table "users"/
         @dump.should =~ /create_table "demography.citizens"/
-        @dump.should =~ /create_table "demography.countries"/ 
+        @dump.should =~ /create_table "demography.countries"/
       end
 
       it 'dumps indexes' do
         @dump.should =~ /add_index "users", \["name"\]/
         @dump.should =~ /add_index "demography\.citizens", \["country_id"\]/
         @dump.should =~ /add_index "demography\.citizens", \["user_id"\]/
+
+        # verify that the dump includes standard add_index options
+        @dump.should =~ /add_index "demography.citizens", \["country_id", "user_id"\].*:unique => true/
+        # verify that the dump includes pg_power add_index options
+        @dump.should =~ /add_index "demography.citizens", \["country_id", "user_id"\].*:where => "active"/
       end
     end
 

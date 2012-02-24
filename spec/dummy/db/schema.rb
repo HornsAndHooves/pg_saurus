@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120209094937) do
+ActiveRecord::Schema.define(:version => 20120224204546) do
 
   create_schema "demography"
 
@@ -29,16 +29,16 @@ ActiveRecord::Schema.define(:version => 20120209094937) do
 
   add_index "users", ["name"], :name => "index_users_on_name"
 
-  create_table "demography.cities", :force => true do |t|
-    t.integer "country_id"
-    t.integer "name"
-  end
-
   create_table "demography.countries", :force => true do |t|
     t.string   "name"
     t.string   "continent"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "demography.cities", :force => true do |t|
+    t.integer "country_id"
+    t.integer "name"
   end
 
   create_table "demography.citizens", :force => true do |t|
@@ -50,8 +50,10 @@ ActiveRecord::Schema.define(:version => 20120209094937) do
     t.text     "bio"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "active",     :default => false, :null => false
   end
 
+  add_index "demography.citizens", ["country_id", "user_id"], :name => "index_demography_citizens_on_country_id_and_user_id_and_active", :unique => true, :where => "active"
   add_index "demography.citizens", ["country_id"], :name => "index_demography.citizens_on_country_id"
   add_index "demography.citizens", ["user_id"], :name => "index_demography.citizens_on_user_id"
 
