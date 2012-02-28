@@ -5,6 +5,7 @@ ActiveRecord extension to get more from PostgreSQL:
 * Create/drop schemas.
 * Set/remove comments on columns and tables.
 * Use foreign keys.
+* Use partial indexes.
 
 ## Environment notes
 
@@ -99,7 +100,7 @@ Remove comments:
 ## Foreign keys
 
 We imported some code of [foreigner](https://github.com/matthuhiggins/foreigner)
-gem and patched it to be schema-aware. So you should disable `foreigner` in your 
+gem and patched it to be schema-aware. So you should disable `foreigner` in your
 Gemfile if you want to use `pg_power`.
 
 The syntax is compatible with `foreigner`:
@@ -117,14 +118,30 @@ Specify name of foreign key constraint:
 It works with schemas as expected:
     add_foreign_key('blog.comments', 'blog.posts')
 
+## Partial Indexes
+
+We used a Rails 4.x [pull request](https://github.com/rails/rails/pull/4956) as a
+starting point, backported to Rails 3.1.x and patched it to be schema-aware.
+
+### Examples
+
+Add a partial index to a table
+
+    add_index(:comments, [:country_id, :user_id], :where => 'active')
+
+Add a partial index to a schema table
+
+    add_index('blog.comments', :user_id, :where => 'active')
+
 ## Tools
 
 PgPower::Tools provides number of useful methods:
 
-    PgPower::Tools.create_schema "services"  # => create new PG schema "services"
-    PgPower::Tools.create_schema "nets"
-    PgPower::Tools.drop_schema "services"    # => remove the schema
-    PgPower::Tools.schemas                   # => ["public", "information_schema", "nets"]
+    PgPower::Tools.create_schema "services"                 # => create new PG schema "services"
+    PgPower::Tools.create_schema "nets"                     # => create new PG schema "nets"
+    PgPower::Tools.drop_schema "services"                   # => remove the PG schema "services"
+    PgPower::Tools.schemas                                  # => ["public", "information_schema", "nets"]
+    PgPower::Tools.index_exists?(table, columns, options)   # => returns true if an index exists for the given params
 
 ## Running tests:
 
