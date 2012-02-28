@@ -18,11 +18,11 @@ describe 'Foreign keys' do
       PgPower::Explorer.index_exists?('demography.citizens', :user_id).should == false
     end
 
-    it 'should raise a PgPower::IndexExistsError when :exclude_index is true but the index already exists' do
+    it 'should raise a PgPower::IndexExistsError when the index already exists' do
       expect {
         connection = ActiveRecord::Base::connection
         connection.add_index 'demography.citizens', :user_id
-        connection.add_foreign_key 'demography.citizens', 'users', :exclude_index => true
+        connection.add_foreign_key 'demography.citizens', 'users'
       }.should raise_exception(PgPower::IndexExistsError)
     end
   end

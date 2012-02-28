@@ -73,14 +73,15 @@ module PgPower
     def add_foreign_key(from_table, to_table, options = {})
       options[:column] ||= foreign_key_column_id_from_table_name(to_table)
       options[:exclude_index] ||= false
-      index_exists = index_exists?(from_table, options[:column])
 
-      raise PgPower::IndexExistsError if options[:exclude_index] and index_exists
+      if index_exists?(from_table, options[:column]) and !options[:exclude_index]
+        raise PgPower::IndexExistsError, "The index, #{index_name(from_table, options[:column])}, already exists.  Use :exclude_index => true when adding the foreign key."
+      end
 
       sql = "ALTER TABLE #{quote_table_name(from_table)} #{add_foreign_key_sql(from_table, to_table, options)}"
       execute(sql)
 
-      add_index(from_table, options[:column]) unless options[:exclude_index] or index_exists
+      add_index(from_table, options[:column]) unless options[:exclude_index]
     end
 
     # Returns chunk of SQL to add foreign key based on table names and options.

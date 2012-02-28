@@ -71,10 +71,10 @@ ActiveRecord::Schema.define(:version => 20120209094937) do
 
   set_column_comment 'demography.countries', 'name', 'Country name'
 
- add_foreign_key "demography.cities", "demography.countries", :name => "demography_cities_country_id_fk", :column => "country_id"
+ add_foreign_key "demography.cities", "demography.countries", :name => "demography_cities_country_id_fk", :column => "country_id", :exclude_index => true
 
- add_foreign_key "demography.citizens", "public.users", :name => "demography_citizens_user_id_fk", :column => "user_id"
+ add_foreign_key "demography.citizens", "public.users", :name => "demography_citizens_user_id_fk", :column => "user_id", :exclude_index => true
 
- add_foreign_key "pets", "public.users", :name => "pets_user_id_fk", :column => "user_id"
+ add_foreign_key "pets", "public.users", :name => "pets_user_id_fk", :column => "user_id", :exclude_index => true
 
 end
