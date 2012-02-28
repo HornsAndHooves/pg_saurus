@@ -26,17 +26,14 @@ describe ActiveRecord::SchemaDumper do
     end
 
     context 'Indexes' do
+      # This index is added via add_foreign_key
       it 'dumps indexes' do
-        @dump.should =~ /add_index "users", \["name"\]/
+        @dump.should =~ /add_index "pets", \["user_id"\]/
       end
 
+      # This index is added via add_foreign_key
       it 'dumps indexes from non-public schemas' do
-        @dump.should =~ /add_index "demography.citizens", \["country_id"\]/
-      end
-
-      # Double checking that indexes, created via add_foreign_key, are dumped
-      it 'dumps foreign key indexes' do
-        @dump.should =~ /add_index "demography.citizens", \["user_id"\]/
+        @dump.should =~ /add_index "demography.cities", \["country_id"\]/
       end
     end
 

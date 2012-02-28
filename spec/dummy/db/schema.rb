@@ -17,8 +17,11 @@ ActiveRecord::Schema.define(:version => 20120209094937) do
   create_table "pets", :force => true do |t|
     t.string  "name"
     t.integer "user_id"
+    t.integer "country_id"
+    t.integer "citizen_id"
   end
 
+  add_index "pets", ["country_id"], :name => "index_pets_on_country_id"
   add_index "pets", ["user_id"], :name => "index_pets_on_user_id"
 
   create_table "users", :force => true do |t|
@@ -42,9 +45,6 @@ ActiveRecord::Schema.define(:version => 20120209094937) do
     t.datetime "updated_at"
   end
 
-  add_index "demography.citizens", ["country_id"], :name => "index_demography.citizens_on_country_id"
-  add_index "demography.citizens", ["user_id"], :name => "index_demography.citizens_on_user_id"
-
   create_table "demography.countries", :force => true do |t|
     t.string   "name"
     t.string   "continent"
@@ -56,6 +56,8 @@ ActiveRecord::Schema.define(:version => 20120209094937) do
     t.integer "country_id"
     t.integer "name"
   end
+
+  add_index "demography.cities", ["country_id"], :name => "index_demography_cities_on_country_id"
 
   set_table_comment 'users', 'Information about users'
   set_column_comment 'users', 'name', 'User name'
