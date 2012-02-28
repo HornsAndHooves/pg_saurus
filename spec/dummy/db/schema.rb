@@ -53,7 +53,7 @@ ActiveRecord::Schema.define(:version => 20120224204546) do
     t.boolean  "active",     :default => false, :null => false
   end
 
-  add_index "demography.citizens", ["country_id", "user_id"], :name => "index_demography_citizens_on_country_id_and_user_id_and_active", :unique => true, :where => "active"
+  add_index "demography.citizens", ["country_id", "user_id"], :name => "index_demography.citizens_on_country_id_and_user_id", :where => "active"
   add_index "demography.citizens", ["country_id"], :name => "index_demography.citizens_on_country_id"
   add_index "demography.citizens", ["user_id"], :name => "index_demography.citizens_on_user_id"
 

@@ -25,9 +25,7 @@ describe ActiveRecord::SchemaDumper do
         @dump.should =~ /add_index "demography\.citizens", \["country_id"\]/
         @dump.should =~ /add_index "demography\.citizens", \["user_id"\]/
 
-        # verify that the dump includes standard add_index options
-        @dump.should =~ /add_index "demography.citizens", \["country_id", "user_id"\].*:unique => true/
-        # verify that the dump includes pg_power add_index options
+        # verify that the dump includes pg_power options
         @dump.should =~ /add_index "demography.citizens", \["country_id", "user_id"\].*:where => "active"/
       end
     end

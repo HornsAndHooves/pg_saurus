@@ -4,18 +4,26 @@ module ActiveRecord # :nodoc:
     # Patched methods::
     #   * indexes
     class PostgreSQLAdapter
+
       # Returns an array of indexes for the given table.
       #
-      # == Patch reason:
+      # == Patch 1 reason:
       # Since {ActiveRecord::SchemaDumper#tables} is patched to process tables
       # with a schema prefix, the {#indexes} method receives table_name as
       # "<schema>.<table>". This patch allows it to handle table names with
       # a schema prefix.
       #
-      # == Patch:
+      # == Patch 1:
       # Search using provided schema if table_name includes schema name.
       #
-      #  TODO add notes for index patch
+      # == Patch 2 reason:
+      # {ActiveRecord::ConnectionAdapters::PostgreSQLAdapter#indexes} is patched
+      # to support partial indexes using :where clause.
+      #
+      # == Patch 2:
+      # Search the postgres indexdef for the where clause and pass the output to
+      # the custom {PgPower::ConnectionAdapters::IndexDefinition}
+      #
       def indexes(table_name, name = nil)
         schema, table = extract_schema_and_table(table_name)
         schemas = schema ? "ARRAY['#{schema}']" : 'current_schemas(false)'
@@ -47,7 +55,7 @@ module ActiveRecord # :nodoc:
           SQL
 
           column_names = columns.values_at(*indkey).compact
-          # TODO write documentation
+
           where = inddef.scan(/WHERE (.+)$/).flatten[0]
 
           column_names.empty? ? nil : PgPower::ConnectionAdapters::IndexDefinition.new(table_name, index_name, unique, column_names, [], where)
