@@ -1,10 +1,10 @@
-# Provides methods to extend {ActiveRecord::ConnectionAdapters::PostgreSQLAdapter}
-# to support foreign keys feature.
-module PgPower
+module PgPower # :nodoc:
   # Raised when an unexpected index exists
   class IndexExistsError < StandardError
   end
 
+  # Provides methods to extend {ActiveRecord::ConnectionAdapters::PostgreSQLAdapter}
+  # to support foreign keys feature.
   module ConnectionAdapters::PostgreSQLAdapter::ForeignerMethods
     def supports_foreign_keys?
       true
