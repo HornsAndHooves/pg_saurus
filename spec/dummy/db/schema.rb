@@ -17,7 +17,12 @@ ActiveRecord::Schema.define(:version => 20120209094937) do
   create_table "pets", :force => true do |t|
     t.string  "name"
     t.integer "user_id"
+    t.integer "country_id"
+    t.integer "citizen_id"
   end
+
+  add_index "pets", ["country_id"], :name => "index_pets_on_country_id"
+  add_index "pets", ["user_id"], :name => "index_pets_on_user_id"
 
   create_table "users", :force => true do |t|
     t.string   "name"
@@ -28,18 +33,6 @@ ActiveRecord::Schema.define(:version => 20120209094937) do
   end
 
   add_index "users", ["name"], :name => "index_users_on_name"
-
-  create_table "demography.cities", :force => true do |t|
-    t.integer "country_id"
-    t.integer "name"
-  end
-
-  create_table "demography.countries", :force => true do |t|
-    t.string   "name"
-    t.string   "continent"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
 
   create_table "demography.citizens", :force => true do |t|
     t.integer  "country_id"
@@ -52,8 +45,19 @@ ActiveRecord::Schema.define(:version => 20120209094937) do
     t.datetime "updated_at"
   end
 
-  add_index "demography.citizens", ["country_id"], :name => "index_demography.citizens_on_country_id"
-  add_index "demography.citizens", ["user_id"], :name => "index_demography.citizens_on_user_id"
+  create_table "demography.countries", :force => true do |t|
+    t.string   "name"
+    t.string   "continent"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "demography.cities", :force => true do |t|
+    t.integer "country_id"
+    t.integer "name"
+  end
+
+  add_index "demography.cities", ["country_id"], :name => "index_demography_cities_on_country_id"
 
   set_table_comment 'users', 'Information about users'
   set_column_comment 'users', 'name', 'User name'
@@ -67,10 +71,10 @@ ActiveRecord::Schema.define(:version => 20120209094937) do
 
   set_column_comment 'demography.countries', 'name', 'Country name'
 
- add_foreign_key "demography.cities", "demography.countries", :name => "demography_cities_country_id_fk", :column => "country_id"
+ add_foreign_key "demography.cities", "demography.countries", :name => "demography_cities_country_id_fk", :column => "country_id", :exclude_index => true
 
- add_foreign_key "demography.citizens", "public.users", :name => "demography_citizens_user_id_fk", :column => "user_id"
+ add_foreign_key "demography.citizens", "public.users", :name => "demography_citizens_user_id_fk", :column => "user_id", :exclude_index => true
 
- add_foreign_key "pets", "public.users", :name => "pets_user_id_fk", :column => "user_id"
+ add_foreign_key "pets", "public.users", :name => "pets_user_id_fk", :column => "user_id", :exclude_index => true
 
 end

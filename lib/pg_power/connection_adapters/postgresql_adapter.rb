@@ -7,8 +7,10 @@ module PgPower::ConnectionAdapters::PostgreSQLAdapter
   autoload :SchemaMethods   , 'pg_power/connection_adapters/postgresql_adapter/schema_methods'
   autoload :CommentMethods  , 'pg_power/connection_adapters/postgresql_adapter/comment_methods'
   autoload :ForeignerMethods, 'pg_power/connection_adapters/postgresql_adapter/foreigner_methods'
+  autoload :IndexMethods    , 'pg_power/connection_adapters/postgresql_adapter/index_methods'
 
   include SchemaMethods
   include CommentMethods
   include ForeignerMethods
+  include IndexMethods
 end
