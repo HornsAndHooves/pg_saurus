@@ -48,6 +48,17 @@ module PgPower::Explorer
     SQL
   end
 
+  def table_exists?(table_name)
+    schema, table = to_schema_and_table(table_name)
+    !!connection.query(<<-SQL).flatten.first
+      SELECT *
+      FROM pg_class
+        INNER JOIN pg_namespace ON pg_class.relnamespace = pg_namespace.oid
+      WHERE pg_class.relname = '#{table}'
+        AND pg_namespace.nspname = '#{schema}'
+    SQL
+  end
+
 
   private
 

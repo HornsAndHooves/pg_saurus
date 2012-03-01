@@ -26,9 +26,9 @@ In migrations you can use `create_schema` and `drop_schema` methods like this:
 
 ### Create table
 
-Use schema prefix in you table name:
+Use schema `:schema` option to specify schema name:
 
-    create_table "demography.countries" do |t|
+    create_table "countries", :schema => "demography" do |t|
       # columns goes here
     end
 
