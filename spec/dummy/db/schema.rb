@@ -37,6 +37,13 @@ ActiveRecord::Schema.define(:version => 20120224204546) do
 
   add_index "users", ["name"], :name => "index_users_on_name"
 
+  create_table "demography.cities", :force => true do |t|
+    t.integer "country_id"
+    t.integer "name"
+  end
+
+  add_index "demography.cities", ["country_id"], :name => "index_demography_cities_on_country_id"
+
   create_table "demography.citizens", :force => true do |t|
     t.integer  "country_id"
     t.integer  "user_id"
@@ -57,13 +64,6 @@ ActiveRecord::Schema.define(:version => 20120224204546) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
-  create_table "demography.cities", :force => true do |t|
-    t.integer "country_id"
-    t.integer "name"
-  end
-
-  add_index "demography.cities", ["country_id"], :name => "index_demography_cities_on_country_id"
 
   set_table_comment 'users', 'Information about users'
   set_column_comment 'users', 'name', 'User name'

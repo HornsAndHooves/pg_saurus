@@ -35,14 +35,15 @@ module PgPower::SchemaDumper::SchemaMethods
   end
   private :non_public_schema_tables
 
-  # Returns the list of non public schema tables
+  # Returns a sorted list of non-public schema tables
   # Usage:
-  #   get_non_public_schema_table_names # => ['demography.countries', 'demography.cities', 'politics.members']
+  #   get_non_public_schema_table_names # => ['demography.cities','demography.countries','politics.members']
   def get_non_public_schema_table_names
     result = @connection.query(<<-SQL, 'SCHEMA')
       SELECT schemaname || '.' || tablename
       FROM pg_tables
       WHERE schemaname NOT IN ('pg_catalog', 'information_schema', 'public')
+      ORDER BY schemaname, tablename
     SQL
     result.flatten
   end
