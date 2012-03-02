@@ -21,12 +21,9 @@ module ActiveRecord
       #  # Check that a partial index exists
       #  index_exists?(:suppliers, :company_id, :where => 'active')
       #
-      #  # Note that index_exist? may return a false positive if the options passed in
-      #  # are only a subset of a given index's options.  This does not differ from the Rails implementation
-      #  # but may not be what is expected.
       #  # GIVEN: "index_suppliers_on_company_id" UNIQUE, btree (company_id) WHERE active
-      #  index_exists?(:suppliers, :company_id, :where => 'active') => true
-      #  index_exists?(:suppliers, :company_id, :unique => true) => true
+      #  index_exists?(:suppliers, :company_id, :unique => true, :where => 'active') => true
+      #  index_exists?(:suppliers, :company_id, :unique => true) => false
       #
       def index_exists?(table_name, column_name, options = {})
         column_names = Array.wrap(column_name)
@@ -39,10 +36,29 @@ module ActiveRecord
         # Add a comparator for each index option that is part of the query
         index_options = [:unique, :where]
         index_options.each do |index_option|
-          comparators << lambda { |index| index.send(index_option) == options[index_option]} if options.key?(index_option)
+          comparators << if options.key?(index_option)
+            lambda do |index|
+              pg_where_clause = index.send(index_option)
+              # pg does nothing to boolean clauses, e.g. 'where active' => 'where active'
+              if pg_where_clause.is_a?(TrueClass) or pg_where_clause.is_a?(FalseClass)
+                pg_where_clause == options[index_option]
+              else
+                # pg adds parentheses around non-boolean clauses, e.g. 'where color IS NULL' => 'where (color is NULL)'
+                pg_where_clause.gsub!(/[()]/,'')
+                # pg casts string comparison ::text. e.g. "where color = 'black'" => "where ((color)::text = 'black'::text)"
+                pg_where_clause.gsub!(/::text/,'')
+                # prevent case from impacting the comparison
+                pg_where_clause.downcase == options[index_option].downcase
+              end
+            end
+          else
+            # If the given index_option is not an argument to the index_exists? query,
+            # select only those pg indexes that do not have the component
+            lambda { |index| index.send(index_option).blank? }
+          end
         end
 
-        # Search indexes for any that match all comparators
+        # Search all indexes for any that match all comparators
         indexes(table_name).any? do |index|
           comparators.inject(true) { |ret, comparator| ret && comparator.call(index) }
         end

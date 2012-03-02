@@ -16,7 +16,7 @@ module PgPower::ConnectionAdapters::PostgreSQLAdapter::IndexMethods
   #  CREATE INDEX "index_demography.citizens_on_country_id" ON "demography"."citizens" ("country_id")
   #
   def index_name(table_name, options) #:nodoc:
-    super(table_name.gsub('.','_'), options)
+    super.gsub('.','_')
   end
 
   # Overrides ActiveRecord::ConnectionAdapters::SchemaStatements.index_name_for_remove

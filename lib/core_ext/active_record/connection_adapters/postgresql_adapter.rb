@@ -58,7 +58,9 @@ module ActiveRecord # :nodoc:
 
           where = inddef.scan(/WHERE (.+)$/).flatten[0]
 
-          column_names.empty? ? nil : PgPower::ConnectionAdapters::IndexDefinition.new(table_name, index_name, unique, column_names, [], where)
+          # TODO Update lengths once we merge in ActiveRecord code that supports it.
+          lengths = []
+          column_names.empty? ? nil : PgPower::ConnectionAdapters::IndexDefinition.new(table_name, index_name, unique, column_names, lengths, where)
         end.compact
       end
 

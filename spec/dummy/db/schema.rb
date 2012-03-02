@@ -16,11 +16,14 @@ ActiveRecord::Schema.define(:version => 20120224204546) do
 
   create_table "pets", :force => true do |t|
     t.string  "name"
+    t.string  "color"
     t.integer "user_id"
     t.integer "country_id"
     t.integer "citizen_id"
+    t.boolean "active",     :default => true
   end
 
+  add_index "pets", ["color"], :name => "index_pets_on_color"
   add_index "pets", ["country_id"], :name => "index_pets_on_country_id"
   add_index "pets", ["user_id"], :name => "index_pets_on_user_id"
 
@@ -46,7 +49,7 @@ ActiveRecord::Schema.define(:version => 20120224204546) do
     t.boolean  "active",     :default => false, :null => false
   end
 
-  add_index "demography.citizens", ["country_id", "user_id"], :name => "index_demography_citizens_on_country_id_and_user_id", :where => "active"
+  add_index "demography.citizens", ["country_id", "user_id"], :name => "index_demography_citizens_on_country_id_and_user_id", :unique => true, :where => "active"
 
   create_table "demography.countries", :force => true do |t|
     t.string   "name"

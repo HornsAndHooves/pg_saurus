@@ -3,20 +3,76 @@ require 'spec_helper'
 describe 'Indexes' do
   describe '#add_index' do
     it 'should be built with the :where option' do
-      index_options = {:where => 'active'}
-      PgPower::Explorer.index_exists?('demography.citizens', [:country_id, :user_id], index_options).should == true
+      index_options = {:where => "active"}
+
+      ActiveRecord::Migration.add_index(:pets, :name, index_options)
+
+      PgPower::Explorer.index_exists?(:pets, :name, index_options).should == true
     end
   end
 
   describe '#index_exists' do
-    it 'should be true for a valid :where option' do
-      index_options = {:where => 'active'}
+    it 'should be true for simple options' do
+      PgPower::Explorer.index_exists?('pets', :color).should == true
+    end
+
+    it 'should support table name as a symbol' do
+      PgPower::Explorer.index_exists?(:pets, :color).should == true
+    end
+
+    it 'should be true for simple options on a schema table' do
+      PgPower::Explorer.index_exists?('demography.cities', :country_id).should == true
+    end
+
+    it 'should be true for a valid set of options' do
+      index_options = {:unique => true, :where => 'active'}
       PgPower::Explorer.index_exists?('demography.citizens', [:country_id, :user_id], index_options).should == true
     end
 
-    it 'should be false for an invalid :where option' do
+    it 'should be true for a valid set of options including name' do
+      index_options = {:unique => true, :where => 'active', :name => 'index_demography_citizens_on_country_id_and_user_id'}
+      PgPower::Explorer.index_exists?('demography.citizens', [:country_id, :user_id], index_options).should == true
+    end
+
+    it 'should be false for a subset of valid options' do
+      index_options = {:where => 'active'}
+      PgPower::Explorer.index_exists?('demography.citizens', [:country_id, :user_id], index_options).should == false
+    end
+
+    it 'should be false for invalid options' do
       index_options = {:where => 'active'}
       PgPower::Explorer.index_exists?('demography.citizens', [:country_id], index_options).should == false
     end
+
+    it 'should be true for a :where clause that includes boolean comparison' do
+      index_options = {:where => 'active'}
+      ActiveRecord::Migration.add_index(:pets, :name, index_options)
+      PgPower::Explorer.index_exists?(:pets, :name, index_options).should == true
+    end
+
+    it 'should be true for a :where clause that includes text comparison' do
+      index_options = {:where => "color = 'black'"}
+      ActiveRecord::Migration.add_index(:pets, :name, index_options)
+      PgPower::Explorer.index_exists?(:pets, :name, index_options).should == true
+    end
+
+    it 'should be true for a :where clause that includes NULL comparison' do
+      index_options = {:where => 'color IS NULL'}
+      ActiveRecord::Migration.add_index(:pets, :name, index_options)
+      PgPower::Explorer.index_exists?(:pets, :name, index_options).should == true
+    end
+
+    it 'should be true for a :where clause that includes integer comparison' do
+      index_options = {:where => 'id = 4'}
+      ActiveRecord::Migration.add_index(:pets, :name, index_options)
+      PgPower::Explorer.index_exists?(:pets, :name, index_options).should == true
+    end
+
+    it 'should be true for a compound :where clause' do
+      index_options = {:where => "id = 4 and color = 'black' and active"}
+      ActiveRecord::Migration.add_index(:pets, :name, index_options)
+      PgPower::Explorer.index_exists?(:pets, :name, index_options).should == true
+    end
+
   end
 end
