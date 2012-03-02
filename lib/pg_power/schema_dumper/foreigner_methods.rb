@@ -41,6 +41,12 @@ module PgPower::SchemaDumper::ForeignerMethods
           statement_parts << (':dependent => ' + foreign_key.options[:dependent].inspect)
         end
 
+        # Always exclude the index
+        #  If an index was created in a migration, it will get dumped to the schema
+        #  separately from the foreign key.  This will raise an exception if
+        #  add_foreign_key is run without :exclude_index => true.
+        statement_parts << (':exclude_index => true')
+
         ' ' + statement_parts.join(', ')
       end
 

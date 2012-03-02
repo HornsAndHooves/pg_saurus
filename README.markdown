@@ -100,8 +100,11 @@ Remove comments:
 ## Foreign keys
 
 We imported some code of [foreigner](https://github.com/matthuhiggins/foreigner)
-gem and patched it to be schema-aware. So you should disable `foreigner` in your
-Gemfile if you want to use `pg_power`.
+gem and patched it to be schema-aware. We also added support for index auto-generation.
+
+You should disable `foreigner` in your Gemfile if you want to use `pg_power`.
+
+If you do not want to generate an index, pass the :exclude_index => true option.
 
 The syntax is compatible with `foreigner`:
 
@@ -117,6 +120,12 @@ Specify name of foreign key constraint:
 
 It works with schemas as expected:
     add_foreign_key('blog.comments', 'blog.posts')
+
+Adds the index 'index_comments_on_post_id':
+    add_foreign_key(:comments, :posts)
+
+Does not add an index:
+    add_foreign_key(:comments, :posts, :exclude_index => true)
 
 ## Partial Indexes
 

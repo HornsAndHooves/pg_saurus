@@ -3,16 +3,13 @@ class CreateDemographyCitizens < ActiveRecord::Migration
     create_table 'demography.citizens' do |t|
       t.integer :country_id
       t.integer :user_id
-      t.string :first_name 
+      t.string :first_name
       t.string :last_name
       t.date :birthday
       t.text :bio
 
       t.timestamps
     end
-
-    add_index('demography.citizens', :country_id)
-    add_index('demography.citizens', :user_id)
 
     set_table_comment 'demography.citizens', "Citizens Info"
 
