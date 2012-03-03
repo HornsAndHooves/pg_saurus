@@ -60,15 +60,17 @@ module PgPower::Explorer
   end
 
 
-  private
+# private
 
   def to_schema_and_table(table_name)
     table, schema = table_name.to_s.split(".", 2).reverse
     schema ||= "public" 
     [schema, table]
   end
+  private :to_schema_and_table
 
   def connection
     ActiveRecord::Base.connection
   end
+  private :connection
 end
