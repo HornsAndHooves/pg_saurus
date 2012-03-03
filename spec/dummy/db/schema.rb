@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120209094937) do
+ActiveRecord::Schema.define(:version => 20120301171826) do
 
   create_schema "demography"
 
@@ -33,6 +33,11 @@ ActiveRecord::Schema.define(:version => 20120209094937) do
   end
 
   add_index "users", ["name"], :name => "index_users_on_name"
+
+  create_table "demography.population_statistics", :force => true do |t|
+    t.integer "year"
+    t.integer "population"
+  end
 
   create_table "demography.citizens", :force => true do |t|
     t.integer  "country_id"

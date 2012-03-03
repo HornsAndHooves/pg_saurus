@@ -26,7 +26,7 @@ module PgPower::Explorer
         JOIN pg_class c on c.oid = d.objoid
         JOIN pg_attribute a ON c.oid = a.attrelid AND a.attnum = d.objsubid
         JOIN pg_namespace ON c.relnamespace = pg_namespace.oid
-      WHERE c.relkind = 'r'
+      WHERE c.relkind = 'r' 
         AND c.relname = '#{table}'
         AND pg_namespace.nspname = '#{schema}'
         AND a.attname = '#{column}'
@@ -38,7 +38,7 @@ module PgPower::Explorer
 
     !!connection.query(<<-SQL).flatten.first
       SELECT tc.constraint_name
-      FROM information_schema.table_constraints AS tc
+      FROM information_schema.table_constraints AS tc 
         JOIN information_schema.key_column_usage AS kcu ON tc.constraint_name = kcu.constraint_name
         JOIN information_schema.constraint_column_usage AS ccu ON ccu.constraint_name = tc.constraint_name
       WHERE constraint_type = 'FOREIGN KEY'
@@ -52,15 +52,29 @@ module PgPower::Explorer
     connection.index_exists?(table_name, column)
   end
 
-  private
+  def table_exists?(table_name)
+    schema, table = to_schema_and_table(table_name)
+    !!connection.query(<<-SQL).flatten.first
+      SELECT *
+      FROM pg_class
+        INNER JOIN pg_namespace ON pg_class.relnamespace = pg_namespace.oid
+      WHERE pg_class.relname = '#{table}'
+        AND pg_namespace.nspname = '#{schema}'
+    SQL
+  end
+
+
+# private
 
   def to_schema_and_table(table_name)
     table, schema = table_name.to_s.split(".", 2).reverse
-    schema ||= "public"
+    schema ||= "public" 
     [schema, table]
   end
+  private :to_schema_and_table
 
   def connection
     ActiveRecord::Base.connection
   end
+  private :connection
 end
