@@ -13,6 +13,8 @@
 ActiveRecord::Schema.define(:version => 20120224204546) do
 
   create_schema "demography"
+  create_schema "later"
+  create_schema "latest"
 
   create_table "pets", :force => true do |t|
     t.string  "name"

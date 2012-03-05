@@ -22,7 +22,7 @@ module PgPower
 
     # Returns an array of existing schemas.
     def schemas
-      sql = "SELECT nspname FROM pg_namespace WHERE nspname !~ '^pg_.*'"
+      sql = "SELECT nspname FROM pg_namespace WHERE nspname !~ '^pg_.*' order by nspname"
       ActiveRecord::Base.connection.query(sql).flatten
     end
 
