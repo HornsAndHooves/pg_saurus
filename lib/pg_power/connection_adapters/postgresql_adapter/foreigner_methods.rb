@@ -71,7 +71,7 @@ module PgPower # :nodoc:
     # @param [Hash] options
     #
     def add_foreign_key(from_table, to_table, options = {})
-      options[:column] ||= foreign_key_column_id_from_table_name(to_table)
+      options[:column] ||= id_column_name_from_table_name(to_table)
       options[:exclude_index] ||= false
 
       if index_exists?(from_table, options[:column]) and !options[:exclude_index]
@@ -109,31 +109,43 @@ module PgPower # :nodoc:
     # @param [String, Hash] to_table_or_options_hash
     #
     def remove_foreign_key(from_table, to_table_or_options_hash, options={})
-      execute "ALTER TABLE #{quote_table_name(from_table)} #{remove_foreign_key_sql(from_table, to_table_or_options_hash)}"
+      if Hash === to_table_or_options_hash
+        options = to_table_or_options_hash
+        column = options[:column]
+        foreign_key_name = foreign_key_name(from_table, column, options)
+        column ||= id_column_name_from_foreign_key_metadata(from_table, foreign_key_name)
+      else
+        column = id_column_name_from_table_name(to_table_or_options_hash)
+        foreign_key_name = foreign_key_name(from_table, column)
+      end
+
+      execute "ALTER TABLE #{quote_table_name(from_table)} #{remove_foreign_key_sql(foreign_key_name)}"
 
       options[:exclude_index] ||= false
-      column = (Hash === to_table_or_options_hash) ? to_table_or_options_hash[:column] : foreign_key_column_id_from_table_name(to_table_or_options_hash)
       remove_index(from_table, column) unless options[:exclude_index] || !index_exists?(from_table, column)
     end
 
     # Returns chunk of SQL to  remove foreign key based on table name and options.
-    def remove_foreign_key_sql(from_table, to_table_or_options_hash)
-      if Hash === to_table_or_options_hash
-        foreign_key_name = foreign_key_name(from_table, options[:column], options)
-      else
-        column = foreign_key_column_id_from_table_name(to_table_or_options_hash)
-        foreign_key_name = foreign_key_name(from_table, column)
-      end
-
+    def remove_foreign_key_sql(foreign_key_name)
       "DROP CONSTRAINT #{quote_column_name(foreign_key_name)}"
     end
 
     # Builds the foreign key column id from the referenced table
-    def foreign_key_column_id_from_table_name(table)
+    def id_column_name_from_table_name(table)
       "#{table.to_s.split('.').last.singularize}_id"
     end
-    private :foreign_key_column_id_from_table_name
+    private :id_column_name_from_table_name
 
+    # Extracts the foreign key column id from the foreign key metadata
+    # @param [String, Symbol] from_table
+    # @param [String]         foreign_key_name
+    def id_column_name_from_foreign_key_metadata(from_table, foreign_key_name)
+      keys = foreign_keys(from_table)
+      this_key = keys.find {|key| key.options[:name] == foreign_key_name}
+      this_key.options[:column]
+    end
+    private :id_column_name_from_foreign_key_metadata
+    
     # Builds default name for constraint
     def foreign_key_name(table, column, options = {})
       if options[:name]

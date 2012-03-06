@@ -16,15 +16,30 @@ ActiveRecord::Schema.define(:version => 20120301171826) do
   create_schema "later"
   create_schema "latest"
 
+  create_table "breeds", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "owners", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "pets", :force => true do |t|
     t.string  "name"
     t.string  "color"
     t.integer "user_id"
     t.integer "country_id"
     t.integer "citizen_id"
+    t.integer "breed_id"
+    t.integer "owner_id"
     t.boolean "active",     :default => true
   end
 
+  add_index "pets", ["breed_id"], :name => "index_pets_on_breed_id"
   add_index "pets", ["color"], :name => "index_pets_on_color"
   add_index "pets", ["country_id"], :name => "index_pets_on_country_id"
   add_index "pets", ["user_id"], :name => "index_pets_on_user_id"
