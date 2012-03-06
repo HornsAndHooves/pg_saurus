@@ -48,8 +48,8 @@ module PgPower::Explorer
     SQL
   end
 
-  def index_exists?(table_name, column)
-    connection.index_exists?(table_name, column)
+  def index_exists?(table_name, column_name, options = {})
+    connection.index_exists?(table_name.to_s, column_name, options)
   end
 
   def table_exists?(table_name)
@@ -74,7 +74,7 @@ module PgPower::Explorer
   private :to_schema_and_table
 
   def connection
-    ActiveRecord::Base.connection
+    @connection || ActiveRecord::Base.connection
   end
   private :connection
 end

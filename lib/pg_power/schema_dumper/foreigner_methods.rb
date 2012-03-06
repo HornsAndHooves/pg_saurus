@@ -47,7 +47,7 @@ module PgPower::SchemaDumper::ForeignerMethods
         #  add_foreign_key is run without :exclude_index => true.
         statement_parts << (':exclude_index => true')
 
-        ' ' + statement_parts.join(', ')
+        '  ' + statement_parts.join(', ')
       end
 
       stream.puts add_foreign_key_statements.sort.join("\n")

@@ -12,6 +12,11 @@ describe ActiveRecord::SchemaDumper do
     context 'Schemas' do
       it 'dumps schemas' do
         @dump.should =~ /create_schema "demography"/
+        @dump.should =~ /create_schema "later"/
+        @dump.should =~ /create_schema "latest"/
+      end
+      it 'dumps schemas in alphabetical order' do
+        @dump.should =~ /create_schema "demography".*create_schema "later".*create_schema "latest"/m
       end
     end
 
@@ -26,9 +31,15 @@ describe ActiveRecord::SchemaDumper do
     end
 
     context 'Indexes' do
-      # This index is added via add_foreign_key
       it 'dumps indexes' do
+        # added via standard add_index
+        @dump.should =~ /add_index "users", \["name"\]/
+        # added via foreign key
         @dump.should =~ /add_index "pets", \["user_id"\]/
+        # foreign key :exclude_index
+        @dump.should_not =~ /add_index "demography\.citizens", \["user_id"\]/
+        # partial index
+        @dump.should =~ /add_index "demography.citizens", \["country_id", "user_id"\].*:where => "active"/
       end
 
       # This index is added via add_foreign_key

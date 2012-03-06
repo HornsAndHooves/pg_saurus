@@ -4,6 +4,7 @@ require "pg_power/engine"
 # * Schemas.
 # * Comments on columns and tables.
 # * Foreign keys.
+# * Partial indexes.
 module PgPower
   extend ActiveSupport::Autoload
 

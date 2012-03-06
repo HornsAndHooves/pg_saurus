@@ -5,6 +5,7 @@ ActiveRecord extension to get more from PostgreSQL:
 * Create/drop schemas.
 * Set/remove comments on columns and tables.
 * Use foreign keys.
+* Use partial indexes.
 
 ## Environment notes
 
@@ -103,8 +104,7 @@ gem and patched it to be schema-aware. We also added support for index auto-gene
 
 You should disable `foreigner` in your Gemfile if you want to use `pg_power`.
 
-  If you do
-not want to generate an index, pass the :exclude_index => true option.
+If you do not want to generate an index, pass the :exclude_index => true option.
 
 The syntax is compatible with `foreigner`:
 
@@ -127,14 +127,30 @@ Adds the index 'index_comments_on_post_id':
 Does not add an index:
     add_foreign_key(:comments, :posts, :exclude_index => true)
 
+## Partial Indexes
+
+We used a Rails 4.x [pull request](https://github.com/rails/rails/pull/4956) as a
+starting point, backported to Rails 3.1.x and patched it to be schema-aware.
+
+### Examples
+
+Add a partial index to a table
+
+    add_index(:comments, [:country_id, :user_id], :where => 'active')
+
+Add a partial index to a schema table
+
+    add_index('blog.comments', :user_id, :where => 'active')
+
 ## Tools
 
 PgPower::Tools provides number of useful methods:
 
-    PgPower::Tools.create_schema "services"  # => create new PG schema "services"
-    PgPower::Tools.create_schema "nets"
-    PgPower::Tools.drop_schema "services"    # => remove the schema
-    PgPower::Tools.schemas                   # => ["public", "information_schema", "nets"]
+    PgPower::Tools.create_schema "services"                 # => create new PG schema "services"
+    PgPower::Tools.create_schema "nets"                     # => create new PG schema "nets"
+    PgPower::Tools.drop_schema "services"                   # => remove the PG schema "services"
+    PgPower::Tools.schemas                                  # => ["public", "information_schema", "nets"]
+    PgPower::Tools.index_exists?(table, columns, options)   # => returns true if an index exists for the given params
 
 ## Running tests:
 

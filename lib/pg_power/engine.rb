@@ -5,7 +5,11 @@ module PgPower
     initializer 'pg_power' do
       ActiveSupport.on_load(:active_record) do
         # load monkey patches
-        require PgPower::Engine.root + 'lib/core_ext/active_record/connection_adapters/postgresql_adapter'
+        ['schema_dumper',
+         'connection_adapters/postgresql_adapter',
+         'connection_adapters/abstract/schema_statements'].each do |path|
+          require PgPower::Engine.root + 'lib/core_ext/active_record/' + path
+        end
 
         ActiveRecord::SchemaDumper.class_eval do
           include PgPower::SchemaDumper
@@ -36,7 +40,7 @@ module PgPower
         end
 
       end
-    end 
+    end
 
   end
 end

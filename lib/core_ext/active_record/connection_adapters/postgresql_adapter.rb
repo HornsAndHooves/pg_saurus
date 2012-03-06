@@ -4,22 +4,32 @@ module ActiveRecord # :nodoc:
     # Patched methods::
     #   * indexes
     class PostgreSQLAdapter
+
       # Returns an array of indexes for the given table.
       #
-      # == Patch reason:
+      # == Patch 1 reason:
       # Since {ActiveRecord::SchemaDumper#tables} is patched to process tables
       # with a schema prefix, the {#indexes} method receives table_name as
       # "<schema>.<table>". This patch allows it to handle table names with
       # a schema prefix.
       #
-      # == Patch:
+      # == Patch 1:
       # Search using provided schema if table_name includes schema name.
+      #
+      # == Patch 2 reason:
+      # {ActiveRecord::ConnectionAdapters::PostgreSQLAdapter#indexes} is patched
+      # to support partial indexes using :where clause.
+      #
+      # == Patch 2:
+      # Search the postgres indexdef for the where clause and pass the output to
+      # the custom {PgPower::ConnectionAdapters::IndexDefinition}
+      #
       def indexes(table_name, name = nil)
         schema, table = extract_schema_and_table(table_name)
         schemas = schema ? "ARRAY['#{schema}']" : 'current_schemas(false)'
 
         result = query(<<-SQL, name)
-          SELECT distinct i.relname, d.indisunique, d.indkey, t.oid
+          SELECT distinct i.relname, d.indisunique, d.indkey,  pg_get_indexdef(d.indexrelid), t.oid
           FROM pg_class t
           INNER JOIN pg_index d ON t.oid = d.indrelid
           INNER JOIN pg_class i ON d.indexrelid = i.oid
@@ -30,12 +40,12 @@ module ActiveRecord # :nodoc:
          ORDER BY i.relname
         SQL
 
-
         result.map do |row|
           index_name = row[0]
           unique = row[1] == 't'
           indkey = row[2].split(" ")
-          oid = row[3]
+          inddef = row[3]
+          oid = row[4]
 
           columns = Hash[query(<<-SQL, "Columns for index #{row[0]} on #{table_name}")]
           SELECT a.attnum, a.attname
@@ -45,7 +55,12 @@ module ActiveRecord # :nodoc:
           SQL
 
           column_names = columns.values_at(*indkey).compact
-          column_names.empty? ? nil : IndexDefinition.new(table_name, index_name, unique, column_names)
+
+          where = inddef.scan(/WHERE (.+)$/).flatten[0]
+
+          # TODO Update lengths once we merge in ActiveRecord code that supports it. -dresselm 20120305
+          lengths = []
+          column_names.empty? ? nil : PgPower::ConnectionAdapters::IndexDefinition.new(table_name, index_name, unique, column_names, lengths, where)
         end.compact
       end
 
