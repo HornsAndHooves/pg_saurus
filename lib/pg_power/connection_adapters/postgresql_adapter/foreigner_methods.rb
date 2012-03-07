@@ -108,6 +108,14 @@ module PgPower # :nodoc:
     # @param [String, Symbol] from_table
     # @param [String, Hash] to_table_or_options_hash
     #
+    # The flexible method signature allows calls of two principal forms. Examples:
+    #
+    #   remove_foreign_key(from_table, options_hash)
+    #
+    # or:
+    #
+    #   remove_foreign_key(from_table, to_table, options_hash)
+    #
     def remove_foreign_key(from_table, to_table_or_options_hash, options={})
       if Hash === to_table_or_options_hash
         options = to_table_or_options_hash
