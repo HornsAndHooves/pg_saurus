@@ -6,6 +6,8 @@ class CreatePets < ActiveRecord::Migration
       t.integer :user_id
       t.integer :country_id
       t.integer :citizen_id
+      t.integer :breed_id
+      t.integer :owner_id
       t.boolean :active, :default => true
     end
 

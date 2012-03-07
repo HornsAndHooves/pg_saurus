@@ -30,20 +30,28 @@ describe 'Foreign keys' do
   describe '#remove_foreign_key' do
     # RemoveForeignKeys migration
     #   remove_foreign_key 'demography.citizens', 'demography.countries'
+    #   remove_foreign_key 'pets', :name => "pets_owner_id_fk"
     it 'removes foreign key' do
       PgPower::Explorer.has_foreign_key?('demography.citizens', :country_id).should == false
+      PgPower::Explorer.has_foreign_key?('pets', :owner_id).should == false
     end
 
     # RemoveForeignKeys migration
     #   remove_foreign_key 'demography.citizens', 'demography.countries'
+    #   remove_foreign_key 'pets', :name => "pets_owner_id_fk"
     it 'removes the index on the foreign key' do
       PgPower::Explorer.index_exists?('demography.citizens', :country_id).should == false
+      PgPower::Explorer.index_exists?('pets', :owner_id).should == false
     end
 
     # RemoveForeignKeys migration
     #   remove_foreign_key 'pets', 'demography.countries', :exclude_index => true
-    it 'should not remove the index when :exclude_index is true' do
+    #   remove_foreign_key 'pets', :name => "pets_breed_id_fk", :exclude_index => true
+    it 'should remove foreign key but not remove the index when :exclude_index is true' do
+      PgPower::Explorer.has_foreign_key?('pets', :country_id).should == false
+      PgPower::Explorer.has_foreign_key?('pets', :breed_id).should == false
       PgPower::Explorer.index_exists?('pets', :country_id).should == true
+      PgPower::Explorer.index_exists?('pets', :breed_id).should == true
     end
 
     it 'should not raise an exception if the index does not exist' do
