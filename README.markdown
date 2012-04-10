@@ -158,6 +158,11 @@ PgPower::Tools provides number of useful methods:
 * Run `rake spec`.
 * Make sure migrations don't raise exceptions and all specs pass.
 
+## Deploying to GemFury
+Make sure you have an account on GemFury and it has been made a collaborator of the TMXCredit corporate account, then run:
+
+    rake gemfury:push
+
 ## TODO:
 
 Add next syntax to create table:
