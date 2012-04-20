@@ -49,9 +49,21 @@ module PgPower # :nodoc:
       end
     end
 
-    # Disables triggers and drops tables.
+    # (optionally disable triggers) and drop table
+    # changes adapted from https://github.com/matthuhiggins/foreigner/blob/e72ab9c454c156056d3f037d55e3359cd972af32/lib/foreigner/connection_adapters/sql2003.rb
+    # NOTE: disabling referential integrity requires superuser access in postgres.  Default AR behavior is to just drop_table.
+    #
+    # == Options:
+    # * :force - force disabling of referential integrity
+    #
+    # Note: I don't know a good way to test this -mike 20120420
     def drop_table(*args)
-      disable_referential_integrity { super }
+      options = args.clone.extract_options!
+      if options[:force]
+        disable_referential_integrity { super }
+      else
+        super
+      end
     end
 
     # Adds foreign key.

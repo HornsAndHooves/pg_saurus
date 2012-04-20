@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    pg_power (0.1.4)
+    pg_power (0.1.5)
       pg
       pg_power
       rails (~> 3.1.3)
