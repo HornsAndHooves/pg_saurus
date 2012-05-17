@@ -24,6 +24,13 @@ describe 'Indexes' do
 
       PgPower::Explorer.index_exists?(:pets, ["(color || ' ' || name)"] ).should be_true
     end
+
+    it "blah" do
+      opts = {:where => 'color IS NULL'}
+
+      ActiveRecord::Migration.add_index(:pets, ['upper(name)'], opts)
+      PgPower::Explorer.index_exists?(:pets, ['upper(name'], opts).should be_true
+    end
   end
 
   describe '#remove_index' do
