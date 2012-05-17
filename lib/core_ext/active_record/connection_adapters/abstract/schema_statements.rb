@@ -1,6 +1,9 @@
 module ActiveRecord
   module ConnectionAdapters # :nodoc:
     module SchemaStatements # :nodoc:
+      # Regexp used to find the function name and function argument of a
+      # function call
+      FUNCTIONAL_INDEX_REGEXP = /(\w+)\((\w+)\)/
 
       # Adds a new index to the table.  +column_name+ can be a single Symbol, or
       # an Array of Symbols.
@@ -64,6 +67,21 @@ module ActiveRecord
         end
       end
 
+      def index_name(table_name, options) #:nodoc:
+        if Hash === options # legacy support
+          if options[:column]
+            column_names = Array.wrap(options[:column]).map {|c| expression_index_name(c)}
+            "index_#{table_name}_on_#{column_names * '_and_'}"
+          elsif options[:name]
+            options[:name]
+          else
+            raise ArgumentError, "You must specify the index name"
+          end
+        else
+          index_name(table_name, :column => options)
+        end
+      end
+
       # Returns options used to build out index SQL
       #
       # Added support for partial indexes implemented using the :where option
@@ -94,6 +112,27 @@ module ActiveRecord
       end
       protected :add_index_options
 
+      # Override super method to provide support for expression column names
+      def quoted_columns_for_index(column_names, options = {})
+        column_names.map do |name|
+          if name =~ FUNCTIONAL_INDEX_REGEXP
+            "#{$1}(#{quote_column_name($2)})"
+          else
+            quote_column_name(name)
+          end
+        end
+      end
+      protected :quoted_columns_for_index
+
+      # Map an expression to a name appropriate for an index
+      def expression_index_name(column_name)
+        if column_name =~ FUNCTIONAL_INDEX_REGEXP
+          "#{$1.downcase}_#{$2}"
+        else
+          column_name
+        end
+      end
+      private :expression_index_name
     end
   end
 end

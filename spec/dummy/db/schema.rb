@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120301171826) do
+ActiveRecord::Schema.define(:version => 20120516222439) do
 
   create_schema "demography"
   create_schema "later"
@@ -42,6 +42,7 @@ ActiveRecord::Schema.define(:version => 20120301171826) do
   add_index "pets", ["breed_id"], :name => "index_pets_on_breed_id"
   add_index "pets", ["color"], :name => "index_pets_on_color"
   add_index "pets", ["country_id"], :name => "index_pets_on_country_id"
+  add_index "pets", ["lower(name)"], :name => "index_pets_on_lower_name"
   add_index "pets", ["user_id"], :name => "index_pets_on_user_id"
 
   create_table "users", :force => true do |t|
