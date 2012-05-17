@@ -4,6 +4,10 @@ module ActiveRecord # :nodoc:
     # Patched methods::
     #   * indexes
     class PostgreSQLAdapter
+      # Regex to find columns used in index statements
+      INDEX_COLUMN_EXPRESSION = /ON \w+(?: USING \w+ )?\((.+)\)/
+      # Regex to find where clause in index statements
+      INDEX_WHERE_EXPRESION = /WHERE (.+)$/
 
       # Returns an array of indexes for the given table.
       #
@@ -41,29 +45,82 @@ module ActiveRecord # :nodoc:
         SQL
 
         result.map do |row|
-          index_name = row[0]
-          unique = row[1] == 't'
-          indkey = row[2].split(" ")
-          inddef = row[3]
-          oid = row[4]
+          index = {
+            :name       => row[0],
+            :unique     => row[1] == 't',
+            :keys       => row[2].split(" "),
+            :definition => row[3],
+            :id         => row[4]
+          }
 
-          columns = Hash[query(<<-SQL, "Columns for index #{row[0]} on #{table_name}")]
-          SELECT a.attnum, a.attname
-          FROM pg_attribute a
-          WHERE a.attrelid = #{oid}
-          AND a.attnum IN (#{indkey.join(",")})
-          SQL
+          column_names = find_column_names(table_name, index)
 
-          column_names = columns.values_at(*indkey).compact
+          unless column_names.empty?
+            where   = find_where_statement(index)
+            lengths = find_lengths(index)
 
-          where = inddef.scan(/WHERE (.+)$/).flatten[0]
-
-          # TODO Update lengths once we merge in ActiveRecord code that supports it. -dresselm 20120305
-          lengths = []
-          column_names.empty? ? nil : PgPower::ConnectionAdapters::IndexDefinition.new(table_name, index_name, unique, column_names, lengths, where)
+            PgPower::ConnectionAdapters::IndexDefinition.new(table_name, index[:name], index[:unique], column_names, lengths, where)
+          end
         end.compact
       end
 
+      # Find column names from index attributes. If the columns are virtual (ie
+      # this is an expression index) then it will try to return the functions
+      # that represent each column
+      #
+      # @param [String] table_name the name of the table
+      # @param [Hash] index index attributes
+      # @return [Array]
+      def find_column_names(table_name, index)
+        columns = Hash[query(<<-SQL, "Columns for index #{index[:name]} on #{table_name}")]
+          SELECT a.attnum, a.attname
+          FROM pg_attribute a
+          WHERE a.attrelid = #{index[:id]}
+          AND a.attnum IN (#{index[:keys].join(",")})
+        SQL
+
+        column_names = columns.values_at(*index[:keys]).compact
+
+        if column_names.empty?
+          definition = index[:definition].sub(INDEX_WHERE_EXPRESION, '')
+          if column_expression = definition.match(INDEX_COLUMN_EXPRESSION)[1]
+            column_names = column_expression.split(',').map do |functional_name|
+              remove_type(functional_name)
+            end
+          end
+        end
+
+        column_names
+      end
+
+      # Find where statement from index definition
+      #
+      # @param [Hash] index index attributes
+      # @return [String] where statement
+      def find_where_statement(index)
+        index[:definition].scan(INDEX_WHERE_EXPRESION).flatten[0]
+      end
+
+      # Find length of index
+      # TODO Update lengths once we merge in ActiveRecord code that supports it. -dresselm 20120305
+      #
+      # @param [Hash] index index attributes
+      # @return [Array]
+      def find_lengths(index)
+        []
+      end
+
+      # Remove type specification from stored Postgres index definitions
+      #
+      # @param [String] column_with_type the name of the column with type
+      # @return [String]
+      #
+      # @example
+      #   remove_type("((col)::text")
+      #   => "col"
+      def remove_type(column_with_type)
+        column_with_type.sub(/\((\w+)\)::\w+/, '\1')
+      end
     end
   end
 end

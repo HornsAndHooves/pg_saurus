@@ -46,6 +46,14 @@ describe ActiveRecord::SchemaDumper do
       it 'dumps indexes from non-public schemas' do
         @dump.should =~ /add_index "demography.cities", \["country_id"\]/
       end
+
+      it 'dumps functional indexes' do
+        @dump.should =~ /add_index "pets", \["lower\(name\)"\]/
+      end
+
+      it 'dumps partial functional indexes' do
+        @dump.should =~ /add_index "pets", \["upper\(color\)"\].*:where => "\(name IS NULL\)"/
+      end
     end
 
     context 'Foreign keys' do

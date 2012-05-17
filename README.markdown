@@ -142,6 +142,17 @@ Add a partial index to a schema table
 
     add_index('blog.comments', :user_id, :where => 'active')
 
+## Indexes on Expressions
+
+PostgreSQL supports indexes on expressions. Right now, only basic functional
+expressions are supported.
+
+### Examples
+
+Add an index to a column with a function
+
+    add_index(:comments, "lower(text)")
+
 ## Tools
 
 PgPower::Tools provides number of useful methods:
