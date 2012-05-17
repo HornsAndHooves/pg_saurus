@@ -82,7 +82,8 @@ module ActiveRecord # :nodoc:
         column_names = columns.values_at(*index[:keys]).compact
 
         if column_names.empty?
-          if column_expression = index[:definition].match(INDEX_COLUMN_EXPRESSION)[1]
+          definition = index[:definition].sub(INDEX_WHERE_EXPRESION, '')
+          if column_expression = definition.match(INDEX_COLUMN_EXPRESSION)[1]
             column_names = column_expression.split(',').map do |functional_name|
               remove_type(functional_name)
             end

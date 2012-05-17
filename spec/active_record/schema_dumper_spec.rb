@@ -50,6 +50,10 @@ describe ActiveRecord::SchemaDumper do
       it 'dumps functional indexes' do
         @dump.should =~ /add_index "pets", \["lower\(name\)"\]/
       end
+
+      it 'dumps partial functional indexes' do
+        @dump.should =~ /add_index "pets", \["upper\(color\)"\].*:where => "\(name IS NULL\)"/
+      end
     end
 
     context 'Foreign keys' do

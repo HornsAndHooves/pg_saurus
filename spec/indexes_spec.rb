@@ -25,11 +25,11 @@ describe 'Indexes' do
       PgPower::Explorer.index_exists?(:pets, ["(color || ' ' || name)"] ).should be_true
     end
 
-    it "blah" do
+    it "should allow partial indexes with expressions" do
       opts = {:where => 'color IS NULL'}
 
-      ActiveRecord::Migration.add_index(:pets, ['upper(name)'], opts)
-      PgPower::Explorer.index_exists?(:pets, ['upper(name'], opts).should be_true
+      ActiveRecord::Migration.add_index(:pets, ['upper(name)', 'lower(color)'], opts)
+      PgPower::Explorer.index_exists?(:pets, ['upper(name)', 'lower(color)'], opts).should be_true
     end
   end
 
