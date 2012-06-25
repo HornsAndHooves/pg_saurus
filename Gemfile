@@ -17,7 +17,7 @@ gem 'pg'
 
 # rake spec fails if this is in the :development group:
 gem 'rspec-rails'
-gem 'rails', '~> 3.1.3'
+gem 'rails', '~> 3.2.6'
 
 group :development do
   # code metrics:

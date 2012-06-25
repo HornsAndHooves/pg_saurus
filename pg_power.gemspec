@@ -62,7 +62,7 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<pg_power>, [">= 0"])
       s.add_runtime_dependency(%q<pg>, [">= 0"])
       s.add_runtime_dependency(%q<rspec-rails>, [">= 0"])
-      s.add_runtime_dependency(%q<rails>, ["~> 3.1.3"])
+      s.add_runtime_dependency(%q<rails>, ["~> 3.2.6"])
       s.add_development_dependency(%q<rcov>, [">= 0"])
       s.add_development_dependency(%q<yard>, [">= 0"])
       s.add_development_dependency(%q<metrical>, [">= 0"])

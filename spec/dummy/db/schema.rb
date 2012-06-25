@@ -18,14 +18,14 @@ ActiveRecord::Schema.define(:version => 20120517211922) do
 
   create_table "breeds", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "owners", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "pets", :force => true do |t|
@@ -50,8 +50,8 @@ ActiveRecord::Schema.define(:version => 20120517211922) do
     t.string   "name"
     t.string   "email"
     t.string   "phone_number"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
   end
 
   add_index "users", ["name"], :name => "index_users_on_name"
@@ -70,8 +70,8 @@ ActiveRecord::Schema.define(:version => 20120517211922) do
     t.string   "last_name"
     t.date     "birthday"
     t.text     "bio"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
     t.boolean  "active",     :default => false, :null => false
   end
 
@@ -80,8 +80,8 @@ ActiveRecord::Schema.define(:version => 20120517211922) do
   create_table "demography.countries", :force => true do |t|
     t.string   "name"
     t.string   "continent"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "demography.population_statistics", :force => true do |t|
