@@ -4,7 +4,7 @@ PATH
     pg_power (0.1.6)
       pg
       pg_power
-      rails (~> 3.2.6)
+      rails (~> 3.1)
       rspec-rails
 
 GEM
@@ -201,7 +201,7 @@ DEPENDENCIES
   metrical
   pg
   pg_power!
-  rails (~> 3.2.6)
+  rails (~> 3.1)
   rcov
   rspec-rails
   ruby-debug
