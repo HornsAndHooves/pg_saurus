@@ -4,6 +4,15 @@ module ActiveRecord # :nodoc:
     # Patched methods::
     #   * indexes
     class PostgreSQLAdapter
+      # In Rails3.2 method #extract_schema_and_table is moved into Utils module.
+      # In Rails3.1 it's implemented right in PostgreSQLAdapter class.
+      # So it's Rails3.2 we include the module into PostgreSQLAdapter in order to make
+      # it compatible to Rails3.1
+      # -- sergey.potapov 2012-06-25
+      if ActiveRecord::VERSION::STRING =~ /^3\.2/
+        include self::Utils
+      end
+
       # Regex to find columns used in index statements
       INDEX_COLUMN_EXPRESSION = /ON \w+(?: USING \w+ )?\((.+)\)/
       # Regex to find where clause in index statements
