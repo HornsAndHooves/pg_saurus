@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120517211922) do
+ActiveRecord::Schema.define(:version => 20120720103136) do
 
   create_schema "demography"
   create_schema "later"
@@ -82,6 +82,10 @@ ActiveRecord::Schema.define(:version => 20120517211922) do
     t.string   "continent"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+  end
+
+  create_table "demography.people", :force => true do |t|
+    t.string "name"
   end
 
   create_table "demography.population_statistics", :force => true do |t|

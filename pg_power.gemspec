@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "pg_power"
-  s.version = "0.2.0"
+  s.version = "0.3.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Potapov Sergey", "Arthur Shagall"]
-  s.date = "2012-07-03"
+  s.date = "2012-07-20"
   s.description = "ActiveRecord extensions for PostgreSQL. Provides useful tools and ability to create/drop schemas in migrations."
   s.email = ["blake131313@gmail.com", "arthur.shagall@gmail.com"]
   s.extra_rdoc_files = [
@@ -52,7 +52,7 @@ Gem::Specification.new do |s|
     "lib/tasks/pg_power_tasks.rake"
   ]
   s.require_paths = ["lib"]
-  s.rubygems_version = "1.8.17"
+  s.rubygems_version = "1.8.21"
   s.summary = "ActiveRecord extensions for PostgreSQL."
 
   if s.respond_to? :specification_version then
@@ -63,6 +63,12 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<pg>, [">= 0"])
       s.add_runtime_dependency(%q<rspec-rails>, [">= 0"])
       s.add_runtime_dependency(%q<rails>, ["~> 3.1"])
+      s.add_development_dependency(%q<rcov>, [">= 0"])
+      s.add_development_dependency(%q<yard>, [">= 0"])
+      s.add_development_dependency(%q<metrical>, [">= 0"])
+      s.add_development_dependency(%q<gemfury>, [">= 0"])
+      s.add_development_dependency(%q<jeweler>, [">= 0"])
+      s.add_development_dependency(%q<ruby-debug>, [">= 0"])
       s.add_development_dependency(%q<rcov>, [">= 0"])
       s.add_development_dependency(%q<yard>, [">= 0"])
       s.add_development_dependency(%q<metrical>, [">= 0"])
@@ -80,12 +86,24 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<gemfury>, [">= 0"])
       s.add_dependency(%q<jeweler>, [">= 0"])
       s.add_dependency(%q<ruby-debug>, [">= 0"])
+      s.add_dependency(%q<rcov>, [">= 0"])
+      s.add_dependency(%q<yard>, [">= 0"])
+      s.add_dependency(%q<metrical>, [">= 0"])
+      s.add_dependency(%q<gemfury>, [">= 0"])
+      s.add_dependency(%q<jeweler>, [">= 0"])
+      s.add_dependency(%q<ruby-debug>, [">= 0"])
     end
   else
     s.add_dependency(%q<pg_power>, [">= 0"])
     s.add_dependency(%q<pg>, [">= 0"])
     s.add_dependency(%q<rspec-rails>, [">= 0"])
     s.add_dependency(%q<rails>, ["~> 3.1"])
+    s.add_dependency(%q<rcov>, [">= 0"])
+    s.add_dependency(%q<yard>, [">= 0"])
+    s.add_dependency(%q<metrical>, [">= 0"])
+    s.add_dependency(%q<gemfury>, [">= 0"])
+    s.add_dependency(%q<jeweler>, [">= 0"])
+    s.add_dependency(%q<ruby-debug>, [">= 0"])
     s.add_dependency(%q<rcov>, [">= 0"])
     s.add_dependency(%q<yard>, [">= 0"])
     s.add_dependency(%q<metrical>, [">= 0"])
