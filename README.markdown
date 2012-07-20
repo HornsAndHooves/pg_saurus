@@ -33,6 +33,12 @@ Use schema `:schema` option to specify schema name:
       # columns goes here
     end
 
+### Move table to another schema
+
+Move table `countries' from `demography` schema to `public`:
+
+    move_table_to_schema 'demography.countries', :public
+
 ## Comments
 
 Provides next methods to manage comments:
