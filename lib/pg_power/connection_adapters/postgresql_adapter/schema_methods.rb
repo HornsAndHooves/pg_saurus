@@ -12,4 +12,11 @@ module PgPower::ConnectionAdapters::PostgreSQLAdapter::SchemaMethods
   def drop_schema(schema_name)
     ::PgPower::Tools.drop_schema(schema_name)
   end
+
+  # Move table to another schema
+  # @param [String] table table name. Can be with schema prefix e.g. "demography.people"
+  # @param [String] schema schema where table should be moved to.
+  def move_table_to_schema(table, schema)
+    ::PgPower::Tools.move_table_to_schema(table, schema)
+  end
 end

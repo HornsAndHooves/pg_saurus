@@ -17,4 +17,11 @@ describe 'Schema methods' do
       end
     end
   end
+
+  describe '#move_table_to_schema' do
+    it 'moves table to another schema' do
+      PgPower::Explorer.table_exists?('public.people').should == false
+      PgPower::Explorer.table_exists?('demography.people').should == true
+    end
+  end
 end
