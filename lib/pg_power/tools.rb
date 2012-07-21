@@ -36,6 +36,16 @@ module PgPower
       connection.execute sql
     end
 
+    # Rename constraint
+    # @param [String, Symbol] table table name
+    # @param [String, Symbol] old_constaint_name
+    # @param [String, Symbol] new_constraint_name
+    def rename_constraint(table, old_constaint_name, new_constraint_name)
+      schema, table = to_schema_and_table(table)
+      sql = %{ALTER TABLE "#{schema}"."#{table}" RENAME CONSTRAINT "#{old_constaint_name}" TO "#{new_constraint_name}"}
+      connection.execute sql
+    end
+
 
 
     # Return databas connections

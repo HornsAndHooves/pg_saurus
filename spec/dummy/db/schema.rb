@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120720103136) do
+ActiveRecord::Schema.define(:version => 20120721131741) do
 
   create_schema "demography"
   create_schema "later"
@@ -85,8 +85,11 @@ ActiveRecord::Schema.define(:version => 20120720103136) do
   end
 
   create_table "demography.people", :force => true do |t|
-    t.string "name"
+    t.string  "name"
+    t.integer "citizen_id"
   end
+
+  add_index "demography.people", ["citizen_id"], :name => "index_demography_people_on_citizen_id"
 
   create_table "demography.population_statistics", :force => true do |t|
     t.integer "year"
@@ -108,6 +111,8 @@ ActiveRecord::Schema.define(:version => 20120720103136) do
   add_foreign_key "demography.cities", "demography.countries", :name => "demography_cities_country_id_fk", :column => "country_id", :exclude_index => true
 
   add_foreign_key "demography.citizens", "public.users", :name => "demography_citizens_user_id_fk", :column => "user_id", :exclude_index => true
+
+  add_foreign_key "demography.people", "demography.citizens", :name => "people_citizen_id_fk", :column => "citizen_id", :exclude_index => true
 
   add_foreign_key "pets", "public.users", :name => "pets_user_id_fk", :column => "user_id", :exclude_index => true
 
