@@ -70,23 +70,33 @@ module PgPower # :nodoc:
     #
     # Ensures that an index is created for the foreign key, unless :exclude_index is true.
     #
-    # Raises a [PgPower::IndexExistsError] when :exclude_index is true, but the index already exists.
-    #
     # == Options:
     # * :column
     # * :primary_key
     # * :dependent
     # * :exclude_index [Boolean]
+    # * :concurrently_index [Boolean]
     #
-    # @param [String, Symbol] from_table
-    # @param [String, Symbol] to_table
-    # @param [Hash] options
+    # @param [String, Symbol]          from_table
+    # @param [String, Symbol]          to_table
+    # @param [Hash]                    options
+    # @option options [String, Symbol] :column
+    # @option options [String, Symbol] :primary_key
+    # @option options [Hash]           :dependent
+    # @option options [Boolean]        :exclude_index
+    # @option options [Boolean]        :concurrently_index
     #
+    # @raise [ArgumentError]             in case of conflicted option were set
+    # @raise [PgPower::IndexExistsError] when :exclude_index is true, but the index already exists
     def add_foreign_key(from_table, to_table, options = {})
-      options[:column] ||= id_column_name_from_table_name(to_table)
-      options[:exclude_index] ||= false
+      options[:column]             ||= id_column_name_from_table_name(to_table)
+      options[:exclude_index]      ||= false
+      options[:concurrently_index] ||= false
 
-      if index_exists?(from_table, options[:column]) and !options[:exclude_index]
+      if options[:exclude_index] && options[:concurrently_index]
+        raise ArgumentError, 'Conflicted options(exclude_index, concurrently_index) both are set to true.'
+      end
+      if index_exists?(from_table, options[:column]) && !options[:exclude_index]
         raise PgPower::IndexExistsError,
           "The index, #{index_name(from_table, options[:column])}, already exists." \
           "  Use :exclude_index => true when adding the foreign key."
@@ -95,7 +105,9 @@ module PgPower # :nodoc:
       sql = "ALTER TABLE #{quote_table_name(from_table)} #{add_foreign_key_sql(from_table, to_table, options)}"
       execute(sql)
 
-      add_index(from_table, options[:column]) unless options[:exclude_index]
+      unless options[:exclude_index]
+        add_index(from_table, options[:column], :concurrently => options[:concurrently_index])
+      end
     end
 
     # Returns chunk of SQL to add foreign key based on table names and options.

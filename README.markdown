@@ -171,6 +171,10 @@ Add an index concurrently to a table
 
     add_index :table, :column_id, :concurrently => true
 
+Add an index concurrently along with foreign key
+
+    add_foreign_key :table1, :table2, :column => :column_id, :concurrent_index => true
+
 ## Tools
 
 PgPower::Tools provides number of useful methods:
