@@ -196,7 +196,14 @@ Support for JRuby:
 
 * [Potapov Sergey](https://github.com/greyblake) - schema support
 * [Arthur Shagall](https://github.com/albertosaurus) - thanks for [pg_comment](https://github.com/albertosaurus/pg_comment)
+* [Matthew Higgins](https://github.com/matthuhiggins) - thanks for [foreigner](https://github.com/matthuhiggins/foreigner), which was used as a base for the foreign key support
+* [Marcelo Silveira](https://github.com/mhfs) - thanks for rails partial index support that was backported into this gem
 
 ## Copyright
 
 Copyright (c) 2012 TMX Credit.
+Initial foreign key code taken from foreigner, Copyright (c) 2009 Matthew Higgins
+pg_comment Copyright (c) 2011 Arthur Shagall
+Partial index Copyright (c) 2012 Marcelo Silveira
+
+Released under the MIT License.  See the MIT-LICENSE file for more details.

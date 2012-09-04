@@ -12,7 +12,7 @@ rescue LoadError
   RDoc::Task = Rake::RDocTask
 end
 
-require 'pg_power/version'
+require 'lib/pg_power/version'
 
 begin
   require "jeweler"

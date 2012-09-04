@@ -1,10 +1,5 @@
 source "http://rubygems.org"
 
-# Declare your gem's dependencies in pg_power.gemspec.
-# Bundler will treat runtime dependencies like base dependencies, and
-# development dependencies will be added by default to the :development group.
-gemspec
-
 # NOTE: This is a Gemfile for a gem.
 # Using 'platforms' is contraindicated because they won't make it into
 # the gemspec correctly.
@@ -24,7 +19,6 @@ group :development do
   gem 'rcov'
   gem 'yard'
   gem 'metrical', :require => false
-  gem 'gemfury', :require => false
   gem 'jeweler', :require => false
 
   gem "ruby-debug"   if version18 && !java_platform
