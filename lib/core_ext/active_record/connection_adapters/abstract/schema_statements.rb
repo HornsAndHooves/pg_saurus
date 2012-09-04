@@ -30,7 +30,7 @@ module ActiveRecord
       #  # Check that a partial index exists
       #  index_exists?(:suppliers, :company_id, :where => 'active')
       #
-      #  # GIVEN: "index_suppliers_on_company_id" UNIQUE, btree (company_id) WHERE active
+      #  # GIVEN: 'index_suppliers_on_company_id' UNIQUE, btree (company_id) WHERE active
       #  index_exists?(:suppliers, :company_id, :unique => true, :where => 'active') => true
       #  index_exists?(:suppliers, :company_id, :unique => true) => false
       #
@@ -99,11 +99,11 @@ module ActiveRecord
         index_creation_method = nil
 
         if Hash === options # legacy support, since this param was a string
-          index_type = options[:unique] ? "UNIQUE" : ""
+          index_type = options[:unique] ? 'UNIQUE' : ''
           index_creation_method = options[:concurrently] ? 'CONCURRENTLY' : ''
           index_name = options[:name].to_s if options.key?(:name)
           if supports_partial_index?
-            index_options = options[:where] ? " WHERE #{options[:where]}" : ""
+            index_options = options[:where] ? " WHERE #{options[:where]}" : ''
           end
         else
           index_type = options
@@ -115,7 +115,7 @@ module ActiveRecord
         if index_name_exists?(table_name, index_name, false)
           raise ArgumentError, "Index name '#{index_name}' on table '#{table_name}' already exists"
         end
-        index_columns = quoted_columns_for_index(column_names, options).join(", ")
+        index_columns = quoted_columns_for_index(column_names, options).join(', ')
 
         [index_name, index_type, index_creation_method, index_columns, index_options]
       end

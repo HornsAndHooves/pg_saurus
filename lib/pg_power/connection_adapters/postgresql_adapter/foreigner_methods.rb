@@ -87,7 +87,9 @@ module PgPower # :nodoc:
       options[:exclude_index] ||= false
 
       if index_exists?(from_table, options[:column]) and !options[:exclude_index]
-        raise PgPower::IndexExistsError, "The index, #{index_name(from_table, options[:column])}, already exists.  Use :exclude_index => true when adding the foreign key."
+        raise PgPower::IndexExistsError,
+          "The index, #{index_name(from_table, options[:column])}, already exists." \
+          "  Use :exclude_index => true when adding the foreign key."
       end
 
       sql = "ALTER TABLE #{quote_table_name(from_table)} #{add_foreign_key_sql(from_table, to_table, options)}"
@@ -130,13 +132,13 @@ module PgPower # :nodoc:
     #
     def remove_foreign_key(from_table, to_table_or_options_hash, options={})
       if Hash === to_table_or_options_hash
-        options = to_table_or_options_hash
-        column = options[:column]
-        foreign_key_name = foreign_key_name(from_table, column, options)
-        column ||= id_column_name_from_foreign_key_metadata(from_table, foreign_key_name)
+        options          =   to_table_or_options_hash
+        column           =   options[:column]
+        foreign_key_name =   foreign_key_name(from_table, column, options)
+        column           ||= id_column_name_from_foreign_key_metadata(from_table, foreign_key_name)
       else
-        column = id_column_name_from_table_name(to_table_or_options_hash)
-        foreign_key_name = foreign_key_name(from_table, column)
+        column           =   id_column_name_from_table_name(to_table_or_options_hash)
+        foreign_key_name =   foreign_key_name(from_table, column)
       end
 
       execute "ALTER TABLE #{quote_table_name(from_table)} #{remove_foreign_key_sql(foreign_key_name)}"
@@ -165,7 +167,7 @@ module PgPower # :nodoc:
       this_key.options[:column]
     end
     private :id_column_name_from_foreign_key_metadata
-    
+
     # Builds default name for constraint
     def foreign_key_name(table, column, options = {})
       if options[:name]
