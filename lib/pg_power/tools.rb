@@ -38,7 +38,7 @@ module PgPower
 
 
 
-    # Return databas connections
+    # Return database connections
     def connection
       ActiveRecord::Base.connection
     end
