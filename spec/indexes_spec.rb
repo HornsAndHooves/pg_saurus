@@ -116,5 +116,10 @@ describe 'Indexes' do
       PgPower::Explorer.index_exists?(:pets, :name, index_options).should be_true
     end
 
+    it 'should be true for concurrently created index' do
+      index_options = {:concurrently => true}
+      PgPower::Explorer.index_exists?(:users, :email, index_options).should be_true
+    end
+
   end
 end

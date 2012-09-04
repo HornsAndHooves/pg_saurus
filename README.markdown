@@ -6,6 +6,7 @@ ActiveRecord extension to get more from PostgreSQL:
 * Set/remove comments on columns and tables.
 * Use foreign keys.
 * Use partial indexes.
+* Run index creation concurrently.
 
 ## Environment notes
 
@@ -158,6 +159,17 @@ expressions are supported.
 Add an index to a column with a function
 
     add_index(:comments, "lower(text)")
+
+## Concurrent index creation
+
+PostgreSQL supports concurent index creation. We added that feature to migration
+DSL on index and foreign keys creation.
+
+### Examples
+
+Add an index concurrently to a table
+
+    add_index :table, :column_id, :concurrently => true
 
 ## Tools
 
