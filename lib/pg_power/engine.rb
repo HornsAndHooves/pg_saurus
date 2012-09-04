@@ -6,6 +6,7 @@ module PgPower
       ActiveSupport.on_load(:active_record) do
         # load monkey patches
         ['schema_dumper',
+         'errors',
          'connection_adapters/postgresql_adapter',
          'connection_adapters/abstract/schema_statements'].each do |path|
           require PgPower::Engine.root + 'lib/core_ext/active_record/' + path

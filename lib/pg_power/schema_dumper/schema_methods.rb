@@ -30,7 +30,11 @@ module PgPower::SchemaDumper::SchemaMethods
   # Dumps tables from schemas other than public
   def non_public_schema_tables(stream)
     get_non_public_schema_table_names.each do |name|
-      table(name, stream)
+      begin
+        table(name, stream)
+      rescue ::ActiveRecord::InsufficientPrivilege => exc
+        with_warnings(false) { warn("#{exc.class.name}: #{exc.message}. Skipping #{name.inspect}...") }
+      end
     end
   end
   private :non_public_schema_tables
