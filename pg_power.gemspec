@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Potapov Sergey", "Arthur Shagall"]
-  s.date = "2012-09-04"
+  s.date = "2012-09-05"
   s.description = "ActiveRecord extensions for PostgreSQL. Provides useful tools and ability to create/drop schemas in migrations."
   s.email = ["blake131313@gmail.com", "arthur.shagall@gmail.com"]
   s.extra_rdoc_files = [

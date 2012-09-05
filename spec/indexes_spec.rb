@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'ruby-debug'
 
 describe 'Indexes' do
   describe '#add_index' do

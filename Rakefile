@@ -12,7 +12,7 @@ rescue LoadError
   RDoc::Task = Rake::RDocTask
 end
 
-require 'lib/pg_power/version'
+require './lib/pg_power/version'
 
 begin
   require "jeweler"
@@ -41,33 +41,6 @@ end
 
 APP_RAKEFILE = File.expand_path("../spec/dummy/Rakefile", __FILE__)
 load 'rails/tasks/engine.rake'
-
-def gemspec
-  @gem_spec ||= eval( open( `ls *.gemspec`.strip ){|file| file.read } )
-end
-
-def gem_version
-  gemspec.version
-end
-
-def gem_version_tag
-  "v#{gem_version}"
-end
-
-def gem_name
-  gemspec.name
-end
-
-def gem_file_name
-  "#{gem_name}-#{gem_version}.gem"
-end
-
-namespace :gemfury do
-  desc "Build version #{gem_version} into the pkg directory and upload to GemFury"
-  task :push => [:build] do
-    sh "fury push pkg/#{gem_file_name} --as=TMXCredit"
-  end
-end
 
 desc 'Run specs'
 task 'spec' => ['db:drop', 'db:create', 'db:migrate', 'app:spec']
