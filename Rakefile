@@ -26,6 +26,7 @@ begin
     gem.files = Dir["{app,config,db,lib}/**/*"] + Dir['Rakefie', 'README.markdown']
     # Need to explicitly specify version here so gemspec:validate task doesn't whine.
     gem.version = PgPower::VERSION
+    gem.homepage = "https://github.com/TMXCredit/pg_power"
   end
 rescue
   puts "Jeweler or one of its dependencies is not installed."

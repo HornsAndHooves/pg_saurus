@@ -51,6 +51,7 @@ Gem::Specification.new do |s|
     "lib/pg_power/version.rb",
     "lib/tasks/pg_power_tasks.rake"
   ]
+  s.homepage = "https://github.com/TMXCredit/pg_power"
   s.require_paths = ["lib"]
   s.rubygems_version = "1.8.24"
   s.summary = "ActiveRecord extensions for PostgreSQL."
