@@ -1,4 +1,7 @@
+# Extend ActiveRecord::ConnectionAdapter::PostgreSQLAdapter logic
+# to wrap more pg-specific errors into specific exception classes
 module PgPower::ConnectionAdapters::PostgreSQLAdapter::TranslateException
+  # # See http://www.postgresql.org/docs/9.1/static/errcodes-appendix.html
   INSUFFICIENT_PRIVILEGE = "42501"
 
   # Intercept insufficient privilege PGError and raise active_record wrapped database exception
