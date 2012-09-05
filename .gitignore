@@ -1,6 +1,5 @@
 # we don't want Gemfile.lock in gems
 Gemfile.lock
-.rvmrc
 
 .bundle/
 log/*.log
