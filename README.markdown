@@ -9,7 +9,7 @@ ActiveRecord extension to get more from PostgreSQL:
 
 ## Environment notes
 
-It was tested with Rails 3.1.3 and Ruby 1.8.7.
+It was tested with Rails 3.1.x and 3.2.x, Ruby 1.8.7 REE and 1.9.3.
 
 
 ## Schemas
@@ -175,11 +175,6 @@ PgPower::Tools provides number of useful methods:
 * Run `rake spec`.
 * Make sure migrations don't raise exceptions and all specs pass.
 
-## Deploying to GemFury
-Make sure you have an account on GemFury and it has been made a collaborator of the TMXCredit corporate account, then run:
-
-    rake gemfury:push
-
 ## TODO:
 
 Add next syntax to create table:
@@ -196,7 +191,22 @@ Support for JRuby:
 
 * [Potapov Sergey](https://github.com/greyblake) - schema support
 * [Arthur Shagall](https://github.com/albertosaurus) - thanks for [pg_comment](https://github.com/albertosaurus/pg_comment)
+* [Matthew Higgins](https://github.com/matthuhiggins) - thanks for [foreigner](https://github.com/matthuhiggins/foreigner), which was used as a base for the foreign key support
+* [Marcelo Silveira](https://github.com/mhfs) - thanks for rails partial index support that was backported into this gem
 
-## Copyright
+## Copyright and License
 
 Copyright (c) 2012 TMX Credit.
+Initial foreign key code taken from foreigner, Copyright (c) 2009 Matthew Higgins
+pg_comment Copyright (c) 2011 Arthur Shagall
+Partial index Copyright (c) 2012 Marcelo Silveira
+
+Released under the MIT License.  See the MIT-LICENSE file for more details.
+
+## Contributing
+
+Contributions are welcome.  However, before issuing a pull request, please make sure of the following:
+
+* All specs are passing (under both ree and 1.9.3)
+* Any new features have test coverage.
+* Anything that breaks backward compatibility has a very good reason for doing so.
