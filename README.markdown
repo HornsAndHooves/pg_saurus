@@ -116,21 +116,27 @@ The syntax is compatible with `foreigner`:
 
 
 Add foreign key from `comments` to `posts` using `post_id` column as key by default:
+
     add_foreign_key(:comments, :posts)
 
 Specify key explicitly:
+
     add_foreign_key(:comments, :posts, :column => :blog_post_id)
 
 Specify name of foreign key constraint:
+
     add_foreign_key(:comments, :posts, :name => "comments_posts_fk")
 
 It works with schemas as expected:
+
     add_foreign_key('blog.comments', 'blog.posts')
 
 Adds the index 'index_comments_on_post_id':
+
     add_foreign_key(:comments, :posts)
 
 Does not add an index:
+
     add_foreign_key(:comments, :posts, :exclude_index => true)
 
 ## Partial Indexes
