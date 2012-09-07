@@ -1,5 +1,8 @@
 source "http://rubygems.org"
 
+# To test against different rails versions with TravisCI
+rails_version = ENV['RAILS_VERSION'] || '~> 3.1'
+
 # NOTE: This is a Gemfile for a gem.
 # Using 'platforms' is contraindicated because they won't make it into
 # the gemspec correctly.
@@ -12,7 +15,7 @@ gem 'pg'
 
 # rake spec fails if this is in the :development group:
 gem 'rspec-rails'
-gem 'rails', '~> 3.1'
+gem 'rails', rails_version
 
 group :development do
   # code metrics:

@@ -1,5 +1,6 @@
 # PgPower
 
+[![Build Status](https://secure.travis-ci.org/TMXCredit/pg_power.png)](http://travis-ci.org/TMXCredit/pg_power)
 [![Dependency Status](https://gemnasium.com/TMXCredit/pg_power.png)](https://gemnasium.com/TMXCredit/pg_power)
 [![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/TMXCredit/pg_power)
 
