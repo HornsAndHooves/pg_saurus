@@ -1,5 +1,8 @@
 # PgPower
 
+[![Dependency Status](https://gemnasium.com/TMXCredit/pg_power.png)](https://gemnasium.com/TMXCredit/pg_power)
+[![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/TMXCredit/pg_power)
+
 ActiveRecord extension to get more from PostgreSQL:
 
 * Create/drop schemas.
