@@ -23,7 +23,7 @@ describe 'Foreign keys' do
         connection = ActiveRecord::Base::connection
         connection.add_index 'demography.citizens', :user_id
         connection.add_foreign_key 'demography.citizens', 'users'
-      }.should raise_exception(PgPower::IndexExistsError)
+      }.to raise_exception(PgPower::IndexExistsError)
     end
 
     describe 'with creating index concurrently' do
@@ -69,7 +69,7 @@ describe 'Foreign keys' do
         connection = ActiveRecord::Base::connection
         connection.add_foreign_key 'pets', 'demography.citizens', :exclude_index => true
         connection.remove_foreign_key 'pets', 'demography.citizens'
-      }.should_not raise_exception(StandardError)
+      }.to_not raise_exception(StandardError)
     end
   end
 end

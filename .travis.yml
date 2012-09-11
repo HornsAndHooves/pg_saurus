@@ -1,0 +1,15 @@
+language: ruby
+before_script:
+  - psql -c "create database pg_power_dummy_test;" -U postgres
+script: "bundle exec rake spec"
+rvm:
+  - 1.8.7
+  - 1.9.2
+  - 1.9.3
+  - ree
+env:
+  - RAILS_VERSION="~> 3.1"
+  - RAILS_VERSION="~> 3.2"
+notifications:
+  email:
+    - blake131313@gmail.com

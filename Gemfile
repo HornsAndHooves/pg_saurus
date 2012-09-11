@@ -1,9 +1,7 @@
 source "http://rubygems.org"
 
-# Declare your gem's dependencies in pg_power.gemspec.
-# Bundler will treat runtime dependencies like base dependencies, and
-# development dependencies will be added by default to the :development group.
-gemspec
+# To test against different rails versions with TravisCI
+rails_version = ENV['RAILS_VERSION'] || '~> 3.1'
 
 # NOTE: This is a Gemfile for a gem.
 # Using 'platforms' is contraindicated because they won't make it into
@@ -17,14 +15,13 @@ gem 'pg'
 
 # rake spec fails if this is in the :development group:
 gem 'rspec-rails'
-gem 'rails', '~> 3.1'
+gem 'rails', rails_version
 
 group :development do
   # code metrics:
   gem 'rcov'
   gem 'yard'
   gem 'metrical', :require => false
-  gem 'gemfury', :require => false
   gem 'jeweler', :require => false
 
   gem "ruby-debug"   if version18 && !java_platform

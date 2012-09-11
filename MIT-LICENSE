@@ -1,4 +1,7 @@
-Copyright 2012 TMX Credit
+Copyright (c) 2012 TMX Credit
+Initial foreign key code taken from foreigner, Copyright (c) 2009 Matthew Higgins
+pg_comment Copyright (c) 2011 Arthur Shagall
+Partial index Copyright (c) 2012 Marcelo Silveira
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the

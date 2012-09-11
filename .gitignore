@@ -1,3 +1,6 @@
+# we don't want Gemfile.lock in gems
+Gemfile.lock
+
 .bundle/
 log/*.log
 pkg/
