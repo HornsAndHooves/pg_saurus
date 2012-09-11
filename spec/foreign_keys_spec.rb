@@ -30,7 +30,7 @@ describe 'Foreign keys' do
       it 'should raise ArgumentError when conflicting options are given' do
         expect do
           ActiveRecord::Migration.add_foreign_key(:steroids, :users,
-            :exclude_index => true, :concurrently_index => true)
+            :exclude_index => true, :concurrent_index => true)
         end.to raise_error(ArgumentError,
           'Conflicted options(exclude_index, concurrent_index) was found, both are set to true.')
       end
