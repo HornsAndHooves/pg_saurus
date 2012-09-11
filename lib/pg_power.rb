@@ -13,4 +13,5 @@ module PgPower
   autoload :Tools
   autoload :Migration
   autoload :ConnectionAdapters
+  autoload :CreateIndexConcurrently
 end

@@ -19,6 +19,18 @@ module PgPower
           end
         end
 
+        # Follow three include statements adds support for concurrently
+        #   index creation in migrations.
+        ActiveRecord::Migration.class_eval do
+          include ::PgPower::CreateIndexConcurrently::Migration
+        end
+        ActiveRecord::Migrator.class_eval do
+          include ::PgPower::CreateIndexConcurrently::Migrator
+        end
+        ActiveRecord::MigrationProxy.class_eval do
+          include ::PgPower::CreateIndexConcurrently::MigrationProxy
+        end
+
         ActiveRecord::ConnectionAdapters::Table.module_eval do
           include ::PgPower::ConnectionAdapters::Table
         end

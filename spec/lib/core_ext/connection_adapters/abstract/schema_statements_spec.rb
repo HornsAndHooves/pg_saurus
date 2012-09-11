@@ -15,6 +15,7 @@ describe ActiveRecord::ConnectionAdapters::SchemaStatements do
       end
 
       ActiveRecord::Migration.add_index :users, :phone_number, :concurrently => true
+      ActiveRecord::Migration.process_postponed_queries
     end
   end
 end

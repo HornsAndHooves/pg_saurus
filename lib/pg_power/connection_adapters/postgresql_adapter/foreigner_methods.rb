@@ -86,16 +86,11 @@ module PgPower # :nodoc:
     # @option options [Boolean]        :exclude_index
     # @option options [Boolean]        :concurrent_index
     #
-    # @raise [ArgumentError]             in case of conflicted option were set
     # @raise [PgPower::IndexExistsError] when :exclude_index is true, but the index already exists
     def add_foreign_key(from_table, to_table, options = {})
       options[:column]             ||= id_column_name_from_table_name(to_table)
       options[:exclude_index]      ||= false
-      options[:concurrently_index] ||= false
 
-      if options[:exclude_index] && options[:concurrently_index]
-        raise ArgumentError, 'Conflicted options(exclude_index, concurrently_index) both are set to true.'
-      end
       if index_exists?(from_table, options[:column]) && !options[:exclude_index]
         raise PgPower::IndexExistsError,
           "The index, #{index_name(from_table, options[:column])}, already exists." \
@@ -105,8 +100,20 @@ module PgPower # :nodoc:
       sql = "ALTER TABLE #{quote_table_name(from_table)} #{add_foreign_key_sql(from_table, to_table, options)}"
       execute(sql)
 
-      unless options[:exclude_index]
-        add_index(from_table, options[:column], :concurrently => options[:concurrently_index])
+      # GOTCHA:
+      #   Index can not be created concurrently inside transaction in PostgreSQL.
+      #   So, in case of concurrently created index with foreign key only
+      #   foreign key will be created inside migration transaction and after
+      #   closing transaction queries for index creation will be send to database.
+      #   That's why I prevent here normal index creation in case of
+      #   `concurrent_index` option is given.
+      #   NOTE: Index creation after closing migration transaction could lead
+      #   to weird effects when transaction moves smoothly, but index
+      #   creation with error. In that case transaction will not be rolled back.
+      #   As it was closed before even index was attempted to create.
+      #   -- zekefast 2012-09-12
+      unless options[:exclude_index] || options[:concurrent_index]
+        add_index(from_table, options[:column])
       end
     end
 
@@ -168,7 +175,6 @@ module PgPower # :nodoc:
     def id_column_name_from_table_name(table)
       "#{table.to_s.split('.').last.singularize}_id"
     end
-    private :id_column_name_from_table_name
 
     # Extracts the foreign key column id from the foreign key metadata
     # @param [String, Symbol] from_table
