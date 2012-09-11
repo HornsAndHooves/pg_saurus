@@ -74,8 +74,8 @@ module PgPower # :nodoc:
     # * :column
     # * :primary_key
     # * :dependent
-    # * :exclude_index [Boolean]
-    # * :concurrently_index [Boolean]
+    # * :exclude_index    [Boolean]
+    # * :concurrent_index [Boolean]
     #
     # @param [String, Symbol]          from_table
     # @param [String, Symbol]          to_table
@@ -84,7 +84,7 @@ module PgPower # :nodoc:
     # @option options [String, Symbol] :primary_key
     # @option options [Hash]           :dependent
     # @option options [Boolean]        :exclude_index
-    # @option options [Boolean]        :concurrently_index
+    # @option options [Boolean]        :concurrent_index
     #
     # @raise [ArgumentError]             in case of conflicted option were set
     # @raise [PgPower::IndexExistsError] when :exclude_index is true, but the index already exists

@@ -9,7 +9,8 @@ module ActiveRecord
       # an Array of Symbols.
       #
       # ====== Creating a partial index
-      #  add_index(:accounts, [:branch_id, :party_id], :unique => true, :concurrently => true, :where => 'active')
+      #  add_index(:accounts, [:branch_id, :party_id],
+      #   :unique => true, :concurrently => true, :where => 'active')
       # generates
       #  CREATE UNIQUE INDEX CONCURRENTLY
       #   index_accounts_on_branch_id_and_party_id
