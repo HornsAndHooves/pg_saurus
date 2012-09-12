@@ -24,6 +24,10 @@ group :development do
   gem 'metrical', :require => false
   gem 'jeweler', :require => false
 
-  gem "ruby-debug"   if version18 && !java_platform
-  gem "ruby-debug19" if version19 && !java_platform
+
+  unless ENV["RM_INFO"]
+    # RubyMine internal debugger conflicts with ruby-debug. So, require it only when it's run outside of RubyMine
+    gem "ruby-debug"   if version18 && !java_platform
+    gem "ruby-debug19" if version19 && !java_platform
+  end
 end

@@ -21,8 +21,8 @@ begin
     gem.name = "pg_power"
     gem.summary = "ActiveRecord extensions for PostgreSQL."
     gem.description = "ActiveRecord extensions for PostgreSQL. Provides useful tools and ability to create/drop schemas in migrations."
-    gem.email = ["blake131313@gmail.com", "arthur.shagall@gmail.com"]
-    gem.authors = ['Potapov Sergey', 'Arthur Shagall']
+    gem.email = ["rubygems@tmxcredit.com"]
+    gem.authors = ['Potapov Sergey', 'Arthur Shagall', 'TMX Credit']
     gem.files = Dir["{app,config,db,lib}/**/*"] + Dir['Rakefie', 'README.markdown']
     # Need to explicitly specify version here so gemspec:validate task doesn't whine.
     gem.version = PgPower::VERSION
