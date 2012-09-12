@@ -4,8 +4,8 @@ development: &default
   encoding: unicode
   database: pg_power_dummy_development
   pool: 5
-  username: pg_power
-  password: pg_power
+  username: postgres
+  password: secret
   host: localhost
 
 test:
