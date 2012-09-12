@@ -44,16 +44,21 @@ module PgPower::CreateIndexConcurrently
         end
 
         options[:column] ||= connection.id_column_name_from_table_name(to_table)
-        enque(from_table, options[:column])
+        options = options.merge(:concurrently => options[:concurrent_index])
+        enque(from_table, options[:column], options)
       end
 
       connection.add_foreign_key(from_table, to_table, options, &block)
     end
 
     def process_postponed_queries
-      Array(@postpone_queries).each do |arguments, block|
+      result = Array(@postpone_queries).each do |arguments, block|
         connection.add_index(*arguments, &block)
       end
+
+      @postpone_queries = []
+
+      result
     end
 
     def enque(*arguments, &block)
