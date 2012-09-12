@@ -1,6 +1,7 @@
 module PgPower::CreateIndexConcurrently
   module Migration
     attr_accessor :postponed_queries
+    private :postponed_queries, :postponed_queries=
 
 
     def add_index(table_name, column_name, options = {}, &block)
@@ -10,6 +11,7 @@ module PgPower::CreateIndexConcurrently
       end
 
       enque(table_name, column_name, options, &block)
+      nil
     end
 
     # Adds foreign key.
@@ -52,13 +54,13 @@ module PgPower::CreateIndexConcurrently
     end
 
     def process_postponed_queries
-      result = Array(@postponed_queries).each do |arguments, block|
+      Array(@postponed_queries).each do |arguments, block|
         connection.add_index(*arguments, &block)
       end
 
       clean_queue
 
-      result
+      self
     end
 
     # Clean postponed queries' queue.
@@ -74,6 +76,8 @@ module PgPower::CreateIndexConcurrently
     def enque(*arguments, &block)
       @postponed_queries ||= []
       @postponed_queries << [arguments, block]
+
+      self
     end
     private :enque
   end
