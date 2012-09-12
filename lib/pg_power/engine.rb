@@ -19,7 +19,7 @@ module PgPower
           end
         end
 
-        # Follow three include statements adds support for concurrently
+        # Follow three include statements add support for concurrently
         #   index creation in migrations.
         ActiveRecord::Migration.class_eval do
           include ::PgPower::CreateIndexConcurrently::Migration
