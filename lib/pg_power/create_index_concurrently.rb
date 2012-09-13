@@ -135,7 +135,7 @@ module PgPower::CreateIndexConcurrently
         connection.add_index(*arguments, &block)
       end
 
-      clean_queue
+      clear_queue
 
       self
     end
@@ -143,12 +143,12 @@ module PgPower::CreateIndexConcurrently
     # Clean postponed queries' queue.
     #
     # @return [::PgPower::CreateIndexConcurrently::Migration] migration
-    def clean_queue
+    def clear_queue
       @postponed_queries = []
 
       self
     end
-    private :clean_queue
+    private :clear_queue
 
     # Add to the queue add_index call parameters to be able execute call later.
     #
