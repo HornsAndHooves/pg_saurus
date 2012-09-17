@@ -206,10 +206,10 @@ Support for JRuby:
 
 ## Copyright and License
 
-Copyright (c) 2012 TMX Credit.
-Initial foreign key code taken from foreigner, Copyright (c) 2009 Matthew Higgins
-pg_comment Copyright (c) 2011 Arthur Shagall
-Partial index Copyright (c) 2012 Marcelo Silveira
+* Copyright (c) 2012 TMX Credit.
+* Initial foreign key code taken from foreigner, Copyright (c) 2009 Matthew Higgins
+* pg_comment Copyright (c) 2011 Arthur Shagall
+* Partial index Copyright (c) 2012 Marcelo Silveira
 
 Released under the MIT License.  See the MIT-LICENSE file for more details.
 
