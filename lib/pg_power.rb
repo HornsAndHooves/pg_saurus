@@ -1,4 +1,5 @@
 require "pg_power/engine"
+require "pg_power/errors"
 
 # Rails engine which allows to use some PostgreSQL features:
 # * Schemas.
