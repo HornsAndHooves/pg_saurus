@@ -20,9 +20,9 @@ module ActiveRecord
       #    active
       #
       def add_index(table_name, column_name, options = {})
-        index_name, index_type, index_creation_method, index_columns, index_options = add_index_options(table_name, column_name, options)
-        execute "CREATE #{index_type} INDEX #{index_creation_method} #{quote_column_name(index_name)} " \
-          "ON #{quote_table_name(table_name)} (#{index_columns})#{index_options}"
+        name, type, creation_method, columns, opts = add_index_options(table_name, column_name, options)
+        execute "CREATE #{type} INDEX #{creation_method} #{quote_column_name(name)} " \
+          "ON #{quote_table_name(table_name)} (#{columns})#{opts}"
       end
 
       # Checks to see if an index exists on a table for a given index definition.
