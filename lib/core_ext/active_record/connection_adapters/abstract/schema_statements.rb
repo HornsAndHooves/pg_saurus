@@ -9,13 +9,37 @@ module ActiveRecord
       # an Array of Symbols.
       #
       # ====== Creating a partial index
-      #  add_index(:accounts, [:branch_id, :party_id], :unique => true, :where => "active")
+      #  add_index(:accounts, [:branch_id, :party_id],
+      #   :unique => true, :concurrently => true, :where => 'active')
       # generates
-      #  CREATE UNIQUE INDEX index_accounts_on_branch_id_and_party_id ON accounts(branch_id, party_id) WHERE active
+      #  CREATE UNIQUE INDEX CONCURRENTLY
+      #   index_accounts_on_branch_id_and_party_id
+      #  ON
+      #    accounts(branch_id, party_id)
+      #  WHERE
+      #    active
       #
       def add_index(table_name, column_name, options = {})
-        index_name, index_type, index_columns, index_options = add_index_options(table_name, column_name, options)
-        execute "CREATE #{index_type} INDEX #{quote_column_name(index_name)} ON #{quote_table_name(table_name)} (#{index_columns})#{index_options}"
+        name, type, creation_method, columns, opts = add_index_options(table_name, column_name, options)
+
+        # GOTCHA:
+        #   It ensures that there is no existing index only for the case when the index
+        #   is created concurrently to avoid changing the error behavior for default
+        #   index creation.
+        #   -- zekefast 2012-09-25
+        # GOTCHA:
+        #   This check prevents invalid index creation, so after migration failed
+        #   here there is no need to go to database and clean it from invalid
+        #   indexes. But note that this handles only one of the cases when index
+        #   creation can fail!!! All other case should be procesed manually.
+        #   -- zekefast 2012-09-25
+        if options.has_key?(:concurrently) && index_exists?(table_name, column_name, options)
+          raise ::PgPower::IndexExistsError, "Index #{name} for `#{table_name}.#{column_name}` " \
+            "column can not be created concurrently, because such index already exists."
+        end
+
+        execute "CREATE #{type} INDEX #{creation_method} #{quote_column_name(name)} " \
+          "ON #{quote_table_name(table_name)} (#{columns})#{opts}"
       end
 
       # Checks to see if an index exists on a table for a given index definition.
@@ -24,7 +48,7 @@ module ActiveRecord
       #  # Check that a partial index exists
       #  index_exists?(:suppliers, :company_id, :where => 'active')
       #
-      #  # GIVEN: "index_suppliers_on_company_id" UNIQUE, btree (company_id) WHERE active
+      #  # GIVEN: 'index_suppliers_on_company_id' UNIQUE, btree (company_id) WHERE active
       #  index_exists?(:suppliers, :company_id, :unique => true, :where => 'active') => true
       #  index_exists?(:suppliers, :company_id, :unique => true) => false
       #
@@ -88,14 +112,16 @@ module ActiveRecord
       # Added support for partial indexes implemented using the :where option
       #
       def add_index_options(table_name, column_name, options = {})
-        column_names = Array(column_name)
-        index_name   = index_name(table_name, :column => column_names)
+        column_names          = Array(column_name)
+        index_name            = index_name(table_name, :column => column_names)
+        index_creation_method = nil
 
         if Hash === options # legacy support, since this param was a string
-          index_type = options[:unique] ? "UNIQUE" : ""
+          index_type = options[:unique] ? 'UNIQUE' : ''
+          index_creation_method = options[:concurrently] ? 'CONCURRENTLY' : ''
           index_name = options[:name].to_s if options.key?(:name)
           if supports_partial_index?
-            index_options = options[:where] ? " WHERE #{options[:where]}" : ""
+            index_options = options[:where] ? " WHERE #{options[:where]}" : ''
           end
         else
           index_type = options
@@ -107,9 +133,9 @@ module ActiveRecord
         if index_name_exists?(table_name, index_name, false)
           raise ArgumentError, "Index name '#{index_name}' on table '#{table_name}' already exists"
         end
-        index_columns = quoted_columns_for_index(column_names, options).join(", ")
+        index_columns = quoted_columns_for_index(column_names, options).join(', ')
 
-        [index_name, index_type, index_columns, index_options]
+        [index_name, index_type, index_creation_method, index_columns, index_options]
       end
       protected :add_index_options
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120720103136) do
+ActiveRecord::Schema.define(:version => 20120904114121) do
 
   create_schema "demography"
   create_schema "later"
@@ -55,6 +55,7 @@ ActiveRecord::Schema.define(:version => 20120720103136) do
     t.datetime "updated_at",   :null => false
   end
 
+  add_index "users", ["email"], :name => "index_users_on_email"
   add_index "users", ["name"], :name => "index_users_on_name"
 
   create_table "demography.cities", :force => true do |t|

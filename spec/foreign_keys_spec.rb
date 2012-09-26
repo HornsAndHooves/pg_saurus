@@ -1,3 +1,5 @@
+require 'spec_helper'
+
 describe 'Foreign keys' do
   describe '#add_foreign_key' do
     # AddForeignKeys migration
@@ -24,6 +26,36 @@ describe 'Foreign keys' do
         connection.add_index 'demography.citizens', :user_id
         connection.add_foreign_key 'demography.citizens', 'users'
       }.to raise_exception(PgPower::IndexExistsError)
+    end
+
+    describe 'with creating index concurrently' do
+      let(:expected_index_query) do
+        'CREATE  INDEX CONCURRENTLY "index_steroids_on_user_id" ON "steroids" ("user_id")'
+      end
+
+      before do
+        ActiveRecord::Base.connection.stub(:execute)
+        ActiveRecord::Migration.stub(:id_column_name_from_table_name => 'user_id')
+      end
+
+
+      it 'should create index concurrently' do
+        ActiveRecord::Base.connection.should_receive(:execute).ordered
+        ActiveRecord::Base.connection.should_receive(:execute).ordered.once do |query|
+          query.should == expected_index_query
+        end
+
+        ActiveRecord::Migration.add_foreign_key :steroids, :users, :concurrent_index => true
+        ActiveRecord::Migration.process_postponed_queries
+      end
+
+      it 'should raise ArgumentError when conflicting options are given' do
+        expect do
+          ActiveRecord::Migration.add_foreign_key(:steroids, :users,
+            :exclude_index => true, :concurrent_index => true)
+        end.to raise_error(ArgumentError,
+          'Conflicted options(exclude_index, concurrent_index) was found, both are set to true.')
+      end
     end
   end
 

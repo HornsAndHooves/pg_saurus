@@ -1,8 +1,4 @@
 module PgPower # :nodoc:
-  # Raised when an unexpected index exists
-  class IndexExistsError < StandardError
-  end
-
   # Provides methods to extend {ActiveRecord::ConnectionAdapters::PostgreSQLAdapter}
   # to support foreign keys feature.
   module ConnectionAdapters::PostgreSQLAdapter::ForeignerMethods
@@ -70,30 +66,51 @@ module PgPower # :nodoc:
     #
     # Ensures that an index is created for the foreign key, unless :exclude_index is true.
     #
-    # Raises a [PgPower::IndexExistsError] when :exclude_index is true, but the index already exists.
-    #
     # == Options:
     # * :column
     # * :primary_key
     # * :dependent
-    # * :exclude_index [Boolean]
+    # * :exclude_index    [Boolean]
+    # * :concurrent_index [Boolean]
     #
-    # @param [String, Symbol] from_table
-    # @param [String, Symbol] to_table
-    # @param [Hash] options
+    # @param [String, Symbol]          from_table
+    # @param [String, Symbol]          to_table
+    # @param [Hash]                    options
+    # @option options [String, Symbol] :column
+    # @option options [String, Symbol] :primary_key
+    # @option options [Hash]           :dependent
+    # @option options [Boolean]        :exclude_index
+    # @option options [Boolean]        :concurrent_index
     #
+    # @raise [PgPower::IndexExistsError] when :exclude_index is true, but the index already exists
     def add_foreign_key(from_table, to_table, options = {})
-      options[:column] ||= id_column_name_from_table_name(to_table)
-      options[:exclude_index] ||= false
+      options[:column]             ||= id_column_name_from_table_name(to_table)
+      options[:exclude_index]      ||= false
 
-      if index_exists?(from_table, options[:column]) and !options[:exclude_index]
-        raise PgPower::IndexExistsError, "The index, #{index_name(from_table, options[:column])}, already exists.  Use :exclude_index => true when adding the foreign key."
+      if index_exists?(from_table, options[:column]) && !options[:exclude_index]
+        raise PgPower::IndexExistsError,
+          "The index, #{index_name(from_table, options[:column])}, already exists." \
+          "  Use :exclude_index => true when adding the foreign key."
       end
 
       sql = "ALTER TABLE #{quote_table_name(from_table)} #{add_foreign_key_sql(from_table, to_table, options)}"
       execute(sql)
 
-      add_index(from_table, options[:column]) unless options[:exclude_index]
+      # GOTCHA:
+      #   Index can not be created concurrently inside transaction in PostgreSQL.
+      #   So, in case of concurrently created index with foreign key only
+      #   foreign key will be created inside migration transaction and after
+      #   closing transaction queries for index creation will be send to database.
+      #   That's why I prevent here normal index creation in case of
+      #   `concurrent_index` option is given.
+      #   NOTE: Index creation after closing migration transaction could lead
+      #   to weird effects when transaction moves smoothly, but index
+      #   creation with error. In that case transaction will not be rolled back.
+      #   As it was closed before even index was attempted to create.
+      #   -- zekefast 2012-09-12
+      unless options[:exclude_index] || options[:concurrent_index]
+        add_index(from_table, options[:column])
+      end
     end
 
     # Returns chunk of SQL to add foreign key based on table names and options.
@@ -130,13 +147,13 @@ module PgPower # :nodoc:
     #
     def remove_foreign_key(from_table, to_table_or_options_hash, options={})
       if Hash === to_table_or_options_hash
-        options = to_table_or_options_hash
-        column = options[:column]
-        foreign_key_name = foreign_key_name(from_table, column, options)
-        column ||= id_column_name_from_foreign_key_metadata(from_table, foreign_key_name)
+        options          =   to_table_or_options_hash
+        column           =   options[:column]
+        foreign_key_name =   foreign_key_name(from_table, column, options)
+        column           ||= id_column_name_from_foreign_key_metadata(from_table, foreign_key_name)
       else
-        column = id_column_name_from_table_name(to_table_or_options_hash)
-        foreign_key_name = foreign_key_name(from_table, column)
+        column           =   id_column_name_from_table_name(to_table_or_options_hash)
+        foreign_key_name =   foreign_key_name(from_table, column)
       end
 
       execute "ALTER TABLE #{quote_table_name(from_table)} #{remove_foreign_key_sql(foreign_key_name)}"
@@ -154,7 +171,6 @@ module PgPower # :nodoc:
     def id_column_name_from_table_name(table)
       "#{table.to_s.split('.').last.singularize}_id"
     end
-    private :id_column_name_from_table_name
 
     # Extracts the foreign key column id from the foreign key metadata
     # @param [String, Symbol] from_table
@@ -165,7 +181,7 @@ module PgPower # :nodoc:
       this_key.options[:column]
     end
     private :id_column_name_from_foreign_key_metadata
-    
+
     # Builds default name for constraint
     def foreign_key_name(table, column, options = {})
       if options[:name]

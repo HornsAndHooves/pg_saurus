@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "pg_power"
-  s.version = "1.0.1"
+  s.version = "1.1.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Potapov Sergey", "Arthur Shagall", "TMX Credit"]
-  s.date = "2012-09-12"
+  s.date = "2012-09-26"
   s.description = "ActiveRecord extensions for PostgreSQL. Provides useful tools and ability to create/drop schemas in migrations."
   s.email = ["rubygems@tmxcredit.com"]
   s.extra_rdoc_files = [
@@ -39,7 +39,9 @@ Gem::Specification.new do |s|
     "lib/pg_power/connection_adapters/table.rb",
     "lib/pg_power/connection_adapters/table/comment_methods.rb",
     "lib/pg_power/connection_adapters/table/foreigner_methods.rb",
+    "lib/pg_power/create_index_concurrently.rb",
     "lib/pg_power/engine.rb",
+    "lib/pg_power/errors.rb",
     "lib/pg_power/migration.rb",
     "lib/pg_power/migration/command_recorder.rb",
     "lib/pg_power/migration/command_recorder/comment_methods.rb",

@@ -9,12 +9,10 @@ module PgPower
          'errors',
          'connection_adapters/postgresql_adapter',
          'connection_adapters/abstract/schema_statements'].each do |path|
-          require PgPower::Engine.root + 'lib/core_ext/active_record/' + path
+          require ::PgPower::Engine.root + 'lib/core_ext/active_record/' + path
         end
 
-        ActiveRecord::SchemaDumper.class_eval do
-          include PgPower::SchemaDumper
-        end
+        ActiveRecord::SchemaDumper.class_eval { include ::PgPower::SchemaDumper }
 
         if defined?(ActiveRecord::Migration::CommandRecorder)
           ActiveRecord::Migration::CommandRecorder.class_eval do
@@ -22,12 +20,24 @@ module PgPower
           end
         end
 
+        # Follow three include statements add support for concurrently
+        #   index creation in migrations.
+        ActiveRecord::Migration.class_eval do
+          include ::PgPower::CreateIndexConcurrently::Migration
+        end
+        ActiveRecord::Migrator.class_eval do
+          include ::PgPower::CreateIndexConcurrently::Migrator
+        end
+        ActiveRecord::MigrationProxy.class_eval do
+          include ::PgPower::CreateIndexConcurrently::MigrationProxy
+        end
+
         ActiveRecord::ConnectionAdapters::Table.module_eval do
-          include PgPower::ConnectionAdapters::Table
+          include ::PgPower::ConnectionAdapters::Table
         end
 
         ActiveRecord::ConnectionAdapters::AbstractAdapter.module_eval do
-          include PgPower::ConnectionAdapters::AbstractAdapter
+          include ::PgPower::ConnectionAdapters::AbstractAdapter
         end
 
         if defined?(ActiveRecord::ConnectionAdapters::JdbcAdapter)
@@ -37,7 +47,7 @@ module PgPower
         end
 
         sql_adapter_class.class_eval do
-          include PgPower::ConnectionAdapters::PostgreSQLAdapter
+          include ::PgPower::ConnectionAdapters::PostgreSQLAdapter
         end
 
       end
