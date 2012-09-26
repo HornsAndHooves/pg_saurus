@@ -21,6 +21,24 @@ module ActiveRecord
       #
       def add_index(table_name, column_name, options = {})
         name, type, creation_method, columns, opts = add_index_options(table_name, column_name, options)
+
+        # GOTCHA:
+        #   It ensures that there is no index exists only for the case when index
+        #   created concurrently to avoid to change error behaviour for normal
+        #   indexes.
+        #   -- zekefast 2012-09-25
+        # GOTCHA:
+        #   This check prevents invalid index creation, so after migration failed
+        #   here there is no need to go to database and clean it from invalid
+        #   indexes. But note that this is only one of the cases when index
+        #   creation could end up with fail!!! All other case should be procesed
+        #   manually.
+        #   -- zekefast 2012-09-25
+        if options.has_key?(:concurrently) && index_exists?(table_name, column_name, options)
+          raise ::PgPower::IndexExistsError, "Index #{name} for `#{table_name}.#{column_name}` " \
+            "column can not be created concurrently, because such index already exists."
+        end
+
         execute "CREATE #{type} INDEX #{creation_method} #{quote_column_name(name)} " \
           "ON #{quote_table_name(table_name)} (#{columns})#{opts}"
       end

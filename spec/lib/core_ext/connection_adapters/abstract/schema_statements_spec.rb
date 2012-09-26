@@ -17,5 +17,16 @@ describe ActiveRecord::ConnectionAdapters::SchemaStatements do
       ActiveRecord::Migration.add_index :users, :phone_number, :concurrently => true
       ActiveRecord::Migration.process_postponed_queries
     end
+
+    it 'raises index exists error' do
+      ActiveRecord::Base.connection.stub(:index_exists? => true)
+      ActiveRecord::Base.connection.should_receive(:index_exists?).once
+
+      ActiveRecord::Migration.add_index :users, :phone_number, :concurrently => true
+
+      expect {
+        ActiveRecord::Migration.process_postponed_queries
+      }.to raise_exception(::PgPower::IndexExistsError)
+    end
   end
 end
