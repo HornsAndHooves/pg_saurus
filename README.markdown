@@ -209,12 +209,6 @@ PgPower::Tools.index_exists?(table, columns, options)   # => returns true if an 
 
 ## TODO:
 
-Add next syntax to create table:
-```ruby
-create_table "table_name", :schema => "schema_name" do |t|
-  # columns goes here
-end
-```
 Support for JRuby:
 
 * Jdbc driver provides its own `create_schema(schema, user)` method - solve conflicts.
