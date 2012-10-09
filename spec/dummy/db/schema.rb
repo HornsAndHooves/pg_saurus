@@ -16,8 +16,8 @@ ActiveRecord::Schema.define(:version => 20121009170904) do
   create_schema "later"
   create_schema "latest"
 
-  create_extension "cube", :schema => "demography", :version => "1.0"
   create_extension "fuzzystrmatch", :version => "1.0"
+  create_extension "cube", :schema => "demography", :version => "1.0"
 
   create_table "breeds", :force => true do |t|
     t.string   "name"
