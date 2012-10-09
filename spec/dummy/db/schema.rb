@@ -10,25 +10,25 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121009173447) do
+ActiveRecord::Schema.define(:version => 20121009170904) do
 
   create_schema "demography"
   create_schema "later"
   create_schema "latest"
 
-  create_extension "fuzzystrmatch", :version => "1.0"
   create_extension "cube", :schema => "demography", :version => "1.0"
+  create_extension "fuzzystrmatch", :version => "1.0"
 
   create_table "breeds", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "owners", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "pets", :force => true do |t|
@@ -53,8 +53,8 @@ ActiveRecord::Schema.define(:version => 20121009173447) do
     t.string   "name"
     t.string   "email"
     t.string   "phone_number"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email"
@@ -74,8 +74,8 @@ ActiveRecord::Schema.define(:version => 20121009173447) do
     t.string   "last_name"
     t.date     "birthday"
     t.text     "bio"
-    t.datetime "created_at",                    :null => false
-    t.datetime "updated_at",                    :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.boolean  "active",     :default => false, :null => false
   end
 
@@ -84,8 +84,8 @@ ActiveRecord::Schema.define(:version => 20121009173447) do
   create_table "demography.countries", :force => true do |t|
     t.string   "name"
     t.string   "continent"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "demography.people", :force => true do |t|

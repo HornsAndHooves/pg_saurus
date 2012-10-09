@@ -70,7 +70,7 @@ module PgPower::ConnectionAdapters::PostgreSQLAdapter::ExtensionMethods
       mode = mode.to_sym
 
       unless AVAILABLE_DROP_MODES.include?(mode)
-        raise ArgumentError, "Expected one of #{AVAILABLE_DROP_MODES.KEYS.inspect} drop modes, but #{model} received"
+        raise ArgumentError, "Expected one of #{AVAILABLE_DROP_MODES.KEYS.inspect} drop modes, but #{mode} received"
       end
 
       sql << AVAILABLE_DROP_MODES[mode]
