@@ -13,10 +13,10 @@ module PgPower::SchemaDumper::ExtensionMethods
   def dump_extensions(stream)
     extensions = @connection.extensions
     commands = extensions.map do |extension_name, options|
-      result = [%W|create_extension "#{extension_name}"|]
-      result << %W|, :schema => "#{options[:schema_name]}"| unless options[:schema_name] == 'public'
-      result << %W|, :version => "#{options[:version]}"|
-      result.join(' ')
+      result = [%Q|create_extension "#{extension_name}"|]
+      result << %Q|:schema => "#{options[:schema_name]}"| unless options[:schema_name] == 'public'
+      result << %Q|:version => "#{options[:version]}"|
+      result.join(', ')
     end
 
     commands.each do |c|

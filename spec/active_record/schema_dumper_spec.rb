@@ -20,6 +20,13 @@ describe ActiveRecord::SchemaDumper do
       end
     end
 
+    context "Extensions" do
+      it 'dumps loaded extension modules' do
+        @dump.should =~ /create_extension "fuzzystrmatch", :version => "\d+\.\d+"/
+        @dump.should =~ /create_extension "cube", :schema => "demography", :version => "\d+\.\d+"/
+      end
+    end
+
     context 'Tables' do
       it 'dumps tables' do
         @dump.should =~ /create_table "users"/
