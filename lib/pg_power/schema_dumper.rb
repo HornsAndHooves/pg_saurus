@@ -5,10 +5,12 @@ module PgPower::SchemaDumper
   extend ActiveSupport::Autoload
   extend ActiveSupport::Concern
 
+  autoload :ExtensionMethods
   autoload :CommentMethods
   autoload :SchemaMethods
   autoload :ForeignerMethods
 
+  include ExtensionMethods
   include CommentMethods
   include SchemaMethods
   include ForeignerMethods
@@ -17,5 +19,6 @@ module PgPower::SchemaDumper
     alias_method_chain :tables, :schemas
     alias_method_chain :tables, :comments
     alias_method_chain :tables, :foreign_keys
+    alias_method_chain :tables, :extensions
   end
 end
