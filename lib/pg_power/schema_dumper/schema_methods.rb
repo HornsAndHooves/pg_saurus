@@ -1,11 +1,17 @@
 # Extends ActiveRecord::SchemaDumper class to dump schemas other than "public"
 # and tables from those schemas.
 module PgPower::SchemaDumper::SchemaMethods
+  # Dump create schema statements
+  def header_with_schemas(stream)
+    header_without_schemas(stream)
+    schemas(stream)
+    stream
+  end
+
   # * Dumps schemas.
   # * Dumps tables from public schema using native #tables method.
   # * Dumps tables from schemas other than public.
   def tables_with_schemas(stream)
-    schemas(stream)
     tables_without_schemas(stream)
     non_public_schema_tables(stream)
   end

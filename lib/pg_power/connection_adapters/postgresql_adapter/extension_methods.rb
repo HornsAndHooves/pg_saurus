@@ -1,6 +1,7 @@
 # Provides methods to extend {ActiveRecord::ConnectionAdapters::PostgreSQLAdapter}
 # to support extensions feature.
 module PgPower::ConnectionAdapters::PostgreSQLAdapter::ExtensionMethods
+  # Default options for {#create_extension} method
   CREATE_EXTENSION_DEFAULTS = {
       :if_not_exists => true,
       :schema_name   => nil,
@@ -8,6 +9,7 @@ module PgPower::ConnectionAdapters::PostgreSQLAdapter::ExtensionMethods
       :old_version   => nil
   }
 
+  # Default options for {#drop_extension} method
   DROP_EXTENSION_DEFAULTS = {
       :if_exists => true,
       :mode      => :restrict

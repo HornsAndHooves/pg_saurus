@@ -16,9 +16,11 @@ module PgPower::SchemaDumper
   include ForeignerMethods
 
   included do
+    alias_method_chain :header, :schemas
+    alias_method_chain :header, :extensions
+
     alias_method_chain :tables, :schemas
     alias_method_chain :tables, :comments
     alias_method_chain :tables, :foreign_keys
-    alias_method_chain :tables, :extensions
   end
 end
