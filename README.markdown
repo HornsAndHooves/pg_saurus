@@ -191,6 +191,36 @@ Add an index concurrently along with foreign key
     add_foreign_key :table1, :table2, :column => :column_id, :concurrent_index => true
 ```
 
+## Loading/Unloading postgresql extension modules
+
+Postgresql is shipped with a number of [extension modules](http://www.postgresql.org/docs/9.1/static/contrib.html).
+PgPower provides some tools
+to [load](http://www.postgresql.org/docs/9.1/static/sql-createextension.html)/[unload](http://www.postgresql.org/docs/9.1/static/sql-dropextension.html)
+such modules by the means of migrations.
+
+### Examples
+
+Load [fuzzystrmatch](http://www.postgresql.org/docs/9.1/static/fuzzystrmatch.html) extension module
+and create its objects in schema *public*:
+
+```ruby
+   create_extension "fuzzystrmatch"
+```
+
+
+Load version *1.0* of the [cube](http://www.postgresql.org/docs/9.1/static/cube.html) extension module
+and create its objects in schema *demography*.
+
+```ruby
+   create_extension "cube", :schema_name => "demography", :version => "1.0"
+```
+
+Unload extension module:
+
+```ruby
+  drop_extension "fuzzystrmatch"
+```
+
 ## Tools
 
 PgPower::Tools provides number of useful methods:
@@ -218,6 +248,7 @@ Support for JRuby:
 * [Potapov Sergey](https://github.com/greyblake) - schema support
 * [Arthur Shagall](https://github.com/albertosaurus) - thanks for [pg_comment](https://github.com/albertosaurus/pg_comment)
 * [Matthew Higgins](https://github.com/matthuhiggins) - thanks for [foreigner](https://github.com/matthuhiggins/foreigner), which was used as a base for the foreign key support
+* [Artem Ignatyev](https://github.com/cryo28) - extension modules load/unload support
 * [Marcelo Silveira](https://github.com/mhfs) - thanks for rails partial index support that was backported into this gem
 
 ## Copyright and License

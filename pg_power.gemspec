@@ -5,12 +5,12 @@
 
 Gem::Specification.new do |s|
   s.name = "pg_power"
-  s.version = "1.1.0"
+  s.version = "1.2.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = ["Potapov Sergey", "Arthur Shagall", "TMX Credit"]
-  s.date = "2012-09-26"
-  s.description = "ActiveRecord extensions for PostgreSQL. Provides useful tools and ability to create/drop schemas in migrations."
+  s.authors = ["Potapov Sergey", "Arthur Shagall", "Artem Ignatyev", "TMX Credit"]
+  s.date = "2012-10-09"
+  s.description = "ActiveRecord extensions for PostgreSQL. Provides useful tools for schema, foreign_key, index, comment and extensios manipulations in migrations."
   s.email = ["rubygems@tmxcredit.com"]
   s.extra_rdoc_files = [
     "README.markdown"
@@ -32,6 +32,7 @@ Gem::Specification.new do |s|
     "lib/pg_power/connection_adapters/index_definition.rb",
     "lib/pg_power/connection_adapters/postgresql_adapter.rb",
     "lib/pg_power/connection_adapters/postgresql_adapter/comment_methods.rb",
+    "lib/pg_power/connection_adapters/postgresql_adapter/extension_methods.rb",
     "lib/pg_power/connection_adapters/postgresql_adapter/foreigner_methods.rb",
     "lib/pg_power/connection_adapters/postgresql_adapter/index_methods.rb",
     "lib/pg_power/connection_adapters/postgresql_adapter/schema_methods.rb",
@@ -45,10 +46,12 @@ Gem::Specification.new do |s|
     "lib/pg_power/migration.rb",
     "lib/pg_power/migration/command_recorder.rb",
     "lib/pg_power/migration/command_recorder/comment_methods.rb",
+    "lib/pg_power/migration/command_recorder/extension_methods.rb",
     "lib/pg_power/migration/command_recorder/foreigner_methods.rb",
     "lib/pg_power/migration/command_recorder/schema_methods.rb",
     "lib/pg_power/schema_dumper.rb",
     "lib/pg_power/schema_dumper/comment_methods.rb",
+    "lib/pg_power/schema_dumper/extension_methods.rb",
     "lib/pg_power/schema_dumper/foreigner_methods.rb",
     "lib/pg_power/schema_dumper/schema_methods.rb",
     "lib/pg_power/tools.rb",
@@ -71,7 +74,7 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<yard>, [">= 0"])
       s.add_development_dependency(%q<metrical>, [">= 0"])
       s.add_development_dependency(%q<jeweler>, [">= 0"])
-      s.add_development_dependency(%q<ruby-debug19>, [">= 0"])
+      s.add_development_dependency(%q<ruby-debug>, [">= 0"])
     else
       s.add_dependency(%q<pg>, [">= 0"])
       s.add_dependency(%q<rspec-rails>, [">= 0"])
@@ -80,7 +83,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<yard>, [">= 0"])
       s.add_dependency(%q<metrical>, [">= 0"])
       s.add_dependency(%q<jeweler>, [">= 0"])
-      s.add_dependency(%q<ruby-debug19>, [">= 0"])
+      s.add_dependency(%q<ruby-debug>, [">= 0"])
     end
   else
     s.add_dependency(%q<pg>, [">= 0"])
@@ -90,7 +93,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<yard>, [">= 0"])
     s.add_dependency(%q<metrical>, [">= 0"])
     s.add_dependency(%q<jeweler>, [">= 0"])
-    s.add_dependency(%q<ruby-debug19>, [">= 0"])
+    s.add_dependency(%q<ruby-debug>, [">= 0"])
   end
 end
 
