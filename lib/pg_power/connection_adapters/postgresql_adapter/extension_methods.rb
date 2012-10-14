@@ -91,6 +91,10 @@ module PgPower::ConnectionAdapters::PostgreSQLAdapter::ExtensionMethods
   #
   # @return [Hash{String => Hash{Symbol => String}}] A list of loaded extensions with their options
   def extensions
+    # Check postgresql version to not break on Postgresql < 9.1 during schema dump
+    pg_version_str = select_value('SELECT version()')
+    return {} unless pg_version_str =~ /^PostgreSQL (\d+\.\d+.\d+)/ && ($1 >= '9.1')
+
     sql = <<-SQL
       SELECT pge.extname AS ext_name, pgn.nspname AS schema_name, pge.extversion AS ext_version
       FROM pg_extension pge
