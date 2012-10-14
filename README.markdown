@@ -169,7 +169,15 @@ expressions are supported.
 Add an index to a column with a function
 
 ```ruby
-    add_index(:comments, "lower(text)")
+  add_index(:comments, "lower(text)")
+```
+
+You can also specify index access method
+
+```ruby
+  create_extension 'btree_gist'
+  create_extension 'fuzzystrmatch'
+  add_index(:comments, 'dmetaphone(author)', :using => 'gist')
 ```
 
 ## Concurrent index creation
@@ -198,6 +206,9 @@ PgPower provides some tools
 to [load](http://www.postgresql.org/docs/9.1/static/sql-createextension.html)/[unload](http://www.postgresql.org/docs/9.1/static/sql-dropextension.html)
 such modules by the means of migrations.
 
+Please note. CREATE/DROP EXTENSION command has been introduced in postgresql 9.1 only. So this functionality will not be
+available for the previous versions.
+
 ### Examples
 
 Load [fuzzystrmatch](http://www.postgresql.org/docs/9.1/static/fuzzystrmatch.html) extension module
@@ -208,11 +219,11 @@ and create its objects in schema *public*:
 ```
 
 
-Load version *1.0* of the [cube](http://www.postgresql.org/docs/9.1/static/cube.html) extension module
+Load version *1.0* of the [btree_gist](http://www.postgresql.org/docs/9.1/static/btree-gist.html) extension module
 and create its objects in schema *demography*.
 
 ```ruby
-   create_extension "cube", :schema_name => "demography", :version => "1.0"
+   create_extension "btree_gist", :schema_name => "demography", :version => "1.0"
 ```
 
 Unload extension module:
@@ -233,6 +244,7 @@ PgPower::Tools.index_exists?(table, columns, options)   # => returns true if an 
 ```
 ## Running tests:
 
+* Ensure your postgresql has postgres-contrib (Ubuntu) package installed. Tests depend on btree_gist and fuzzystrmatch extensions
 * Configure `spec/dummy/config/database.yml` for development and test environments.
 * Run `rake spec`.
 * Make sure migrations don't raise exceptions and all specs pass.

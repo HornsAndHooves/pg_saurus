@@ -42,10 +42,11 @@ module ActiveRecord # :nodoc:
         schemas = schema ? "ARRAY['#{schema}']" : 'current_schemas(false)'
 
         result = query(<<-SQL, name)
-          SELECT distinct i.relname, d.indisunique, d.indkey,  pg_get_indexdef(d.indexrelid), t.oid
+          SELECT distinct i.relname, d.indisunique, d.indkey,  pg_get_indexdef(d.indexrelid), t.oid, am.amname
           FROM pg_class t
           INNER JOIN pg_index d ON t.oid = d.indrelid
           INNER JOIN pg_class i ON d.indexrelid = i.oid
+          INNER JOIN pg_am    am ON i.relam = am.oid
           WHERE i.relkind = 'i'
             AND d.indisprimary = 'f'
             AND t.relname = '#{table}'
@@ -55,11 +56,12 @@ module ActiveRecord # :nodoc:
 
         result.map do |row|
           index = {
-            :name       => row[0],
-            :unique     => row[1] == 't',
-            :keys       => row[2].split(" "),
-            :definition => row[3],
-            :id         => row[4]
+            :name          => row[0],
+            :unique        => row[1] == 't',
+            :keys          => row[2].split(" "),
+            :definition    => row[3],
+            :id            => row[4],
+            :access_method => row[5]
           }
 
           column_names = find_column_names(table_name, index)
@@ -68,7 +70,7 @@ module ActiveRecord # :nodoc:
             where   = find_where_statement(index)
             lengths = find_lengths(index)
 
-            PgPower::ConnectionAdapters::IndexDefinition.new(table_name, index[:name], index[:unique], column_names, lengths, where)
+            PgPower::ConnectionAdapters::IndexDefinition.new(table_name, index[:name], index[:unique], column_names, lengths, where, index[:access_method])
           end
         end.compact
       end

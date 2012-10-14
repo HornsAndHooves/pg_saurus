@@ -9,7 +9,7 @@ module ActiveRecord
       # an Array of Symbols.
       #
       # ====== Creating a partial index
-      #  add_index(:accounts, [:branch_id, :party_id],
+      #  add_index(:accounts, [:branch_id, :party_id], :using => 'BTree'
       #   :unique => true, :concurrently => true, :where => 'active')
       # generates
       #  CREATE UNIQUE INDEX CONCURRENTLY
@@ -38,8 +38,14 @@ module ActiveRecord
             "column can not be created concurrently, because such index already exists."
         end
 
-        execute "CREATE #{type} INDEX #{creation_method} #{quote_column_name(name)} " \
-          "ON #{quote_table_name(table_name)} (#{columns})#{opts}"
+        sql = ["CREATE #{type} INDEX"]
+        sql << creation_method.to_s
+        sql << quote_column_name(name)
+        sql << "ON #{quote_table_name(table_name)}"
+        sql << "USING #{options[:using].to_s.downcase}" if options[:using]
+        sql << "(#{columns})#{opts}"
+
+        execute sql.join(" ")
       end
 
       # Checks to see if an index exists on a table for a given index definition.
