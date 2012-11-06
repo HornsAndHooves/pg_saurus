@@ -29,6 +29,8 @@ module ActiveRecord #:nodoc:
           #  Append :where clause if a partial index
           statement_parts << (':where => ' + index.where.inspect) if index.where
 
+          statement_parts << (':using => ' + index.access_method.inspect) unless index.access_method.downcase == 'btree'
+
           '  ' + statement_parts.join(', ')
         end
 

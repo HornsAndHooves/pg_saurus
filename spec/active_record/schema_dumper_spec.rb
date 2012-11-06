@@ -20,6 +20,13 @@ describe ActiveRecord::SchemaDumper do
       end
     end
 
+    context "Extensions" do
+      it 'dumps loaded extension modules' do
+        @dump.should =~ /create_extension "fuzzystrmatch", :version => "\d+\.\d+"/
+        @dump.should =~ /create_extension "btree_gist", :schema_name => "demography", :version => "\d+\.\d+"/
+      end
+    end
+
     context 'Tables' do
       it 'dumps tables' do
         @dump.should =~ /create_table "users"/
@@ -53,6 +60,10 @@ describe ActiveRecord::SchemaDumper do
 
       it 'dumps partial functional indexes' do
         @dump.should =~ /add_index "pets", \["upper\(color\)"\].*:where => "\(name IS NULL\)"/
+      end
+
+      it 'dumps indexes with non default access method' do
+        @dump.should =~ Regexp.new(Regexp.quote('add_index "pets", ["user_id"], :name => "index_pets_on_user_id_gist", :using => "gist"'))
       end
     end
 
