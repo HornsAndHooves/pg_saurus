@@ -69,7 +69,7 @@ Gem::Specification.new do |s|
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<pg>, [">= 0"])
       s.add_runtime_dependency(%q<rspec-rails>, [">= 0"])
-      s.add_runtime_dependency(%q<rails>, ["~> 3.1"])
+      s.add_runtime_dependency(%q<rails>, ['>= 3.1', '< 4.1'])
       s.add_development_dependency(%q<rcov>, [">= 0"])
       s.add_development_dependency(%q<yard>, [">= 0"])
       s.add_development_dependency(%q<metrical>, [">= 0"])
@@ -78,7 +78,7 @@ Gem::Specification.new do |s|
     else
       s.add_dependency(%q<pg>, [">= 0"])
       s.add_dependency(%q<rspec-rails>, [">= 0"])
-      s.add_dependency(%q<rails>, ["~> 3.1"])
+      s.add_dependency(%q<rails>, ['>= 3.1', '< 4.1'])
       s.add_dependency(%q<rcov>, [">= 0"])
       s.add_dependency(%q<yard>, [">= 0"])
       s.add_dependency(%q<metrical>, [">= 0"])
@@ -88,7 +88,7 @@ Gem::Specification.new do |s|
   else
     s.add_dependency(%q<pg>, [">= 0"])
     s.add_dependency(%q<rspec-rails>, [">= 0"])
-    s.add_dependency(%q<rails>, ["~> 3.1"])
+    s.add_dependency(%q<rails>, ['>= 3.1', '< 4.1'])
     s.add_dependency(%q<rcov>, [">= 0"])
     s.add_dependency(%q<yard>, [">= 0"])
     s.add_dependency(%q<metrical>, [">= 0"])
