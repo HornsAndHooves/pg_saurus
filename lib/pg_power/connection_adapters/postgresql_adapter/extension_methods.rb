@@ -113,6 +113,6 @@ module PgPower::ConnectionAdapters::PostgreSQLAdapter::ExtensionMethods
       ]
     end
 
-    Hash[result]
+    result.to_hash
   end
 end
