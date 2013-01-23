@@ -103,16 +103,10 @@ module PgPower::ConnectionAdapters::PostgreSQLAdapter::ExtensionMethods
     SQL
 
     result = select_all(sql)
-    result.map! do |row|
-      [
-          row['ext_name'],
-          {
-              :schema_name => row['schema_name'],
-              :version => row['ext_version']
-          }
-      ]
-    end
 
-    Hash[result]
+    result.inject({}){ | hash, row|
+      hash[row['ext_name']] = { :schema_name => row['schema_name'], :version => row['ext_version'] }
+      hash
+    }
   end
 end
