@@ -1,4 +1,12 @@
 ENV["RAILS_ENV"] ||= 'test'
+# We probably don't want to use simplecov in Travis:CI, and we want to confirm
+# simplecov exists (it won't in ruby 1.8.X)
+if !ENV['TRAVIS'] && require('simplecov')
+  SimpleCov.start do
+    add_filter 'spec'
+  end
+end
+
 require File.expand_path("../dummy/config/environment", __FILE__)
 require 'rspec/rails'
 require 'rspec/autorun'
