@@ -16,6 +16,8 @@ ActiveRecord extension to get more from PostgreSQL:
 
 It was tested with Rails 3.1.x and 3.2.x, Ruby 1.8.7 REE and 1.9.3.
 
+NOTE: JRuby is unfortunately not supported. The current ActiveRecord JDBC adapter has its
+own support for creating schemas, which conflicts with this gem.
 
 ## Schemas
 
