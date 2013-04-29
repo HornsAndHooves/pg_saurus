@@ -22,6 +22,12 @@ describe 'Indexes' do
       PgPower::Explorer.index_exists?(:pets, "gin(to_tsvector('english', name))" ).should be_true
     end
 
+    it 'should allow indexes with expressions using functions with multiple arguments as dumped' do
+      ActiveRecord::Migration.add_index(:pets, "to_tsvector('english'::regconfig, name)", :using => 'gin')
+
+      PgPower::Explorer.index_exists?(:pets, "gin(to_tsvector('english', name))" ).should be_true
+    end
+
     # TODO support this canonical example
     it 'should allow indexes with advanced expressions' do
       pending "Not sophisticated enough for this yet"

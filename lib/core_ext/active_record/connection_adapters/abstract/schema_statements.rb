@@ -3,7 +3,7 @@ module ActiveRecord
     module SchemaStatements # :nodoc:
       # Regexp used to find the function name and function argument of a
       # function call
-      FUNCTIONAL_INDEX_REGEXP = /(\w+)\(((?:'.+', *)*)(\w+)\)/
+      FUNCTIONAL_INDEX_REGEXP = /(\w+)\(((?:'.+'(?:::\w+)?, *)*)(\w+)\)/
 
       # Adds a new index to the table.  +column_name+ can be a single Symbol, or
       # an Array of Symbols.
