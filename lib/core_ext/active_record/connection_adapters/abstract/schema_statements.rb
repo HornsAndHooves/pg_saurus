@@ -3,7 +3,7 @@ module ActiveRecord
     module SchemaStatements # :nodoc:
       # Regexp used to find the function name and function argument of a
       # function call
-      FUNCTIONAL_INDEX_REGEXP = /(\w+)\((\w+)\)/
+      FUNCTIONAL_INDEX_REGEXP = /(\w+)\(((?:'.+'(?:::\w+)?, *)*)(\w+)\)/
 
       # Adds a new index to the table.  +column_name+ can be a single Symbol, or
       # an Array of Symbols.
@@ -149,7 +149,7 @@ module ActiveRecord
       def quoted_columns_for_index(column_names, options = {})
         column_names.map do |name|
           if name =~ FUNCTIONAL_INDEX_REGEXP
-            "#{$1}(#{quote_column_name($2)})"
+            "#{$1}(#{$2}#{quote_column_name($3)})"
           else
             quote_column_name(name)
           end
@@ -160,7 +160,7 @@ module ActiveRecord
       # Map an expression to a name appropriate for an index
       def expression_index_name(column_name)
         if column_name =~ FUNCTIONAL_INDEX_REGEXP
-          "#{$1.downcase}_#{$2}"
+          "#{$1.downcase}_#{$3}"
         else
           column_name
         end

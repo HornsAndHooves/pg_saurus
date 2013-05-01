@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "pg_power"
-  s.version = "1.3.1"
+  s.version = "1.4.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Potapov Sergey", "Arthur Shagall", "Artem Ignatyev", "TMX Credit"]
-  s.date = "2013-03-11"
+  s.date = "2013-05-01"
   s.description = "ActiveRecord extensions for PostgreSQL. Provides useful tools for schema, foreign_key, index, comment and extensios manipulations in migrations."
   s.email = ["rubygems@tmxcredit.com"]
   s.extra_rdoc_files = [
@@ -60,7 +60,7 @@ Gem::Specification.new do |s|
   ]
   s.homepage = "https://github.com/TMXCredit/pg_power"
   s.require_paths = ["lib"]
-  s.rubygems_version = "1.8.25"
+  s.rubygems_version = "1.8.24"
   s.summary = "ActiveRecord extensions for PostgreSQL."
 
   if s.respond_to? :specification_version then
