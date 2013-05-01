@@ -47,6 +47,7 @@ ActiveRecord::Schema.define(:version => 20121009170904) do
   add_index "pets", ["color"], :name => "index_pets_on_color"
   add_index "pets", ["country_id"], :name => "index_pets_on_country_id"
   add_index "pets", ["lower(name)"], :name => "index_pets_on_lower_name"
+  add_index "pets", ["to_tsvector('english'::regconfig, name)"], :name => "index_pets_on_to_tsvector_name_gist", :using => "gist"
   add_index "pets", ["upper(color)"], :name => "index_pets_on_upper_color", :where => "(name IS NULL)"
   add_index "pets", ["user_id"], :name => "index_pets_on_user_id"
   add_index "pets", ["user_id"], :name => "index_pets_on_user_id_gist", :using => "gist"
