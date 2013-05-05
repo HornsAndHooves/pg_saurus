@@ -33,6 +33,19 @@ module PgPower::Explorer
     SQL
   end
 
+  def get_index_comment(index_name)
+    schema, index = to_schema_and_table(index_name)
+    connection.query(<<-SQL).flatten.first
+      SELECT d.description AS comment
+      FROM pg_description d
+      JOIN pg_class c ON c.oid = d.objoid
+      JOIN pg_namespace ON c.relnamespace = pg_namespace.oid
+      WHERE c.relkind = 'i'
+        AND c.relname = '#{index}'
+        AND pg_namespace.nspname = '#{schema}'
+    SQL
+  end
+
   def has_foreign_key?(table_name, column)
     schema, table = to_schema_and_table(table_name)
 

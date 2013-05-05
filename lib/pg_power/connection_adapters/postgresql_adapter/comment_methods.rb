@@ -53,6 +53,21 @@ module PgPower::ConnectionAdapters::PostgreSQLAdapter::CommentMethods
     end
   end
 
+  # Sets the given comment on the given index
+  # @param [String, Symbol] index_name The name of the index
+  # @param [String, Symbol] comment The comment to set on the index
+  def set_index_comment(index_name, comment)
+    sql = "COMMENT ON INDEX #{quote_string(index_name)} IS $$#{comment}$$;"
+    execute sql
+  end
+
+  # Removes any comment from the given index
+  # @param [String, Symbol] index_name The name of the index
+  def remove_index_comment(index_name)
+    sql = "COMMENT ON INDEX #{quote_string(index_name)} IS NULL;"
+    execute sql
+  end
+
   # Fetches all comments related to passed table.
   # I returns table comment and column comments as well.
   # ===Example
@@ -61,7 +76,7 @@ module PgPower::ConnectionAdapters::PostgreSQLAdapter::CommentMethods
   #                           ["email", "Comment on email column"]]
   def comments(table_name)
     relation_name, schema_name = table_name.split(".", 2).reverse
-    schema_name ||= "public" 
+    schema_name ||= :public
 
     com = select_all <<-SQL
       SELECT a.attname AS column_name, d.description AS comment
@@ -74,6 +89,24 @@ module PgPower::ConnectionAdapters::PostgreSQLAdapter::CommentMethods
     SQL
     com.map do |row|
       [ row['column_name'], row['comment'] ]
+    end
+  end
+
+  # Fetches index comments
+  def index_comments
+    query =  <<-SQL
+      SELECT c.relname AS index_name, d.description AS comment, pg_namespace.nspname AS schema_name
+      FROM pg_description d
+      JOIN pg_class c ON c.oid = d.objoid
+      JOIN pg_namespace ON c.relnamespace = pg_namespace.oid
+      WHERE c.relkind = 'i'
+      ORDER BY schema_name, index_name
+    SQL
+
+    com = select_all(query)
+
+    com.map do |row|
+      [ row['schema_name'], row['index_name'], row['comment'] ]
     end
   end
 end

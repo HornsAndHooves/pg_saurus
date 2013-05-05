@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121009170904) do
+ActiveRecord::Schema.define(:version => 20130504233224) do
 
   create_schema "demography"
   create_schema "later"
@@ -111,6 +111,9 @@ ActiveRecord::Schema.define(:version => 20121009170904) do
   set_column_comment 'demography.citizens', 'last_name', 'Last name'
 
   set_column_comment 'demography.countries', 'name', 'Country name'
+
+  set_index_comment 'demography.index_demography_citizens_on_country_id_and_user_id', 'Unique index on active citizens'
+  set_index_comment 'index_pets_on_to_tsvector_name_gist', 'Functional index on name'
 
   add_foreign_key "demography.cities", "demography.countries", :name => "demography_cities_country_id_fk", :column => "country_id", :exclude_index => true
 

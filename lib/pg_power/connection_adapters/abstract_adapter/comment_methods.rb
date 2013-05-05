@@ -59,4 +59,14 @@ module PgPower::ConnectionAdapters::AbstractAdapter::CommentMethods
   def remove_column_comments(table_name, *column_names)
 
   end
+
+  # Sets the comment on the given index
+  def set_index_comment(index_name, comment)
+
+  end
+
+  # Removes the comment from the given index
+  def remove_index_comment(index_name)
+
+  end
 end

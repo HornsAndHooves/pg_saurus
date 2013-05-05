@@ -1,4 +1,4 @@
-class DemographyPopulationStatisctics < ActiveRecord::Migration
+class DemographyPopulationStatistics < ActiveRecord::Migration
   def change
     create_table "population_statistics", :schema => "demography" do |t|
       t.integer :year

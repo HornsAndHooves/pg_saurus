@@ -98,6 +98,14 @@ describe ActiveRecord::SchemaDumper do
       it 'dumps column comments from non-public schemas' do
         @dump.should =~ /set_column_comment 'demography.citizens', 'first_name', 'First name'/
       end
+
+      it 'dumps index comments' do
+        @dump.should =~ /set_index_comment 'index_pets_on_to_tsvector_name_gist', 'Functional index on name'/
+      end
+
+      it 'dumps index comments from non-public schemas' do
+        @dump.should =~/set_index_comment 'demography.index_demography_citizens_on_country_id_and_user_id', 'Unique index on active citizens'/
+      end
     end
 
   end
