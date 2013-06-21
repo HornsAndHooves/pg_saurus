@@ -7,9 +7,11 @@ module PgPower::Migration::CommandRecorder
   autoload :SchemaMethods
   autoload :CommentMethods
   autoload :ForeignerMethods
+  autoload :ViewMethods
 
   include ExtensionMethods
   include SchemaMethods
   include CommentMethods
   include ForeignerMethods
+  include ViewMethods
 end

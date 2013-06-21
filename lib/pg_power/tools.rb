@@ -6,6 +6,9 @@ module PgPower
   #   PgPower::Tools.drop_schema "services"    # => remove the schema
   #   PgPower::Tools.schemas                   # => ["public", "information_schema", "nets"]
   #   PgPower::Tools.move_table_to_schema :computers, :nets
+  #   PgPower::Tools.create_view view_name, sql # => creates new DB view
+  #   PgPower::Tools.drop_view view_name       # => removes the view
+  #   PgPower::Tools.views                     # => ["x_view", "y_view", "z_view"]
   module Tools
     extend self
 
@@ -36,7 +39,23 @@ module PgPower
       connection.execute sql
     end
 
-
+    # Creates PostgreSQL view
+    def create_view(view_name, sql)
+      sql = %{}
+      connection.execute sql
+    end
+    
+    # Drops PostgreSQL view
+    def drop_view(view_name)
+      sql = %{}
+      connection.execute sql
+    end
+    
+    # Returnes an array of existing views.
+    def views
+      sql = ""
+      connection.execute sql
+    end
 
     # Return database connections
     def connection

@@ -9,11 +9,13 @@ module PgPower::SchemaDumper
   autoload :CommentMethods
   autoload :SchemaMethods
   autoload :ForeignerMethods
+  autoload :ViewMethods
 
   include ExtensionMethods
   include CommentMethods
   include SchemaMethods
   include ForeignerMethods
+  include ViewMethods
 
   included do
     alias_method_chain :header, :schemas
