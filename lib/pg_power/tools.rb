@@ -40,20 +40,20 @@ module PgPower
     end
 
     # Creates PostgreSQL view
-    def create_view(view_name, sql)
-      sql = %{}
+    def create_view(view_name, view_definition)
+      sql = "CREATE VIEW #{view_name} AS #{view_definition}"
       connection.execute sql
     end
     
     # Drops PostgreSQL view
     def drop_view(view_name)
-      sql = %{}
+      sql = "DROP VIEW #{view_name}"
       connection.execute sql
     end
     
-    # Returnes an array of existing views.
+    # Returnes an array of existing, non system views.
     def views
-      sql = ""
+      sql = "SELECT table_name, view_definition FROM INFORMATION_SCHEMA.views WHERE table_schema = ANY (current_schemas(false))"
       connection.execute sql
     end
 

@@ -17,8 +17,8 @@ module  PgPower::Migration::CommandRecorder::ViewMethods
   end
 
   # :nodoc:
-  # fix me!!!
   def invert_drop_view(args)
-    [:create_view, [args]]
+    raise ActiveRecord::IrreversibleMigration, "drop_view is only reversible if given a view_definition." if args.size < 2
+    [:create_view, args]
   end
 end
