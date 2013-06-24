@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130504233224) do
+ActiveRecord::Schema.define(:version => 20130624154800) do
 
   create_schema "demography"
   create_schema "later"
@@ -19,6 +19,8 @@ ActiveRecord::Schema.define(:version => 20130504233224) do
 
   create_extension "fuzzystrmatch", :version => "1.0"
   create_extension "btree_gist", :schema_name => "demography", :version => "1.0"
+
+  create_view "demography.citizens_view", "SELECT citizens.id, citizens.country_id, citizens.user_id, citizens.first_name, citizens.last_name, citizens.birthday, citizens.bio, citizens.created_at, citizens.updated_at, citizens.active FROM demography.citizens;"
 
   create_table "breeds", :force => true do |t|
     t.string   "name"

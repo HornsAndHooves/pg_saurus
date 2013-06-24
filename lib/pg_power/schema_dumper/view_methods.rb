@@ -11,16 +11,16 @@ module PgPower::SchemaDumper::ViewMethods
   def views(stream)
     # Don't create "system" views.
     view_names = PgPower::Tools.views
-    view_names.each do |view_name, view_definition|
-      view(view_name, view_definition, stream)
+    view_names.each do |options|
+      view(options["table_schema"], options["table_name"], options["view_definition"], stream)
     end
     stream << "\n"
   end
   private :views
 
   # Generates code to create view.
-  def view(view_name, view_definition, stream)
-    stream << "  create_view \"#{view_name}\", \"#{view_definition}\"\n"
+  def view(table_schema, table_name, view_definition, stream)
+    stream << "  create_view \"#{table_schema}.#{table_name}\", \"#{view_definition}\"\n"
   end
   private :view
 

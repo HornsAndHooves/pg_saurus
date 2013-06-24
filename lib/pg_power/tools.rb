@@ -6,7 +6,7 @@ module PgPower
   #   PgPower::Tools.drop_schema "services"    # => remove the schema
   #   PgPower::Tools.schemas                   # => ["public", "information_schema", "nets"]
   #   PgPower::Tools.move_table_to_schema :computers, :nets
-  #   PgPower::Tools.create_view view_name, sql # => creates new DB view
+  #   PgPower::Tools.create_view view_name, view_definition # => creates new DB view
   #   PgPower::Tools.drop_view view_name       # => removes the view
   #   PgPower::Tools.views                     # => ["x_view", "y_view", "z_view"]
   module Tools
@@ -40,12 +40,15 @@ module PgPower
     end
 
     # Creates PostgreSQL view
+    # @param [String, Symbol] view_name
+    # @param [String] view_definition
     def create_view(view_name, view_definition)
       sql = "CREATE VIEW #{view_name} AS #{view_definition}"
       connection.execute sql
     end
     
     # Drops PostgreSQL view
+    # @param [String, Symbol] view_name
     def drop_view(view_name)
       sql = "DROP VIEW #{view_name}"
       connection.execute sql
@@ -53,7 +56,8 @@ module PgPower
     
     # Returnes an array of existing, non system views.
     def views
-      sql = "SELECT table_name, view_definition FROM INFORMATION_SCHEMA.views WHERE table_schema = ANY (current_schemas(false))"
+      sql = "SELECT table_schema, table_name, view_definition FROM INFORMATION_SCHEMA.views
+      WHERE table_schema NOT IN ('pg_catalog','information_schema')"
       connection.execute sql
     end
 

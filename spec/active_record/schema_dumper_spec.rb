@@ -19,6 +19,12 @@ describe ActiveRecord::SchemaDumper do
         @dump.should =~ /create_schema "demography".*create_schema "later".*create_schema "latest"/m
       end
     end
+    
+    context 'Views' do
+      it 'dumps views' do
+        @dump.should =~ /create_view "demography.citizens_view", "SELECT citizens.id, citizens.country_id, citizens.user_id, citizens.first_name, citizens.last_name, citizens.birthday, citizens.bio, citizens.created_at, citizens.updated_at, citizens.active FROM demography.citizens;"/
+      end
+    end
 
     context "Extensions" do
       it 'dumps loaded extension modules' do
