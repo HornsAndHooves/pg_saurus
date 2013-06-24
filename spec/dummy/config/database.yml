@@ -10,4 +10,4 @@ development: &default
 
 test:
   <<: *default
-  database: pg_power_dummy_development
+  database: pg_power_dummy_test
