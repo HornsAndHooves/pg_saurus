@@ -20,8 +20,6 @@ ActiveRecord::Schema.define(:version => 20130624154800) do
   create_extension "fuzzystrmatch", :version => "1.0"
   create_extension "btree_gist", :schema_name => "demography", :version => "1.0"
 
-  create_view "demography.citizens_view", "SELECT citizens.id, citizens.country_id, citizens.user_id, citizens.first_name, citizens.last_name, citizens.birthday, citizens.bio, citizens.created_at, citizens.updated_at, citizens.active FROM demography.citizens;"
-
   create_table "breeds", :force => true do |t|
     t.string   "name"
     t.datetime "created_at", :null => false
@@ -101,6 +99,8 @@ ActiveRecord::Schema.define(:version => 20130624154800) do
     t.integer "year"
     t.integer "population"
   end
+
+  create_view "demography.citizens_view", "SELECT citizens.id, citizens.country_id, citizens.user_id, citizens.first_name, citizens.last_name, citizens.birthday, citizens.bio, citizens.created_at, citizens.updated_at, citizens.active FROM demography.citizens;"
 
   set_table_comment 'users', 'Information about users'
   set_column_comment 'users', 'name', 'User name'

@@ -1,8 +1,8 @@
 # Extends ActiveRecord::SchemaDumper class to dump views
 module PgPower::SchemaDumper::ViewMethods
   # Dump create view statements
-  def header_with_views(stream)
-    header_without_views(stream)
+  def tables_with_views(stream)
+    tables_without_views(stream)
     views(stream)
     stream
   end
