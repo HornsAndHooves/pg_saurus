@@ -20,12 +20,5 @@ module  PgPower::Migration::CommandRecorder::ViewMethods
   def invert_create_view(args)
     [:drop_view, [args.first]]
   end
-
-  # Inverts deletion of a view in DB.
-  # @param [String, Symbol] view_name
-  # @param [String] view_definition
-  def invert_drop_view(args)
-    raise ActiveRecord::IrreversibleMigration, "drop_view is only reversible if given a view_definition." if args.size < 2
-    [:create_view, args]
-  end
+  
 end
