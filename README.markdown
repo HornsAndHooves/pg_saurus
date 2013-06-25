@@ -235,6 +235,17 @@ Unload extension module:
   drop_extension "fuzzystrmatch"
 ```
 
+## Views
+
+Version 1.6.0 introduces experimental support for creating views. This API should only be used with the understanding
+that it is preliminary 'alpha' at best.
+
+### Example
+
+```ruby
+  create_view "demography.citizens_view", "select * from demography.citizens"
+```
+
 ## Tools
 
 PgPower::Tools provides number of useful methods:

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130504233224) do
+ActiveRecord::Schema.define(:version => 20130624154800) do
 
   create_schema "demography"
   create_schema "later"
@@ -99,6 +99,8 @@ ActiveRecord::Schema.define(:version => 20130504233224) do
     t.integer "year"
     t.integer "population"
   end
+
+  create_view "demography.citizens_view", "SELECT citizens.id, citizens.country_id, citizens.user_id, citizens.first_name, citizens.last_name, citizens.birthday, citizens.bio, citizens.created_at, citizens.updated_at, citizens.active FROM demography.citizens;"
 
   set_table_comment 'users', 'Information about users'
   set_column_comment 'users', 'name', 'User name'
