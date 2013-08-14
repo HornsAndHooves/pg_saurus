@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "pg_power"
-  s.version = "1.6.0"
+  s.version = "1.6.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Potapov Sergey", "Arthur Shagall", "Artem Ignatyev", "TMX Credit"]
-  s.date = "2013-06-25"
+  s.date = "2013-08-14"
   s.description = "ActiveRecord extensions for PostgreSQL. Provides useful tools for schema, foreign_key, index, comment and extensios manipulations in migrations."
   s.email = ["rubygems@tmxcredit.com"]
   s.extra_rdoc_files = [
@@ -71,16 +71,16 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<pg>, [">= 0"])
-      s.add_runtime_dependency(%q<rspec-rails>, [">= 0"])
       s.add_runtime_dependency(%q<rails>, ["~> 3.1"])
+      s.add_development_dependency(%q<rspec-rails>, [">= 0"])
       s.add_development_dependency(%q<yard>, [">= 0"])
       s.add_development_dependency(%q<metrical>, [">= 0"])
       s.add_development_dependency(%q<jeweler>, [">= 0"])
       s.add_development_dependency(%q<ruby-debug19>, [">= 0"])
     else
       s.add_dependency(%q<pg>, [">= 0"])
-      s.add_dependency(%q<rspec-rails>, [">= 0"])
       s.add_dependency(%q<rails>, ["~> 3.1"])
+      s.add_dependency(%q<rspec-rails>, [">= 0"])
       s.add_dependency(%q<yard>, [">= 0"])
       s.add_dependency(%q<metrical>, [">= 0"])
       s.add_dependency(%q<jeweler>, [">= 0"])
@@ -88,8 +88,8 @@ Gem::Specification.new do |s|
     end
   else
     s.add_dependency(%q<pg>, [">= 0"])
-    s.add_dependency(%q<rspec-rails>, [">= 0"])
     s.add_dependency(%q<rails>, ["~> 3.1"])
+    s.add_dependency(%q<rspec-rails>, [">= 0"])
     s.add_dependency(%q<yard>, [">= 0"])
     s.add_dependency(%q<metrical>, [">= 0"])
     s.add_dependency(%q<jeweler>, [">= 0"])

@@ -11,11 +11,11 @@ version18 = (RUBY_VERSION =~ /^1\.8/)
 
 gem 'pg'
 
-# rake spec fails if this is in the :development group:
-gem 'rspec-rails'
 gem 'rails', rails_version
 
 group :development do
+  gem 'rspec-rails'
+
   # code metrics:
   gem 'rcov' if version18
   gem 'yard'
