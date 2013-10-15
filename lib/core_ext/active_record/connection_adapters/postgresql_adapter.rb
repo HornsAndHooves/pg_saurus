@@ -95,13 +95,40 @@ module ActiveRecord # :nodoc:
         if column_names.empty?
           definition = index[:definition].sub(INDEX_WHERE_EXPRESION, '')
           if column_expression = definition.match(INDEX_COLUMN_EXPRESSION)[1]
-            column_names = column_expression.split(',').map do |functional_name|
+            column_names = split_expression(column_expression).map do |functional_name|
               remove_type(functional_name)
             end
           end
         end
 
         column_names
+      end
+
+      # Splits only on commas outside of parens
+      def split_expression(expression)
+        result = []
+        parens = 0
+        buffer = ""
+
+        expression.chars do |char|
+          case char
+          when ','
+            if parens == 0
+              result.push(buffer)
+              buffer = ""
+              next
+            end
+          when '('
+            parens += 1
+          when ')'
+            parens -= 1
+          end
+
+          buffer << char
+        end
+
+        result << buffer unless buffer.empty?
+        result
       end
 
       # Find where statement from index definition

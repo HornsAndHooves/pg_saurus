@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121009170904) do
+ActiveRecord::Schema.define(:version => 20130624154800) do
 
   create_schema "demography"
   create_schema "later"
@@ -47,6 +47,7 @@ ActiveRecord::Schema.define(:version => 20121009170904) do
   add_index "pets", ["color"], :name => "index_pets_on_color"
   add_index "pets", ["country_id"], :name => "index_pets_on_country_id"
   add_index "pets", ["lower(name)"], :name => "index_pets_on_lower_name"
+  add_index "pets", ["to_tsvector('english'::regconfig, name)"], :name => "index_pets_on_to_tsvector_name_gist", :using => "gist"
   add_index "pets", ["upper(color)"], :name => "index_pets_on_upper_color", :where => "(name IS NULL)"
   add_index "pets", ["user_id"], :name => "index_pets_on_user_id"
   add_index "pets", ["user_id"], :name => "index_pets_on_user_id_gist", :using => "gist"
@@ -99,6 +100,8 @@ ActiveRecord::Schema.define(:version => 20121009170904) do
     t.integer "population"
   end
 
+  create_view "demography.citizens_view", "SELECT citizens.id, citizens.country_id, citizens.user_id, citizens.first_name, citizens.last_name, citizens.birthday, citizens.bio, citizens.created_at, citizens.updated_at, citizens.active FROM demography.citizens;"
+
   set_table_comment 'users', 'Information about users'
   set_column_comment 'users', 'name', 'User name'
   set_column_comment 'users', 'email', 'Email address'
@@ -110,6 +113,9 @@ ActiveRecord::Schema.define(:version => 20121009170904) do
   set_column_comment 'demography.citizens', 'last_name', 'Last name'
 
   set_column_comment 'demography.countries', 'name', 'Country name'
+
+  set_index_comment 'demography.index_demography_citizens_on_country_id_and_user_id', 'Unique index on active citizens'
+  set_index_comment 'index_pets_on_to_tsvector_name_gist', 'Functional index on name'
 
   add_foreign_key "demography.cities", "demography.countries", :name => "demography_cities_country_id_fk", :column => "country_id", :exclude_index => true
 
