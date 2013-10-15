@@ -30,7 +30,7 @@ module PgPower
       connection.query(sql).flatten
     end
 
-    # Move table to another schema without loosing data, indexes or constraints.
+    # Move table to another schema without losing data, indexes or constraints.
     # @param [String] table table name (schema prefix is allowed)
     # @param [String] new_schema schema where table should be moved to
     def move_table_to_schema(table, new_schema)
