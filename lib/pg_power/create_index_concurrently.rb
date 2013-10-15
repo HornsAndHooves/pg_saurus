@@ -72,9 +72,9 @@ module PgPower::CreateIndexConcurrently
     def add_index(table_name, column_name, options = {}, &block)
       table_name = ::ActiveRecord::Migrator.proper_table_name(table_name)
       # GOTCHA:
-      #   checks if index should be created concurretnly then put it into
-      #   the queue to wait till queue processing will be called (should be
-      #   happended after closing transaction).
+      #   checks if index should be created concurrently then put it into
+      #   the queue to wait till queue processing will be called (should 
+      #   happen after closing transaction).
       #   Otherwise just delegate call to PgPower's `add_index`.
       #   Block is given for future compatibility.
       #   -- zekefast 2012-09-12
