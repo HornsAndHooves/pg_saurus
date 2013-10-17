@@ -6,6 +6,9 @@ module PgPower
   #   PgPower::Tools.drop_schema "services"    # => remove the schema
   #   PgPower::Tools.schemas                   # => ["public", "information_schema", "nets"]
   #   PgPower::Tools.move_table_to_schema :computers, :nets
+  #   PgPower::Tools.create_view view_name, view_definition # => creates new DB view
+  #   PgPower::Tools.drop_view view_name       # => removes the view
+  #   PgPower::Tools.views                     # => ["x_view", "y_view", "z_view"]
   module Tools
     extend self
 
@@ -27,7 +30,7 @@ module PgPower
       connection.query(sql).flatten
     end
 
-    # Move table to another schema without loosing data, indexes or constraints.
+    # Move table to another schema without losing data, indexes or constraints.
     # @param [String] table table name (schema prefix is allowed)
     # @param [String] new_schema schema where table should be moved to
     def move_table_to_schema(table, new_schema)
@@ -36,7 +39,30 @@ module PgPower
       connection.execute sql
     end
 
-
+    # Creates PostgreSQL view
+    # @param [String, Symbol] view_name
+    # @param [String] view_definition
+    def create_view(view_name, view_definition)
+      sql = "CREATE VIEW #{view_name} AS #{view_definition}"
+      connection.execute sql
+    end
+    
+    # Drops PostgreSQL view
+    # @param [String, Symbol] view_name
+    def drop_view(view_name)
+      sql = "DROP VIEW #{view_name}"
+      connection.execute sql
+    end
+    
+    # Returns an array of existing, non system views.
+    def views
+      sql = <<-SQL
+      SELECT table_schema, table_name, view_definition
+      FROM INFORMATION_SCHEMA.views
+      WHERE table_schema NOT IN ('pg_catalog','information_schema')
+      SQL
+      connection.execute sql
+    end
 
     # Return database connections
     def connection

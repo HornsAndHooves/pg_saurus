@@ -27,6 +27,7 @@ begin
     # Need to explicitly specify version here so gemspec:validate task doesn't whine.
     gem.version = PgPower::VERSION
     gem.homepage = "https://github.com/TMXCredit/pg_power"
+    gem.license = 'MIT'
   end
 rescue
   puts "Jeweler or one of its dependencies is not installed."
@@ -43,6 +44,10 @@ end
 APP_RAKEFILE = File.expand_path("../spec/dummy/Rakefile", __FILE__)
 load 'rails/tasks/engine.rake'
 
-desc 'Run specs'
-task 'spec' => ['db:drop', 'db:create', 'db:migrate', 'app:spec']
-task :default => :spec
+require 'rspec/core'
+require 'rspec/core/rake_task'
+RSpec::Core::RakeTask.new(:spec) do |spec|
+  spec.pattern = FileList['spec/**/*_spec.rb']
+end
+
+task 'spec' => ['db:drop', 'db:create', 'db:migrate']

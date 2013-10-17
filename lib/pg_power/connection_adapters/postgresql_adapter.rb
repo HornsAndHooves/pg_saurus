@@ -11,6 +11,7 @@ module PgPower::ConnectionAdapters::PostgreSQLAdapter
   autoload :ForeignerMethods,   'pg_power/connection_adapters/postgresql_adapter/foreigner_methods'
   autoload :IndexMethods,       'pg_power/connection_adapters/postgresql_adapter/index_methods'
   autoload :TranslateException, 'pg_power/connection_adapters/postgresql_adapter/translate_exception'
+  autoload :ViewMethods,        'pg_power/connection_adapters/postgresql_adapter/view_methods'
 
   include ExtensionMethods
   include SchemaMethods
@@ -18,4 +19,5 @@ module PgPower::ConnectionAdapters::PostgreSQLAdapter
   include ForeignerMethods
   include IndexMethods
   include TranslateException
+  include ViewMethods
 end

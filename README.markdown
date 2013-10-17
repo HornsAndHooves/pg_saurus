@@ -16,6 +16,9 @@ ActiveRecord extension to get more from PostgreSQL:
 
 It was tested with Rails 3.1.x and 3.2.x, Ruby 1.8.7 REE and 1.9.3.
 
+NOTE: JRuby is not yet supported. The current ActiveRecord JDBC
+adapter has its own Rails4-compatible method named "create_schema" which
+conflicts with this gem.
 
 ## Schemas
 
@@ -230,6 +233,17 @@ Unload extension module:
 
 ```ruby
   drop_extension "fuzzystrmatch"
+```
+
+## Views
+
+Version 1.6.0 introduces experimental support for creating views. This API should only be used with the understanding
+that it is preliminary 'alpha' at best.
+
+### Example
+
+```ruby
+  create_view "demography.citizens_view", "select * from demography.citizens"
 ```
 
 ## Tools

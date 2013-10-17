@@ -33,6 +33,15 @@ module PgPower::ConnectionAdapters::AbstractAdapter::CommentMethods
 
   end
 
+  # Sets the comment on the given index
+  #
+  # ===== Example
+  # ====== Setting comment on the index_pets_on_breed_id index
+  #  set_index_comment 'index_pets_on_breed_id', 'Index on breed_id'
+  def set_index_comment(index_name, comment)
+
+  end
+
   # Removes any comment from the given table.
   #
   # ===== Example
@@ -57,6 +66,15 @@ module PgPower::ConnectionAdapters::AbstractAdapter::CommentMethods
   # ====== Removing comment from the npa and nxx columns of table phone_numbers
   #  remove_column_comments :phone_numbers, :npa, :nxx
   def remove_column_comments(table_name, *column_names)
+
+  end
+
+  # Removes the comment from the given index
+  #
+  # ===== Example
+  # ====== Removing comment from the index_pets_on_breed_id index
+  #  remove_index_comment :index_pets_on_breed_id
+  def remove_index_comment(index_name)
 
   end
 end

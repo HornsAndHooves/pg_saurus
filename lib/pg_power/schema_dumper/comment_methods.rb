@@ -8,8 +8,20 @@ module PgPower::SchemaDumper::CommentMethods
     table_names = @connection.tables.sort
     table_names += get_non_public_schema_table_names.sort
 
+    # Dump table and column comments
     table_names.each do |table_name|
       dump_comments(table_name, stream)
+    end
+
+    # Now dump index comments
+    unless (index_comments = @connection.index_comments).empty?
+      index_comments.each do |row|
+        schema_name = row[0]
+        index_name = schema_name == 'public' ? "'#{row[1]}'" : "'#{schema_name}.#{row[1]}'"
+        comment = format_comment(row[2])
+        stream.puts "  set_index_comment #{index_name}, '#{comment}'"
+      end
+      stream.puts
     end
   end
 
@@ -19,7 +31,7 @@ module PgPower::SchemaDumper::CommentMethods
     unless (comments = @connection.comments(table_name)).empty?
       comment_statements = comments.map do |row|
         column_name = row[0]
-        comment = row[1].gsub(/'/, "\\\\'")
+        comment = format_comment(row[1])
         if column_name
           "  set_column_comment '#{table_name}', '#{column_name}', '#{comment}'"
         else
@@ -33,4 +45,10 @@ module PgPower::SchemaDumper::CommentMethods
     end
   end
   private :dump_comments
+
+  # Escape out single quotes from comments
+  def format_comment(comment)
+    comment.gsub(/'/, "\\\\'")
+  end
+  private :format_comment
 end

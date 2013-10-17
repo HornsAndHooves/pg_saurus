@@ -19,6 +19,12 @@ describe ActiveRecord::SchemaDumper do
         @dump.should =~ /create_schema "demography".*create_schema "later".*create_schema "latest"/m
       end
     end
+    
+    context 'Views' do
+      it 'dumps views' do
+        @dump.should =~ /create_view "demography.citizens_view", "SELECT citizens.id, citizens.country_id, citizens.user_id, citizens.first_name, citizens.last_name, citizens.birthday, citizens.bio, citizens.created_at, citizens.updated_at, citizens.active FROM demography.citizens;"/
+      end
+    end
 
     context "Extensions" do
       it 'dumps loaded extension modules' do
@@ -65,6 +71,10 @@ describe ActiveRecord::SchemaDumper do
       it 'dumps indexes with non default access method' do
         @dump.should =~ Regexp.new(Regexp.quote('add_index "pets", ["user_id"], :name => "index_pets_on_user_id_gist", :using => "gist"'))
       end
+
+      it 'dumps indexes with non default access method and multiple args' do
+        @dump.should =~ Regexp.new(Regexp.quote('add_index "pets", ["to_tsvector(\'english\'::regconfig, name)"], :name => "index_pets_on_to_tsvector_name_gist", :using => "gist"'))
+      end
     end
 
     context 'Foreign keys' do
@@ -93,6 +103,14 @@ describe ActiveRecord::SchemaDumper do
 
       it 'dumps column comments from non-public schemas' do
         @dump.should =~ /set_column_comment 'demography.citizens', 'first_name', 'First name'/
+      end
+
+      it 'dumps index comments' do
+        @dump.should =~ /set_index_comment 'index_pets_on_to_tsvector_name_gist', 'Functional index on name'/
+      end
+
+      it 'dumps index comments from non-public schemas' do
+        @dump.should =~/set_index_comment 'demography.index_demography_citizens_on_country_id_and_user_id', 'Unique index on active citizens'/
       end
     end
 

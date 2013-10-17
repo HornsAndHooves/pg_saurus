@@ -8,7 +8,7 @@ module  PgPower::Migration::CommandRecorder::CommentMethods
 
   # :nodoc:
   def remove_table_comment(*args)
-    record(:remove_table_comments, args)
+    record(:remove_table_comment, args)
   end
 
   # :nodoc:
@@ -32,6 +32,16 @@ module  PgPower::Migration::CommandRecorder::CommentMethods
   end
 
   # :nodoc:
+  def set_index_comment(*args)
+    record(:set_index_comment, args)
+  end
+
+  # :nodoc:
+  def remove_index_comment(*args)
+    record(:remove_index_comment, args)
+  end
+
+  # :nodoc:
   def invert_set_table_comment(args)
     table_name = args.first
     [:remove_table_comment, [table_name]]
@@ -48,5 +58,11 @@ module  PgPower::Migration::CommandRecorder::CommentMethods
   def invert_set_column_comments(args)
     i_args = [args[0]] + args[1].collect{|name, value| name  }
     [:remove_column_comments, i_args]
+  end
+
+  # :nodoc:
+  def invert_set_index_comment(args)
+    index_name = args.first
+    [:remove_index_comment, [index_name]]
   end
 end
