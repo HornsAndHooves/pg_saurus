@@ -1,4 +1,4 @@
-source "http://rubygems.org"
+source "https://rubygems.org"
 
 # To test against different rails versions with TravisCI
 rails_version = ENV['RAILS_VERSION'] || '~> 3.1'
