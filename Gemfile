@@ -19,7 +19,8 @@ group :development do
   # code metrics:
   gem 'rcov' if version18
   gem 'yard'
-  gem 'metrical', :require => false
+  gem 'metrical' , :require => false if version18
+  gem 'metric_fu', :require => false unless version18
   gem 'jeweler', :require => false
 
 
@@ -32,5 +33,5 @@ end
 
 group :test do
   # Only load simplecov for Ruby 1.9, use rcov above for 1.8.
-  gem 'simplecov', :require => false if version19
+  gem 'simplecov', :require => false unless version18
 end
