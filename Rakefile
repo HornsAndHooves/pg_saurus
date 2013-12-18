@@ -18,16 +18,16 @@ begin
   require "jeweler"
 
   Jeweler::Tasks.new do |gem|
-    gem.name = "pg_power"
-    gem.summary = "ActiveRecord extensions for PostgreSQL."
+    gem.name        = "pg_power"
+    gem.summary     = "ActiveRecord extensions for PostgreSQL."
     gem.description = "ActiveRecord extensions for PostgreSQL. Provides useful tools for schema, foreign_key, index, comment and extensios manipulations in migrations."
-    gem.email = ["rubygems@tmxcredit.com"]
-    gem.authors = ['Potapov Sergey', 'Arthur Shagall', 'Artem Ignatyev', 'TMX Credit']
-    gem.files = Dir["{app,config,db,lib}/**/*"] + Dir['Rakefie', 'README.markdown']
+    gem.email       = ["blake131313@gmail.com", "arthur.shagall@gmail.com", "cryo28@gmail.com", "matt.dressel@gmail.com", "rubygems@tmxcredit.com"]
+    gem.authors     = ["Potapov Sergey", "Arthur Shagall", "Artem Ignatyev", "Matt Dressel", "TMX Credit"]
+    gem.files       = Dir["{app,config,db,lib}/**/*"] + Dir['Rakefie', 'README.markdown']
     # Need to explicitly specify version here so gemspec:validate task doesn't whine.
-    gem.version = PgPower::VERSION
-    gem.homepage = "https://github.com/TMXCredit/pg_power"
-    gem.license = 'MIT'
+    gem.version     = PgPower::VERSION
+    gem.homepage    = "https://github.com/TMXCredit/pg_power"
+    gem.license     = 'MIT'
   end
 rescue
   puts "Jeweler or one of its dependencies is not installed."

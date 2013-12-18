@@ -5,13 +5,13 @@
 
 Gem::Specification.new do |s|
   s.name = "pg_power"
-  s.version = "1.6.2"
+  s.version = "1.6.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = ["Potapov Sergey", "Arthur Shagall", "Artem Ignatyev", "TMX Credit"]
-  s.date = "2013-08-20"
+  s.authors = ["Potapov Sergey", "Arthur Shagall", "Artem Ignatyev", "Matt Dressel", "TMX Credit"]
+  s.date = "2013-12-18"
   s.description = "ActiveRecord extensions for PostgreSQL. Provides useful tools for schema, foreign_key, index, comment and extensios manipulations in migrations."
-  s.email = ["rubygems@tmxcredit.com"]
+  s.email = ["blake131313@gmail.com", "arthur.shagall@gmail.com", "cryo28@gmail.com", "matt.dressel@gmail.com", "rubygems@tmxcredit.com"]
   s.extra_rdoc_files = [
     "README.markdown"
   ]
@@ -64,37 +64,34 @@ Gem::Specification.new do |s|
   s.homepage = "https://github.com/TMXCredit/pg_power"
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
-  s.rubygems_version = "1.8.24"
+  s.rubygems_version = "2.0.7"
   s.summary = "ActiveRecord extensions for PostgreSQL."
 
   if s.respond_to? :specification_version then
-    s.specification_version = 3
+    s.specification_version = 4
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<pg>, [">= 0"])
       s.add_runtime_dependency(%q<rails>, ["~> 3.1"])
       s.add_development_dependency(%q<rspec-rails>, [">= 0"])
       s.add_development_dependency(%q<yard>, [">= 0"])
-      s.add_development_dependency(%q<metrical>, [">= 0"])
+      s.add_development_dependency(%q<metric_fu>, [">= 0"])
       s.add_development_dependency(%q<jeweler>, [">= 0"])
-      s.add_development_dependency(%q<ruby-debug19>, [">= 0"])
     else
       s.add_dependency(%q<pg>, [">= 0"])
       s.add_dependency(%q<rails>, ["~> 3.1"])
       s.add_dependency(%q<rspec-rails>, [">= 0"])
       s.add_dependency(%q<yard>, [">= 0"])
-      s.add_dependency(%q<metrical>, [">= 0"])
+      s.add_dependency(%q<metric_fu>, [">= 0"])
       s.add_dependency(%q<jeweler>, [">= 0"])
-      s.add_dependency(%q<ruby-debug19>, [">= 0"])
     end
   else
     s.add_dependency(%q<pg>, [">= 0"])
     s.add_dependency(%q<rails>, ["~> 3.1"])
     s.add_dependency(%q<rspec-rails>, [">= 0"])
     s.add_dependency(%q<yard>, [">= 0"])
-    s.add_dependency(%q<metrical>, [">= 0"])
+    s.add_dependency(%q<metric_fu>, [">= 0"])
     s.add_dependency(%q<jeweler>, [">= 0"])
-    s.add_dependency(%q<ruby-debug19>, [">= 0"])
   end
 end
 
