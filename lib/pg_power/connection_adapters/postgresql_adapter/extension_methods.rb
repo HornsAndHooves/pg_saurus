@@ -42,7 +42,7 @@ module PgPower::ConnectionAdapters::PostgreSQLAdapter::ExtensionMethods
     options = CREATE_EXTENSION_DEFAULTS.merge(options.symbolize_keys)
     sql = ['CREATE EXTENSION']
     sql << 'IF NOT EXISTS' if options[:if_not_exists]
-    sql << extension_name.to_s
+    sql << %{"#{extension_name.to_s}"}
     sql << "SCHEMA #{options[:schema_name]}" if options[:schema_name].present?
     sql << "VERSION '#{options[:version]}'"    if options[:version].present?
     sql << "FROM #{options[:old_version]}"   if options[:old_version].present?
