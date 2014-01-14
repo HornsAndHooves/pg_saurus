@@ -172,6 +172,7 @@ module PgPower::CreateIndexConcurrently
   # Default delegation in (see ActiveRecord::MigrationProxy) allows to call
   # only several methods.
   module MigrationProxy
+    # :nodoc:
     def self.included(klass)
       klass.delegate :process_postponed_queries, :to => :migration
     end
@@ -188,6 +189,7 @@ module PgPower::CreateIndexConcurrently
   module Migrator
     extend ActiveSupport::Concern
 
+    # :nodoc:
     def self.included(klass)
       klass.alias_method_chain :ddl_transaction, :postponed_queries
     end

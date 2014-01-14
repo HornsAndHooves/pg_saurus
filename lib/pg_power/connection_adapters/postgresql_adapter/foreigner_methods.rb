@@ -193,6 +193,11 @@ module PgPower # :nodoc:
     end
     private :foreign_key_name
 
+    # Get a part of SQL code for that represents dependency for a constraint.
+    #
+    # @param dependency [Symbol] :nullify, :delete or :restrict
+    #
+    # @return [String]
     def dependency_sql(dependency)
       case dependency
         when :nullify then "ON DELETE SET NULL"
