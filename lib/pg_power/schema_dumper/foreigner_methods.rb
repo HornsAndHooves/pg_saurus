@@ -6,7 +6,6 @@ module PgPower::SchemaDumper::ForeignerMethods
     tables_without_foreign_keys(stream)
 
     table_names = @connection.tables.sort
-    table_names += get_non_public_schema_table_names.sort
 
     table_names.sort.each do |table|
       next if ['schema_migrations', ignore_tables].flatten.any? do |ignored|

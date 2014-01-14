@@ -20,19 +20,56 @@ ActiveRecord::Schema.define(:version => 20130624154800) do
   create_extension "fuzzystrmatch", :version => "1.0"
   create_extension "btree_gist", :schema_name => "demography", :version => "1.0"
 
-  create_table "breeds", :force => true do |t|
+  create_table "demography.cities", :force => true do |t|
+    t.integer "country_id"
+    t.integer "name"
+  end
+
+  add_index "demography.cities", ["country_id"], :name => "index_demography_cities_on_country_id"
+
+  create_table "demography.citizens", :force => true do |t|
+    t.integer  "country_id"
+    t.integer  "user_id"
+    t.string   "first_name"
+    t.string   "last_name"
+    t.date     "birthday"
+    t.text     "bio"
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
+    t.boolean  "active",     :default => false, :null => false
+  end
+
+  add_index "demography.citizens", ["country_id", "user_id"], :name => "index_demography_citizens_on_country_id_and_user_id", :unique => true, :where => "active"
+
+  create_table "demography.countries", :force => true do |t|
+    t.string   "name"
+    t.string   "continent"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "demography.people", :force => true do |t|
+    t.string "name"
+  end
+
+  create_table "demography.population_statistics", :force => true do |t|
+    t.integer "year"
+    t.integer "population"
+  end
+
+  create_table "public.breeds", :force => true do |t|
     t.string   "name"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
 
-  create_table "owners", :force => true do |t|
+  create_table "public.owners", :force => true do |t|
     t.string   "name"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
 
-  create_table "pets", :force => true do |t|
+  create_table "public.pets", :force => true do |t|
     t.string  "name"
     t.string  "color"
     t.integer "user_id"
@@ -43,16 +80,22 @@ ActiveRecord::Schema.define(:version => 20130624154800) do
     t.boolean "active",     :default => true
   end
 
-  add_index "pets", ["breed_id"], :name => "index_pets_on_breed_id"
-  add_index "pets", ["color"], :name => "index_pets_on_color"
-  add_index "pets", ["country_id"], :name => "index_pets_on_country_id"
-  add_index "pets", ["lower(name)"], :name => "index_pets_on_lower_name"
-  add_index "pets", ["to_tsvector('english'::regconfig, name)"], :name => "index_pets_on_to_tsvector_name_gist", :using => "gist"
-  add_index "pets", ["upper(color)"], :name => "index_pets_on_upper_color", :where => "(name IS NULL)"
-  add_index "pets", ["user_id"], :name => "index_pets_on_user_id"
-  add_index "pets", ["user_id"], :name => "index_pets_on_user_id_gist", :using => "gist"
+  add_index "public.pets", ["breed_id"], :name => "index_pets_on_breed_id"
+  add_index "public.pets", ["color"], :name => "index_pets_on_color"
+  add_index "public.pets", ["country_id"], :name => "index_pets_on_country_id"
+  add_index "public.pets", ["lower(name)"], :name => "index_pets_on_lower_name"
+  add_index "public.pets", ["to_tsvector('english'::regconfig, name)"], :name => "index_pets_on_to_tsvector_name_gist", :using => "gist"
+  add_index "public.pets", ["upper(color)"], :name => "index_pets_on_upper_color", :where => "(name IS NULL)"
+  add_index "public.pets", ["user_id"], :name => "index_pets_on_user_id"
+  add_index "public.pets", ["user_id"], :name => "index_pets_on_user_id_gist", :using => "gist"
 
-  create_table "users", :force => true do |t|
+  create_table "public.schema_migrations", :id => false, :force => true do |t|
+    t.string "version", :null => false
+  end
+
+  add_index "public.schema_migrations", ["version"], :name => "unique_schema_migrations", :unique => true
+
+  create_table "public.users", :force => true do |t|
     t.string   "name"
     t.string   "email"
     t.string   "phone_number"
@@ -60,8 +103,8 @@ ActiveRecord::Schema.define(:version => 20130624154800) do
     t.datetime "updated_at",   :null => false
   end
 
-  add_index "users", ["email"], :name => "index_users_on_email"
-  add_index "users", ["name"], :name => "index_users_on_name"
+  add_index "public.users", ["email"], :name => "index_users_on_email"
+  add_index "public.users", ["name"], :name => "index_users_on_name"
 
   create_table "demography.cities", :force => true do |t|
     t.integer "country_id"
@@ -102,10 +145,17 @@ ActiveRecord::Schema.define(:version => 20130624154800) do
 
   create_view "demography.citizens_view", "SELECT citizens.id, citizens.country_id, citizens.user_id, citizens.first_name, citizens.last_name, citizens.birthday, citizens.bio, citizens.created_at, citizens.updated_at, citizens.active FROM demography.citizens;"
 
-  set_table_comment 'users', 'Information about users'
-  set_column_comment 'users', 'name', 'User name'
-  set_column_comment 'users', 'email', 'Email address'
-  set_column_comment 'users', 'phone_number', 'Phone number'
+  set_table_comment 'demography.citizens', 'Citizens Info'
+  set_column_comment 'demography.citizens', 'country_id', 'Country key'
+  set_column_comment 'demography.citizens', 'first_name', 'First name'
+  set_column_comment 'demography.citizens', 'last_name', 'Last name'
+
+  set_column_comment 'demography.countries', 'name', 'Country name'
+
+  set_table_comment 'public.users', 'Information about users'
+  set_column_comment 'public.users', 'name', 'User name'
+  set_column_comment 'public.users', 'email', 'Email address'
+  set_column_comment 'public.users', 'phone_number', 'Phone number'
 
   set_table_comment 'demography.citizens', 'Citizens Info'
   set_column_comment 'demography.citizens', 'country_id', 'Country key'
@@ -121,6 +171,6 @@ ActiveRecord::Schema.define(:version => 20130624154800) do
 
   add_foreign_key "demography.citizens", "public.users", :name => "demography_citizens_user_id_fk", :column => "user_id", :exclude_index => true
 
-  add_foreign_key "pets", "public.users", :name => "pets_user_id_fk", :column => "user_id", :exclude_index => true
+  add_foreign_key "public.pets", "public.users", :name => "pets_user_id_fk", :column => "user_id", :exclude_index => true
 
 end

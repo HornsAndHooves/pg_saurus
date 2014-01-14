@@ -19,7 +19,7 @@ describe ActiveRecord::SchemaDumper do
         @dump.should =~ /create_schema "demography".*create_schema "later".*create_schema "latest"/m
       end
     end
-    
+
     context 'Views' do
       it 'dumps views' do
         @dump.should =~ /create_view "demography.citizens_view", "SELECT citizens.id, citizens.country_id, citizens.user_id, citizens.first_name, citizens.last_name, citizens.birthday, citizens.bio, citizens.created_at, citizens.updated_at, citizens.active FROM demography.citizens;"/
@@ -35,7 +35,7 @@ describe ActiveRecord::SchemaDumper do
 
     context 'Tables' do
       it 'dumps tables' do
-        @dump.should =~ /create_table "users"/
+        @dump.should =~ /create_table "public.users"/
       end
 
       it 'dumps tables from non-public schemas' do
@@ -46,9 +46,9 @@ describe ActiveRecord::SchemaDumper do
     context 'Indexes' do
       it 'dumps indexes' do
         # added via standard add_index
-        @dump.should =~ /add_index "users", \["name"\]/
+        @dump.should =~ /add_index "public.users", \["name"\]/
         # added via foreign key
-        @dump.should =~ /add_index "pets", \["user_id"\]/
+        @dump.should =~ /add_index "public.pets", \["user_id"\]/
         # foreign key :exclude_index
         @dump.should_not =~ /add_index "demography\.citizens", \["user_id"\]/
         # partial index
@@ -61,25 +61,27 @@ describe ActiveRecord::SchemaDumper do
       end
 
       it 'dumps functional indexes' do
-        @dump.should =~ /add_index "pets", \["lower\(name\)"\]/
+        @dump.should =~ /add_index "public.pets", \["lower\(name\)"\]/
       end
 
       it 'dumps partial functional indexes' do
-        @dump.should =~ /add_index "pets", \["upper\(color\)"\].*:where => "\(name IS NULL\)"/
+        @dump.should =~ /add_index "public.pets", \["upper\(color\)"\].*:where => "\(name IS NULL\)"/
       end
 
       it 'dumps indexes with non default access method' do
-        @dump.should =~ Regexp.new(Regexp.quote('add_index "pets", ["user_id"], :name => "index_pets_on_user_id_gist", :using => "gist"'))
+        @dump.should =~ Regexp.new(Regexp.quote('add_index "public.pets", ["user_id"], :name => "index_pets_on_user_id_gist", :using => "gist"'))
       end
 
       it 'dumps indexes with non default access method and multiple args' do
-        @dump.should =~ Regexp.new(Regexp.quote('add_index "pets", ["to_tsvector(\'english\'::regconfig, name)"], :name => "index_pets_on_to_tsvector_name_gist", :using => "gist"'))
+        @dump.should =~ Regexp.new(Regexp.quote(
+          'add_index "public.pets", ["to_tsvector(\'english\'::regconfig, name)"], :name => "index_pets_on_to_tsvector_name_gist", :using => "gist"'
+        ))
       end
     end
 
     context 'Foreign keys' do
       it 'dumps foreign keys' do
-        @dump.should =~ /^\s*add_foreign_key "pets", "public.users", :name => "pets_user_id_fk"/
+        @dump.should =~ /^\s*add_foreign_key "public.pets", "public.users", :name => "pets_user_id_fk"/
       end
 
       it 'dumps foreign keys from non-public schemas' do
@@ -90,7 +92,7 @@ describe ActiveRecord::SchemaDumper do
 
     context 'Comments' do
       it 'dumps table comments' do
-        @dump.should =~ /set_table_comment 'users', 'Information about users'/
+        @dump.should =~ /set_table_comment 'public.users', 'Information about users'/
       end
 
       it 'dumps table comments from non-public schemas' do
@@ -98,7 +100,7 @@ describe ActiveRecord::SchemaDumper do
       end
 
       it 'dumps column comments' do
-        @dump.should =~ /set_column_comment 'users', 'name', 'User name'/
+        @dump.should =~ /set_column_comment 'public.users', 'name', 'User name'/
       end
 
       it 'dumps column comments from non-public schemas' do
