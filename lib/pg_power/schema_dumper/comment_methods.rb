@@ -1,6 +1,6 @@
 # Extends ActiveRecord::SchemaDumper class to dump comments on tables and columns.
 module PgPower::SchemaDumper::CommentMethods
-  # Hooks {ActiveRecord::SchemaDumper#table} method to dump comments on
+  # Hooks ActiveRecord::SchemaDumper#table method to dump comments on
   # table and columns.
   def tables_with_comments(stream)
     tables_without_comments(stream)

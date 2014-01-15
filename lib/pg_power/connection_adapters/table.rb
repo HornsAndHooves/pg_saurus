@@ -1,4 +1,4 @@
-# Provides methods to extend {ActiveRecord::ConnectionAdapters::Table}
+# Provides methods to extend ActiveRecord::ConnectionAdapters::Table
 # to support pg_power features.
 module PgPower::ConnectionAdapters::Table
   extend ActiveSupport::Autoload
@@ -10,7 +10,7 @@ module PgPower::ConnectionAdapters::Table
   include CommentMethods
   include ForeignerMethods
 
-  
+
   included do
     alias_method_chain :references, :foreign_keys
   end

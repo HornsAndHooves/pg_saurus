@@ -1,4 +1,4 @@
-# Provides methods to extend {ActiveRecord::ConnectionAdapters::Table}
+# Provides methods to extend ActiveRecord::ConnectionAdapters::Table
 # to support foreign keys feature.
 module PgPower::ConnectionAdapters::Table::ForeignerMethods
   # Adds a new foreign key to the table. +to_table+ can be a single Symbol, or

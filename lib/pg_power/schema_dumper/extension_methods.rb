@@ -1,6 +1,6 @@
 # Extends ActiveRecord::SchemaDumper class to dump comments on tables and columns.
 module PgPower::SchemaDumper::ExtensionMethods
-  # Hooks {ActiveRecord::SchemaDumper#header} method to dump extensions in all schemas except for pg_catalog
+  # Hooks ActiveRecord::SchemaDumper#header method to dump extensions in all schemas except for pg_catalog
   def header_with_extensions(stream)
     header_without_extensions(stream)
     dump_extensions(stream)

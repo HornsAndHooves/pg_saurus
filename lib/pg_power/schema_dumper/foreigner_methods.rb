@@ -1,7 +1,7 @@
-# Provides methods to extend {ActiveRecord::SchemaDumper} to dump
+# Provides methods to extend ActiveRecord::SchemaDumper to dump
 # foreign keys.
 module PgPower::SchemaDumper::ForeignerMethods
-  # Hooks {ActiveRecord::SchemaDumper#table} method to dump foreign keys.
+  # Hooks ActiveRecord::SchemaDumper#table method to dump foreign keys.
   def tables_with_foreign_keys(stream)
     tables_without_foreign_keys(stream)
 

@@ -1,4 +1,4 @@
-# Extends {ActiveRecord::ConnectionAdapters::AbstractAdapter} class.
+# Extends ActiveRecord::ConnectionAdapters::AbstractAdapter class.
 module PgPower::ConnectionAdapters::AbstractAdapter
   extend ActiveSupport::Autoload
   extend ActiveSupport::Concern

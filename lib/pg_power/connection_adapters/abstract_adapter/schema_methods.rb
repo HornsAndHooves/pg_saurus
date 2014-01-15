@@ -1,4 +1,4 @@
-# Extends {ActiveRecord::ConnectionAdapters::AbstractAdapter} 
+# Extends ActiveRecord::ConnectionAdapters::AbstractAdapter
 # with methods for multi schema support.
 module PgPower::ConnectionAdapters::AbstractAdapter::SchemaMethods
 
