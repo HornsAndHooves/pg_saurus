@@ -19,10 +19,29 @@ describe ActiveRecord::SchemaDumper do
         @dump.should =~ /create_schema "demography".*create_schema "later".*create_schema "latest"/m
       end
     end
-    
+
     context 'Views' do
       it 'dumps views' do
-        @dump.should =~ /create_view "demography.citizens_view", "SELECT citizens.id, citizens.country_id, citizens.user_id, citizens.first_name, citizens.last_name, citizens.birthday, citizens.bio, citizens.created_at, citizens.updated_at, citizens.active FROM demography.citizens;"/
+        # Space or new line. PostgreSQL 9.3 formats output in a different way
+        # than the previous versions, so we want to ignore difference between
+        # spaces and new lines.
+        s = /(\s|\n)+/
+
+        @dump.should =~
+          /create_view#{s}"demography.citizens_view",#{s}
+            "\s?SELECT#{s}citizens.id,#{s}\
+              citizens.country_id,#{s}
+              citizens.user_id,#{s}
+              citizens.first_name,#{s}
+              citizens.last_name,#{s}
+              citizens.birthday,#{s}
+              citizens.bio,#{s}
+              citizens.created_at,#{s}
+              citizens.updated_at,#{s}
+              citizens.active#{s}
+          FROM#{s}demography.citizens;"/x
+
+
       end
     end
 
