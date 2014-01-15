@@ -159,20 +159,6 @@ module ActiveRecord # :nodoc:
       def remove_type(column_with_type)
         column_with_type.sub(/\((\w+)\)::\w+/, '\1')
       end
-
-      # Patch +tables+ method to return tables all schemas, not only public.
-      # It addresses https://github.com/TMXCredit/pg_power/issues/18.
-      #
-      # @param name [Object] does nothing, exists just for 100% API compatibily
-      #   with original implementation.
-      def tables(name = nil)
-        query(<<-SQL, 'SCHEMA').map { |row| row[0] }
-          SELECT schemaname || '.' || tablename AS table
-          FROM pg_tables
-          WHERE schemaname NOT IN ('pg_catalog','information_schema')
-        SQL
-      end
-
     end
   end
 end

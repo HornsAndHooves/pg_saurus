@@ -6,7 +6,7 @@ describe ActiveRecord::ConnectionAdapters::PostgreSQLAdapter do
 
   describe '#tables' do
     it 'returns tables from public schema' do
-      connection.tables.should include "public.users"
+      connection.tables.should include "users"
     end
 
     it 'returns tables non public schemas' do
