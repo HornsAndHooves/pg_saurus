@@ -1,12 +1,11 @@
-# Provides methods to extend {ActiveRecord::SchemaDumper} to dump
+# Provides methods to extend ActiveRecord::SchemaDumper to dump
 # foreign keys.
 module PgPower::SchemaDumper::ForeignerMethods
-  # Hooks {ActiveRecord::SchemaDumper#table} method to dump foreign keys.
+  # Hooks ActiveRecord::SchemaDumper#table method to dump foreign keys.
   def tables_with_foreign_keys(stream)
     tables_without_foreign_keys(stream)
 
     table_names = @connection.tables.sort
-    table_names += get_non_public_schema_table_names.sort
 
     table_names.sort.each do |table|
       next if ['schema_migrations', ignore_tables].flatten.any? do |ignored|
@@ -22,7 +21,7 @@ module PgPower::SchemaDumper::ForeignerMethods
   end
 
 
-  # Finds all foreign keys on passed table and writes appropriated
+  # Find all foreign keys on passed table and writes appropriate
   # statements to stream.
   def foreign_keys(table_name, stream)
     if (foreign_keys = @connection.foreign_keys(table_name)).any?

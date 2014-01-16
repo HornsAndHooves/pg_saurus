@@ -1,7 +1,7 @@
-# Provides methods to extend {ActiveRecord::ConnectionAdapters::Table}
+# Provides methods to extend ActiveRecord::ConnectionAdapters::Table
 # to support comments feature.
 module PgPower::ConnectionAdapters::Table::CommentMethods
-  # Sets the comment on the table
+  # Set the comment on the table.
   #
   # ===== Example
   # ====== Set comment on table
@@ -10,7 +10,7 @@ module PgPower::ConnectionAdapters::Table::CommentMethods
     @base.set_table_comment(@table_name, comment)
   end
 
-  # Removes any comment from the table
+  # Remove any comment from the table.
   #
   # ===== Example
   # ====== Remove table comment
@@ -19,7 +19,7 @@ module PgPower::ConnectionAdapters::Table::CommentMethods
     @base.remove_table_comment(@table_name)
   end
 
-  # Sets the comment for a given column
+  # Set the comment for a given column.
   #
   # ===== Example
   # ====== Set comment on the npa column
@@ -28,7 +28,7 @@ module PgPower::ConnectionAdapters::Table::CommentMethods
     @base.set_column_comment(@table_name, column_name, comment)
   end
 
-  # Sets comments on multiple columns.  'comments' is a hash of column_name => comment pairs.
+  # Set comments on multiple columns. 'comments' is a hash of column_name => comment pairs.
   #
   # ===== Example
   # ====== Setting comments on the columns of the phone_numbers table
@@ -38,7 +38,7 @@ module PgPower::ConnectionAdapters::Table::CommentMethods
     @base.set_column_comments(@table_name, comments)
   end
 
-  # Removes any comment for a given column
+  # Remove any comment for a given column.
   #
   # ===== Example
   # ====== Remove comment from the npa column
@@ -47,7 +47,7 @@ module PgPower::ConnectionAdapters::Table::CommentMethods
     @base.remove_column_comment(@table_name, column_name)
   end
 
-  # Removes any comments from the given columns
+  # Remove any comments from the given columns.
   #
   # ===== Example
   # ====== Remove comment from the npa and nxx columns

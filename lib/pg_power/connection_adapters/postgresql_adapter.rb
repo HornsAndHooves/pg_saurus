@@ -5,7 +5,7 @@ module PgPower::ConnectionAdapters::PostgreSQLAdapter
   extend ActiveSupport::Concern
 
   # TODO: Looks like explicit path specification can be omitted -- aignatyev 20120904
-  autoload :ExtensionMethods,      'pg_power/connection_adapters/postgresql_adapter/extension_methods'
+  autoload :ExtensionMethods,   'pg_power/connection_adapters/postgresql_adapter/extension_methods'
   autoload :SchemaMethods,      'pg_power/connection_adapters/postgresql_adapter/schema_methods'
   autoload :CommentMethods,     'pg_power/connection_adapters/postgresql_adapter/comment_methods'
   autoload :ForeignerMethods,   'pg_power/connection_adapters/postgresql_adapter/foreigner_methods'
@@ -20,4 +20,8 @@ module PgPower::ConnectionAdapters::PostgreSQLAdapter
   include IndexMethods
   include TranslateException
   include ViewMethods
+
+  included do
+    alias_method_chain :tables, :non_public_schema_tables
+  end
 end

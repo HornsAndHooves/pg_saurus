@@ -6,7 +6,7 @@ module PgPower # :nodoc:
       true
     end
 
-    # Fetches information about foreign keys related to passed table.
+    # Fetch information about foreign keys related to the passed table.
     # @param [String, Symbol] table_name name of table (e.g. "users", "music.bands")
     # @return [Foreigner::ConnectionAdapters::ForeignKeyDefinition]
     def foreign_keys(table_name)
@@ -20,12 +20,12 @@ module PgPower # :nodoc:
                c.conname     AS name       ,
                c.confdeltype AS dependency
         FROM pg_constraint c
-        JOIN pg_class t1 ON c.conrelid = t1.oid
-        JOIN pg_class t2 ON c.confrelid = t2.oid
-        JOIN pg_attribute a1 ON a1.attnum = c.conkey[1] AND a1.attrelid = t1.oid
-        JOIN pg_attribute a2 ON a2.attnum = c.confkey[1] AND a2.attrelid = t2.oid
-        JOIN pg_namespace t3 ON c.connamespace = t3.oid
-        JOIN pg_namespace nsp ON nsp.oid = t2.relnamespace
+        JOIN pg_class t1      ON c.conrelid     = t1.oid
+        JOIN pg_class t2      ON c.confrelid    = t2.oid
+        JOIN pg_attribute a1  ON a1.attnum      = c.conkey[1]  AND a1.attrelid = t1.oid
+        JOIN pg_attribute a2  ON a2.attnum      = c.confkey[1] AND a2.attrelid = t2.oid
+        JOIN pg_namespace t3  ON c.connamespace = t3.oid
+        JOIN pg_namespace nsp ON nsp.oid        = t2.relnamespace
         WHERE c.contype = 'f'
         AND t1.relname = '#{relation}'
         AND t3.nspname = #{quoted_schema}
@@ -45,9 +45,10 @@ module PgPower # :nodoc:
       end
     end
 
-    # (optionally disable triggers) and drop table
-    # changes adapted from https://github.com/matthuhiggins/foreigner/blob/e72ab9c454c156056d3f037d55e3359cd972af32/lib/foreigner/connection_adapters/sql2003.rb
-    # NOTE: disabling referential integrity requires superuser access in postgres.  Default AR behavior is to just drop_table.
+    # Drop table and optionally disable triggers.
+    # Changes adapted from https://github.com/matthuhiggins/foreigner/blob/e72ab9c454c156056d3f037d55e3359cd972af32/lib/foreigner/connection_adapters/sql2003.rb
+    # NOTE: Disabling referential integrity requires superuser access in postgres.
+    #       Default AR behavior is just to drop_table.
     #
     # == Options:
     # * :force - force disabling of referential integrity
@@ -62,7 +63,7 @@ module PgPower # :nodoc:
       end
     end
 
-    # Adds foreign key.
+    # Add foreign key.
     #
     # Ensures that an index is created for the foreign key, unless :exclude_index is true.
     #
@@ -113,7 +114,7 @@ module PgPower # :nodoc:
       end
     end
 
-    # Returns chunk of SQL to add foreign key based on table names and options.
+    # Return the SQL code fragment to add the foreign key based on the table names and options.
     def add_foreign_key_sql(from_table, to_table, options = {})
       foreign_key_name = foreign_key_name(from_table, options[:column], options)
       primary_key = options[:primary_key] || "id"
@@ -133,7 +134,7 @@ module PgPower # :nodoc:
     # TODO Determine if we can refactor the method signature
     #   remove_foreign_key(from_table, to_table_or_options_hash, options={}) => remove_foreign_key(from_table, to_table, options={})
     #
-    # Removes foreign key.
+    # Remove the foreign key.
     # @param [String, Symbol] from_table
     # @param [String, Hash] to_table_or_options_hash
     #
@@ -162,17 +163,17 @@ module PgPower # :nodoc:
       remove_index(from_table, column) unless options[:exclude_index] || !index_exists?(from_table, column)
     end
 
-    # Returns chunk of SQL to  remove foreign key based on table name and options.
+    # Return the SQL code fragment to remove foreign key based on table name and options.
     def remove_foreign_key_sql(foreign_key_name)
       "DROP CONSTRAINT #{quote_column_name(foreign_key_name)}"
     end
 
-    # Builds the foreign key column id from the referenced table
+    # Build the foreign key column id from the referenced table.
     def id_column_name_from_table_name(table)
       "#{table.to_s.split('.').last.singularize}_id"
     end
 
-    # Extracts the foreign key column id from the foreign key metadata
+    # Extract the foreign key column id from the foreign key metadata.
     # @param [String, Symbol] from_table
     # @param [String]         foreign_key_name
     def id_column_name_from_foreign_key_metadata(from_table, foreign_key_name)
@@ -182,7 +183,7 @@ module PgPower # :nodoc:
     end
     private :id_column_name_from_foreign_key_metadata
 
-    # Builds default name for constraint
+    # Build default name for constraint.
     def foreign_key_name(table, column, options = {})
       if options[:name]
         options[:name]
@@ -193,10 +194,15 @@ module PgPower # :nodoc:
     end
     private :foreign_key_name
 
+    # Get the SQL code fragment that represents dependency for a constraint.
+    #
+    # @param dependency [Symbol] :nullify, :delete or :restrict
+    #
+    # @return [String]
     def dependency_sql(dependency)
       case dependency
-        when :nullify then "ON DELETE SET NULL"
-        when :delete then "ON DELETE CASCADE"
+        when :nullify  then "ON DELETE SET NULL"
+        when :delete   then "ON DELETE CASCADE"
         when :restrict then "ON DELETE RESTRICT"
         else ""
       end

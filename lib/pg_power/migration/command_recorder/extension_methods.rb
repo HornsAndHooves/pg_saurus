@@ -1,4 +1,4 @@
-# Provides methods to extend {ActiveRecord::Migration::CommandRecorder} to
+# Provides methods to extend ActiveRecord::Migration::CommandRecorder to
 # support extensions feature.
 module  PgPower::Migration::CommandRecorder::ExtensionMethods
   # :nodoc:

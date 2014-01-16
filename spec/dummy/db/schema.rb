@@ -26,6 +26,43 @@ ActiveRecord::Schema.define(:version => 20130624154800) do
     t.datetime "updated_at", :null => false
   end
 
+  create_table "demography.cities", :force => true do |t|
+    t.integer "country_id"
+    t.integer "name"
+  end
+
+  add_index "demography.cities", ["country_id"], :name => "index_demography_cities_on_country_id"
+
+  create_table "demography.citizens", :force => true do |t|
+    t.integer  "country_id"
+    t.integer  "user_id"
+    t.string   "first_name"
+    t.string   "last_name"
+    t.date     "birthday"
+    t.text     "bio"
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
+    t.boolean  "active",     :default => false, :null => false
+  end
+
+  add_index "demography.citizens", ["country_id", "user_id"], :name => "index_demography_citizens_on_country_id_and_user_id", :unique => true, :where => "active"
+
+  create_table "demography.countries", :force => true do |t|
+    t.string   "name"
+    t.string   "continent"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "demography.people", :force => true do |t|
+    t.string "name"
+  end
+
+  create_table "demography.population_statistics", :force => true do |t|
+    t.integer "year"
+    t.integer "population"
+  end
+
   create_table "owners", :force => true do |t|
     t.string   "name"
     t.datetime "created_at", :null => false
@@ -100,7 +137,24 @@ ActiveRecord::Schema.define(:version => 20130624154800) do
     t.integer "population"
   end
 
-  create_view "demography.citizens_view", "SELECT citizens.id, citizens.country_id, citizens.user_id, citizens.first_name, citizens.last_name, citizens.birthday, citizens.bio, citizens.created_at, citizens.updated_at, citizens.active FROM demography.citizens;"
+  create_view "demography.citizens_view", " SELECT citizens.id,
+    citizens.country_id,
+    citizens.user_id,
+    citizens.first_name,
+    citizens.last_name,
+    citizens.birthday,
+    citizens.bio,
+    citizens.created_at,
+    citizens.updated_at,
+    citizens.active
+   FROM demography.citizens;"
+
+  set_table_comment 'demography.citizens', 'Citizens Info'
+  set_column_comment 'demography.citizens', 'country_id', 'Country key'
+  set_column_comment 'demography.citizens', 'first_name', 'First name'
+  set_column_comment 'demography.citizens', 'last_name', 'Last name'
+
+  set_column_comment 'demography.countries', 'name', 'Country name'
 
   set_table_comment 'users', 'Information about users'
   set_column_comment 'users', 'name', 'User name'

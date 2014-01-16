@@ -19,4 +19,26 @@ module PgPower::ConnectionAdapters::PostgreSQLAdapter::SchemaMethods
   def move_table_to_schema(table, schema)
     ::PgPower::Tools.move_table_to_schema(table, schema)
   end
+
+  # Make method +tables+ return tables not only from public schema.
+  #
+  # @note
+  #   Tables from public schema have no "public." prefix. It's done for
+  #   compatibility with other libraries that relies on a table name.
+  #   Tables from other schemas has appropriate prefix with schema name.
+  #   See: https://github.com/TMXCredit/pg_power/pull/42
+  #
+  # @return [Array<String>] table names
+  def tables_with_non_public_schema_tables(*args)
+    public_tables = tables_without_non_public_schema_tables(*args)
+
+    non_public_tables =
+      query(<<-SQL, 'SCHEMA').map { |row| row[0] }
+        SELECT schemaname || '.' || tablename AS table
+        FROM pg_tables
+        WHERE schemaname NOT IN ('pg_catalog', 'information_schema', 'public')
+      SQL
+
+    public_tables + non_public_tables
+  end
 end

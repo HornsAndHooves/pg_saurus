@@ -56,7 +56,7 @@ module PgPower::CreateIndexConcurrently
     private :postponed_queries, :postponed_queries=
 
 
-    # Adds a new index to the table.  +column_name+ can be a single Symbol, or
+    # Add a new index to the table. +column_name+ can be a single Symbol, or
     # an Array of Symbols.
     #
     # @param [Symbol, String]                        table_name
@@ -86,7 +86,7 @@ module PgPower::CreateIndexConcurrently
       nil
     end
 
-    # Adds foreign key.
+    # Add a foreign key.
     #
     # == Options:
     # * :column
@@ -140,7 +140,7 @@ module PgPower::CreateIndexConcurrently
       self
     end
 
-    # Clean postponed queries' queue.
+    # Clean postponed queries queue.
     #
     # @return [::PgPower::CreateIndexConcurrently::Migration] migration
     def clear_queue
@@ -165,19 +165,20 @@ module PgPower::CreateIndexConcurrently
     private :enque
   end
 
-  # Allows to call `process_postponed_queries` on MigrationProxy instances.
+  # Allows `process_postponed_queries` to be called on MigrationProxy instances.
   # So, (see ::PgPower::CreateIndexConcurrently::Migrator) could run index
   # creation concurrently.
   #
   # Default delegation in (see ActiveRecord::MigrationProxy) allows to call
   # only several methods.
   module MigrationProxy
+    # :nodoc:
     def self.included(klass)
       klass.delegate :process_postponed_queries, :to => :migration
     end
   end
 
-  # Runs posponed index creation for each migration.
+  # Run postponed index creation for each migration.
   #
   # This module included into (see ::ActiveRecord::Migrator) class to make possible
   # to execute queries for postponed index creation after closing migration's
@@ -188,6 +189,7 @@ module PgPower::CreateIndexConcurrently
   module Migrator
     extend ActiveSupport::Concern
 
+    # :nodoc:
     def self.included(klass)
       klass.alias_method_chain :ddl_transaction, :postponed_queries
     end

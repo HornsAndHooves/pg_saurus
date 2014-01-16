@@ -1,4 +1,4 @@
-# Provides methods to extend {ActiveRecord::ConnectionAdapters::Table}
+# Provides methods to extend ActiveRecord::ConnectionAdapters::Table
 # to support foreign keys feature.
 module PgPower::ConnectionAdapters::Table::ForeignerMethods
   # Adds a new foreign key to the table. +to_table+ can be a single Symbol, or
@@ -40,7 +40,7 @@ module PgPower::ConnectionAdapters::Table::ForeignerMethods
   def references_with_foreign_keys(*args)
     options = args.extract_options!
 
-    if fk_options = options.delete(:foreign_key)
+    if options.delete(:foreign_key)
       p ActiveSupport::Deprecation.send(:deprecation_message, caller,
         ":foreign_key in t.references is deprecated. " \
         "Use t.foreign_key instead")

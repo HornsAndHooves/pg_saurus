@@ -1,4 +1,4 @@
-# Extends {ActiveRecord::ConnectionAdapters::AbstractAdapter} with
+# Extends ActiveRecord::ConnectionAdapters::AbstractAdapter with
 # empty methods for foreign keys feature.
 module PgPower::ConnectionAdapters::AbstractAdapter::ForeignerMethods
   def supports_foreign_keys?

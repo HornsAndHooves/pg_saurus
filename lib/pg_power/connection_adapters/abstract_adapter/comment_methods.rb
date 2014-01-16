@@ -1,4 +1,4 @@
-# Extends {ActiveRecord::ConnectionAdapters::AbstractAdapter} with
+# Extends ActiveRecord::ConnectionAdapters::AbstractAdapter with
 # empty methods for comments feature.
 module PgPower::ConnectionAdapters::AbstractAdapter::CommentMethods
   def supports_comments?
@@ -57,7 +57,7 @@ module PgPower::ConnectionAdapters::AbstractAdapter::CommentMethods
   # ====== Removing comment from the npa column of table phone_numbers
   #  remove_column_comment :phone_numbers, :npa
   def remove_column_comment(table_name, column_name)
-    
+
   end
 
   # Removes any comment from the given columns of a given table.
