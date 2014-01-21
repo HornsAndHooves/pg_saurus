@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 # To test against different rails versions with TravisCI
-rails_version = ENV['RAILS_VERSION'] || '~> 3.1'
+rails_version = ENV['RAILS_VERSION'] || '~> 4.0'
 
 # NOTE: This is a Gemfile for a gem.
 # Using 'platforms' is contraindicated because they won't make it into
@@ -31,7 +31,12 @@ group :development do
   end
 end
 
+group :development, :test do
+  gem 'pry'
+end
+
 group :test do
   # Only load simplecov for Ruby 1.9, use rcov above for 1.8.
   gem 'simplecov', :require => false unless version18
 end
+
