@@ -145,7 +145,7 @@ add_foreign_key(:comments, :posts)
 ```
 Does not add an index:
 ```ruby
-    add_foreign_key(:comments, :posts, :exclude_index => true)
+add_foreign_key(:comments, :posts, :exclude_index => true)
 ```
 ## Partial Indexes
 
@@ -172,15 +172,15 @@ expressions are supported.
 Add an index to a column with a function
 
 ```ruby
-  add_index(:comments, "lower(text)")
+add_index(:comments, "lower(text)")
 ```
 
 You can also specify index access method
 
 ```ruby
-  create_extension 'btree_gist'
-  create_extension 'fuzzystrmatch'
-  add_index(:comments, 'dmetaphone(author)', :using => 'gist')
+create_extension 'btree_gist'
+create_extension 'fuzzystrmatch'
+add_index(:comments, 'dmetaphone(author)', :using => 'gist')
 ```
 
 ## Concurrent index creation
@@ -193,13 +193,13 @@ DSL on index and foreign keys creation.
 Add an index concurrently to a table
 
 ```ruby
-    add_index :table, :column_id, :concurrently => true
+add_index :table, :column_id, :concurrently => true
 ```
 
 Add an index concurrently along with foreign key
 
 ```ruby
-    add_foreign_key :table1, :table2, :column => :column_id, :concurrent_index => true
+add_foreign_key :table1, :table2, :column => :column_id, :concurrent_index => true
 ```
 
 ## Loading/Unloading postgresql extension modules
@@ -218,7 +218,7 @@ Load [fuzzystrmatch](http://www.postgresql.org/docs/9.1/static/fuzzystrmatch.htm
 and create its objects in schema *public*:
 
 ```ruby
-   create_extension "fuzzystrmatch"
+create_extension "fuzzystrmatch"
 ```
 
 
@@ -226,13 +226,13 @@ Load version *1.0* of the [btree_gist](http://www.postgresql.org/docs/9.1/static
 and create its objects in schema *demography*.
 
 ```ruby
-   create_extension "btree_gist", :schema_name => "demography", :version => "1.0"
+create_extension "btree_gist", :schema_name => "demography", :version => "1.0"
 ```
 
 Unload extension module:
 
 ```ruby
-  drop_extension "fuzzystrmatch"
+drop_extension "fuzzystrmatch"
 ```
 
 ## Views
@@ -243,7 +243,7 @@ that it is preliminary 'alpha' at best.
 ### Example
 
 ```ruby
-  create_view "demography.citizens_view", "select * from demography.citizens"
+create_view "demography.citizens_view", "select * from demography.citizens"
 ```
 
 ## Tools
