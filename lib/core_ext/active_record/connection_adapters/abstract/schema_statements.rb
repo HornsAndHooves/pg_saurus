@@ -20,7 +20,8 @@ module ActiveRecord
       #    active
       #
       def add_index(table_name, column_name, options = {})
-        name, type, creation_method, columns, opts = add_index_options(table_name, column_name, options)
+        creation_method = options.delete(:concurrently) ? 'CONCURRENTLY' : ''
+        index_name, index_type, index_columns, index_options, index_algorithm, index_using = add_index_options(table_name, column_name, options)
 
         # GOTCHA:
         #   It ensures that there is no existing index only for the case when the index
@@ -38,14 +39,7 @@ module ActiveRecord
             "column can not be created concurrently, because such index already exists."
         end
 
-        sql = ["CREATE #{type} INDEX"]
-        sql << creation_method.to_s
-        sql << quote_column_name(name)
-        sql << "ON #{quote_table_name(table_name)}"
-        sql << "USING #{options[:using].to_s.downcase}" if options[:using]
-        sql << "(#{columns})#{opts}"
-
-        execute sql.join(" ")
+        execute "CREATE #{index_type} INDEX #{creation_method} #{index_algorithm} #{quote_column_name(index_name)} ON #{quote_table_name(table_name)} #{index_using} (#{index_columns})#{index_options}"
       end
 
       # Checks to see if an index exists on a table for a given index definition.
@@ -112,38 +106,6 @@ module ActiveRecord
           index_name(table_name, :column => options)
         end
       end
-
-      # Returns options used to build out index SQL
-      #
-      # Added support for partial indexes implemented using the :where option
-      #
-      def add_index_options(table_name, column_name, options = {})
-        column_names          = Array(column_name)
-        index_name            = index_name(table_name, :column => column_names)
-        index_creation_method = nil
-
-        if Hash === options # legacy support, since this param was a string
-          index_type = options[:unique] ? 'UNIQUE' : ''
-          index_creation_method = options[:concurrently] ? 'CONCURRENTLY' : ''
-          index_name = options[:name].to_s if options.key?(:name)
-          if supports_partial_index?
-            index_options = options[:where] ? " WHERE #{options[:where]}" : ''
-          end
-        else
-          index_type = options
-        end
-
-        if index_name.length > index_name_length
-          raise ArgumentError, "Index name '#{index_name}' on table '#{table_name}' is too long; the limit is #{index_name_length} characters"
-        end
-        if index_name_exists?(table_name, index_name, false)
-          raise ArgumentError, "Index name '#{index_name}' on table '#{table_name}' already exists"
-        end
-        index_columns = quoted_columns_for_index(column_names, options).join(', ')
-
-        [index_name, index_type, index_creation_method, index_columns, index_options]
-      end
-      protected :add_index_options
 
       # Override super method to provide support for expression column names
       def quoted_columns_for_index(column_names, options = {})
