@@ -5,6 +5,9 @@ module ActiveRecord
       # function call
       FUNCTIONAL_INDEX_REGEXP = /(\w+)\(((?:'.+'(?:::\w+)?, *)*)(\w+)\)/
 
+
+      # Redefine original add_index method to handle :concurrently option.
+      #
       # Adds a new index to the table.  +column_name+ can be a single Symbol, or
       # an Array of Symbols.
       #
@@ -19,7 +22,7 @@ module ActiveRecord
       #  WHERE
       #    active
       #
-      def add_index(table_name, column_name, options = {})
+      def add_index_with_concurrently(table_name, column_name, options = {})
         creation_method = options.delete(:concurrently) ? 'CONCURRENTLY' : ''
         index_name, index_type, index_columns, index_options, index_algorithm, index_using = add_index_options(table_name, column_name, options)
 
