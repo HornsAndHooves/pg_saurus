@@ -12,7 +12,7 @@ module PgPower::SchemaDumper::ExtensionMethods
 #
 # @param [#puts] stream Stream to write to
   def dump_extensions(stream)
-    extensions = @connection.extensions
+    extensions = @connection.pg_extensions
     commands = extensions.map do |extension_name, options|
       result = [%Q|create_extension "#{extension_name}"|]
       result << %Q|:schema_name => "#{options[:schema_name]}"| unless options[:schema_name] == 'public'
