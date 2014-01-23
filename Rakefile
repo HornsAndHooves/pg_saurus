@@ -50,4 +50,4 @@ RSpec::Core::RakeTask.new(:spec) do |spec|
   spec.pattern = FileList['spec/**/*_spec.rb']
 end
 
-task 'spec' => ['db:drop', 'db:create', 'db:migrate']
+task 'spec' => ['db:drop', 'db:create', 'db:migrate', 'app:db:test:load']

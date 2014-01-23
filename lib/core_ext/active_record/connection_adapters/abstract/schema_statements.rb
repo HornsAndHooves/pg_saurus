@@ -23,7 +23,7 @@ module ActiveRecord
       #    active
       #
       def add_index_with_concurrently(table_name, column_name, options = {})
-        creation_method = options.delete(:concurrently) ? 'CONCURRENTLY' : ''
+        creation_method = options.delete(:concurrently) ? 'CONCURRENTLY' : nil
         index_name, index_type, index_columns, index_options, index_algorithm, index_using = add_index_options(table_name, column_name, options)
 
         # GOTCHA:
@@ -37,12 +37,24 @@ module ActiveRecord
         #   indexes. But note that this handles only one of the cases when index
         #   creation can fail!!! All other case should be procesed manually.
         #   -- zekefast 2012-09-25
-        if options.has_key?(:concurrently) && index_exists?(table_name, column_name, options)
-          raise ::PgPower::IndexExistsError, "Index #{name} for `#{table_name}.#{column_name}` " \
+        if creation_method.present? && index_exists?(table_name, column_name, options)
+          raise ::PgPower::IndexExistsError, "Index #{index_name} for `#{table_name}.#{column_name}` " \
             "column can not be created concurrently, because such index already exists."
         end
 
-        execute "CREATE #{index_type} INDEX #{creation_method} #{index_algorithm} #{quote_column_name(index_name)} ON #{quote_table_name(table_name)} #{index_using} (#{index_columns})#{index_options}"
+        statements = []
+        statements << "CREATE #{index_type} INDEX"
+        statements << creation_method if creation_method.present?
+        statements << index_algorithm if index_algorithm.present?
+        statements << quote_column_name(index_name)
+        statements << "ON"
+        statements << quote_table_name(table_name)
+        statements << index_using          if index_using.present?
+        statements << "(#{index_columns})" if index_columns.present?
+        statements << index_options        if index_options.present?
+
+        sql = statements.join(' ')
+        execute(sql)
       end
 
       # Checks to see if an index exists on a table for a given index definition.
