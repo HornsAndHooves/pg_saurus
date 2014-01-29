@@ -39,4 +39,3 @@ group :test do
   # Only load simplecov for Ruby 1.9, use rcov above for 1.8.
   gem 'simplecov', :require => false unless version18
 end
-

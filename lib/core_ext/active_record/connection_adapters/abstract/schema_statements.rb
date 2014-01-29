@@ -24,7 +24,13 @@ module ActiveRecord
       #
       def add_index_with_concurrently(table_name, column_name, options = {})
         creation_method = options.delete(:concurrently) ? 'CONCURRENTLY' : nil
-        index_name, index_type, index_columns, index_options, index_algorithm, index_using = add_index_options(table_name, column_name, options)
+
+        index_name,
+        index_type,
+        index_columns,
+        index_options,
+        index_algorithm,
+        index_using      = add_index_options(table_name, column_name, options)
 
         # GOTCHA:
         #   It ensures that there is no existing index only for the case when the index
@@ -38,14 +44,15 @@ module ActiveRecord
         #   creation can fail!!! All other case should be procesed manually.
         #   -- zekefast 2012-09-25
         if creation_method.present? && index_exists?(table_name, column_name, options)
-          raise ::PgPower::IndexExistsError, "Index #{index_name} for `#{table_name}.#{column_name}` " \
-            "column can not be created concurrently, because such index already exists."
+          raise ::PgPower::IndexExistsError,
+                "Index #{index_name} for `#{table_name}.#{column_name}` " \
+                "column can not be created concurrently, because such index already exists."
         end
 
         statements = []
         statements << "CREATE #{index_type} INDEX"
-        statements << creation_method if creation_method.present?
-        statements << index_algorithm if index_algorithm.present?
+        statements << creation_method      if creation_method.present?
+        statements << index_algorithm      if index_algorithm.present?
         statements << quote_column_name(index_name)
         statements << "ON"
         statements << quote_table_name(table_name)
@@ -57,7 +64,7 @@ module ActiveRecord
         execute(sql)
       end
 
-      # Checks to see if an index exists on a table for a given index definition.
+      # Check to see if an index exists on a table for a given index definition.
       #
       # === Examples
       #  # Check that a partial index exists
@@ -106,7 +113,7 @@ module ActiveRecord
         end
       end
 
-      # Derives the name of the index from the given table name and options hash.
+      # Derive the name of the index from the given table name and options hash.
       def index_name(table_name, options) #:nodoc:
         if Hash === options # legacy support
           if options[:column]
@@ -122,7 +129,7 @@ module ActiveRecord
         end
       end
 
-      # Override super method to provide support for expression column names
+      # Override super method to provide support for expression column names.
       def quoted_columns_for_index(column_names, options = {})
         column_names.map do |name|
           if name =~ FUNCTIONAL_INDEX_REGEXP
@@ -134,7 +141,7 @@ module ActiveRecord
       end
       protected :quoted_columns_for_index
 
-      # Map an expression to a name appropriate for an index
+      # Map an expression to a name appropriate for an index.
       def expression_index_name(column_name)
         if column_name =~ FUNCTIONAL_INDEX_REGEXP
           "#{$1.downcase}_#{$3}"

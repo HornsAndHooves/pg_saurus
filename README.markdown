@@ -259,7 +259,7 @@ PgPower::Tools.index_exists?(table, columns, options)   # => returns true if an 
 
 ## Rails 3
 
-If you are using rails 3.x, use previous pg_power verion:
+If you are using rails 3.x, use previous pg_power version:
 
 ```ruby
 gem 'pg_power', '~> 1.6.4'
