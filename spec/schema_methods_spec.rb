@@ -24,7 +24,7 @@ describe 'Schema methods' do
 
     if is_superuser == 't'
       pending("examples cannot run. " +
-                  "Revoke SUPERUSER priviledge from user '#{ActiveRecord::Base.connection.raw_connection.user}'"
+                  "Revoke SUPERUSER privilege from user '#{ActiveRecord::Base.connection.raw_connection.user}'"
       )
     else
       self.use_transactional_fixtures = false
