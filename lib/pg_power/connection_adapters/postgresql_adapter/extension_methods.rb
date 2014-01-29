@@ -1,7 +1,7 @@
 # Provides methods to extend {ActiveRecord::ConnectionAdapters::PostgreSQLAdapter}
 # to support extensions feature.
 module PgPower::ConnectionAdapters::PostgreSQLAdapter::ExtensionMethods
-  # Default options for {#create_extension} method
+  # Default options for {#create_extension} method.
   CREATE_EXTENSION_DEFAULTS = {
       :if_not_exists => true,
       :schema_name   => nil,
@@ -9,7 +9,7 @@ module PgPower::ConnectionAdapters::PostgreSQLAdapter::ExtensionMethods
       :old_version   => nil
   }
 
-  # Default options for {#drop_extension} method
+  # Default options for {#drop_extension} method.
   DROP_EXTENSION_DEFAULTS = {
       :if_exists => true,
       :mode      => :restrict
@@ -29,7 +29,7 @@ module PgPower::ConnectionAdapters::PostgreSQLAdapter::ExtensionMethods
     true
   end
 
-  # Executes SQL to load a postgresql extension module into the current database
+  # Execute SQL to load a postgresql extension module into the current database.
   #
   # @param [#to_s] extension_name Name of the extension module to load
   # @param [Hash] options
@@ -52,7 +52,7 @@ module PgPower::ConnectionAdapters::PostgreSQLAdapter::ExtensionMethods
   end
 
 
-  # Executes SQL to remove a postgresql extension module from the current database
+  # Execute SQL to remove a postgresql extension module from the current database.
   #
   # @param [#to_s] extension_name Name of the extension module to unload
   # @param [Hash] options
@@ -80,7 +80,11 @@ module PgPower::ConnectionAdapters::PostgreSQLAdapter::ExtensionMethods
     execute(sql)
   end
 
-  # Queries pg_catalog for all loaded to the current database extension modules
+  # Query the pg_catalog for all extension modules loaded to the current database.
+  #
+  # @note
+  #   Since Rails 4 connection has method +extensions+ that returns array of extensions.
+  #   This method is slightly different, since it returns also additional options.
   #
   # Please note all extensions which belong to pg_catalog schema are omitted
   # ===Example
@@ -90,7 +94,7 @@ module PgPower::ConnectionAdapters::PostgreSQLAdapter::ExtensionMethods
   #   }
   #
   # @return [Hash{String => Hash{Symbol => String}}] A list of loaded extensions with their options
-  def extensions
+  def pg_extensions
     # Check postgresql version to not break on Postgresql < 9.1 during schema dump
     pg_version_str = select_value('SELECT version()')
     return {} unless pg_version_str =~ /^PostgreSQL (\d+\.\d+.\d+)/ && ($1 >= '9.1')
@@ -103,7 +107,7 @@ module PgPower::ConnectionAdapters::PostgreSQLAdapter::ExtensionMethods
     SQL
 
     result = select_all(sql)
-    result.map! do |row|
+    formatted_result = result.map do |row|
       [
           row['ext_name'],
           {
@@ -113,6 +117,6 @@ module PgPower::ConnectionAdapters::PostgreSQLAdapter::ExtensionMethods
       ]
     end
 
-    Hash[result]
+    Hash[formatted_result]
   end
 end

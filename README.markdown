@@ -256,6 +256,15 @@ PgPower::Tools.drop_schema "services"                   # => remove the PG schem
 PgPower::Tools.schemas                                  # => ["public", "information_schema", "nets"]
 PgPower::Tools.index_exists?(table, columns, options)   # => returns true if an index exists for the given params
 ```
+
+## Rails 3
+
+If you are using rails 3.x, use previous pg_power version:
+
+```ruby
+gem 'pg_power', '~> 1.6.4'
+```
+
 ## Running tests:
 
 * Ensure your postgresql has postgres-contrib (Ubuntu) package installed. Tests depend on btree_gist and fuzzystrmatch extensions

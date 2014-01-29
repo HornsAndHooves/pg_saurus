@@ -23,5 +23,6 @@ module PgPower::ConnectionAdapters::PostgreSQLAdapter
 
   included do
     alias_method_chain :tables, :non_public_schema_tables
+    alias_method_chain :add_index, :concurrently
   end
 end

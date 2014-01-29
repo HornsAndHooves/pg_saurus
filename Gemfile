@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 # To test against different rails versions with TravisCI
-rails_version = ENV['RAILS_VERSION'] || '~> 3.1'
+rails_version = ENV['RAILS_VERSION'] || '~> 4.0'
 
 # NOTE: This is a Gemfile for a gem.
 # Using 'platforms' is contraindicated because they won't make it into
@@ -29,6 +29,10 @@ group :development do
     gem "ruby-debug"   if version18
     gem "ruby-debug19" if version19
   end
+end
+
+group :development, :test do
+  gem 'pry'
 end
 
 group :test do

@@ -91,7 +91,7 @@ describe 'Foreign keys' do
         connection = ActiveRecord::Base::connection
         connection.add_foreign_key 'pets', 'demography.citizens', :exclude_index => true
         connection.remove_foreign_key 'pets', 'demography.citizens'
-      }.to_not raise_exception(StandardError)
+      }.not_to raise_error
     end
   end
 end

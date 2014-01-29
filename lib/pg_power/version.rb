@@ -1,4 +1,4 @@
 module PgPower
   # Version of pg_power gem.
-  VERSION = '1.6.4'
+  VERSION = '2.0.0'
 end

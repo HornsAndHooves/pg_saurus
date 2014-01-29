@@ -116,7 +116,9 @@ module PgPower::CreateIndexConcurrently
 
         options[:column] ||= connection.id_column_name_from_table_name(to_table)
         options = options.merge(:concurrently => options[:concurrent_index])
-        enque(from_table, options[:column], options)
+
+        index_options = { :concurrently => true }
+        enque(from_table, options[:column], index_options)
       end
 
       # GOTCHA:
