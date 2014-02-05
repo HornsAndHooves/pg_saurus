@@ -51,7 +51,6 @@ module PgPower::ConnectionAdapters::PostgreSQLAdapter::ExtensionMethods
     execute(sql)
   end
 
-
   # Execute SQL to remove a postgresql extension module from the current database.
   #
   # @param [#to_s] extension_name Name of the extension module to unload
@@ -70,7 +69,7 @@ module PgPower::ConnectionAdapters::PostgreSQLAdapter::ExtensionMethods
       mode = mode.to_sym
 
       unless AVAILABLE_DROP_MODES.include?(mode)
-        raise ArgumentError, "Expected one of #{AVAILABLE_DROP_MODES.KEYS.inspect} drop modes, but #{mode} received"
+        raise ArgumentError, "Expected one of #{AVAILABLE_DROP_MODES.keys.inspect} drop modes, but #{mode} received"
       end
 
       sql << AVAILABLE_DROP_MODES[mode]

@@ -20,4 +20,41 @@ describe PgPower::Tools do
       Pet.where(:name => "Flaaffy", :color => "#FFAABB").size.should == 1
     end
   end
+
+  let(:connection) { PgPower::Tools.send(:connection) }
+
+  it ".create_schema" do
+    connection.should_receive(:execute).with(%{CREATE SCHEMA "someschema"})
+    PgPower::Tools.create_schema("someschema")
+  end
+
+  it ".drop_schema" do
+    connection.should_receive(:execute).with(%{DROP SCHEMA "someschema"})
+    PgPower::Tools.drop_schema("someschema")
+  end
+
+  it ".create_view" do
+    connection.should_receive(:execute).with("CREATE VIEW someview AS SELECT 1")
+    PgPower::Tools.create_view("someview", "SELECT 1")
+  end
+
+  it ".drop_view" do
+    connection.should_receive(:execute).with("DROP VIEW someview")
+    PgPower::Tools.drop_view("someview")
+  end
+
+  it ".schemas" do
+    expect(PgPower::Tools.schemas).to include("demography")
+  end
+
+  it ".views" do
+    PgPower::Tools.create_view("someview", "SELECT 1")
+    expect(PgPower::Tools.views.to_a).to include({
+                                                   'table_schema'    => "public",
+                                                   'table_name'      => "someview",
+                                                   'view_definition' => "SELECT 1;"
+                                                 })
+
+    PgPower::Tools.drop_view("someview")
+  end
 end
