@@ -11,6 +11,13 @@ describe PgPower::ConnectionAdapters::PostgreSQLAdapter::ForeignerMethods do
     expect(adapter_stub.supports_foreign_keys?).to be_true
   end
 
+  describe ".drop_table" do
+    it "disables referential integrity if options :force" do
+      adapter_stub.should_receive(:disable_referential_integrity)
+      adapter_stub.drop_table(force: true)
+    end
+  end
+
   describe ".foreign_key_name" do
     it "returns options[:name] if presents" do
       expect(adapter_stub.send(:foreign_key_name, "sometable", "comecolumn", name: "somename")).

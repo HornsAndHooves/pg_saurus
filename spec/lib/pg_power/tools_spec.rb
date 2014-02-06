@@ -49,11 +49,13 @@ describe PgPower::Tools do
 
   it ".views" do
     PgPower::Tools.create_view("someview", "SELECT 1")
-    expect(PgPower::Tools.views.to_a).to include({
-                                                   'table_schema'    => "public",
-                                                   'table_name'      => "someview",
-                                                   'view_definition' => "SELECT 1;"
-                                                 })
+
+    result = PgPower::Tools.views.to_a.find do |view|
+      view['table_schema'] == "public" && view['table_name'] == "someview"
+    end
+
+    expect(result).not_to be_nil
+    expect(result['view_definition']).to match(/SELECT 1;/)
 
     PgPower::Tools.drop_view("someview")
   end
