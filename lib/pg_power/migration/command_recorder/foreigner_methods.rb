@@ -15,11 +15,13 @@ module PgPower::Migration::CommandRecorder::ForeignerMethods
   def invert_add_foreign_key(args)
     from_table, to_table, add_options = *args
     add_options ||= {}
+    add_name_option   = add_options[:name]
+    add_column_option = add_options[:column]
 
-    if add_options[:name]
-      options = {:name => add_options[:name]}
-    elsif add_options[:column]
-      options = {:column => add_options[:column]}
+    if add_name_option then
+      options = {:name => add_name_option}
+    elsif add_column_option
+      options = {:column => add_column_option}
     else
       options = to_table
     end

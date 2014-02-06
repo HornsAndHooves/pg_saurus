@@ -33,13 +33,16 @@ module PgPower # :nodoc:
       SQL
 
       fk_info.map do |row|
-        options = {:column => row['column'], :name => row['name'], :primary_key => row['primary_key']}
+        options = { :column      => row['column'],
+                    :name        => row['name'],
+                    :primary_key => row['primary_key'] }
 
-        options[:dependent] = case row['dependency']
+        options[:dependent] =
+          case row['dependency']
           when 'c' then :delete
           when 'n' then :nullify
           when 'r' then :restrict
-        end
+          end
 
         PgPower::ConnectionAdapters::ForeignKeyDefinition.new(table_name, row['to_table'], options)
       end
@@ -116,16 +119,18 @@ module PgPower # :nodoc:
 
     # Return the SQL code fragment to add the foreign key based on the table names and options.
     def add_foreign_key_sql(from_table, to_table, options = {})
-      foreign_key_name = foreign_key_name(from_table, options[:column], options)
-      primary_key = options[:primary_key] || "id"
-      dependency = dependency_sql(options[:dependent])
+      column           = options[:column]
+      options_options  = options[:options]
+      foreign_key_name = foreign_key_name(from_table, column, options)
+      primary_key      = options[:primary_key] || "id"
+      dependency       = dependency_sql(options[:dependent])
 
       sql =
         "ADD CONSTRAINT #{quote_column_name(foreign_key_name)} " +
-        "FOREIGN KEY (#{quote_column_name(options[:column])}) " +
+        "FOREIGN KEY (#{quote_column_name(column)}) " +
         "REFERENCES #{quote_table_name(ActiveRecord::Migrator.proper_table_name(to_table))}(#{primary_key})"
-      sql << " #{dependency}" if dependency.present?
-      sql << " #{options[:options]}" if options[:options]
+      sql << " #{dependency}"      if dependency.present?
+      sql << " #{options_options}" if options_options
 
       sql
     end
@@ -160,7 +165,9 @@ module PgPower # :nodoc:
       execute "ALTER TABLE #{quote_table_name(from_table)} #{remove_foreign_key_sql(foreign_key_name)}"
 
       options[:exclude_index] ||= false
-      remove_index(from_table, column) unless options[:exclude_index] || !index_exists?(from_table, column)
+      unless options[:exclude_index] || !index_exists?(from_table, column) then
+        remove_index(from_table, column)
+      end
     end
 
     # Return the SQL code fragment to remove foreign key based on table name and options.
@@ -177,7 +184,7 @@ module PgPower # :nodoc:
     # @param [String, Symbol] from_table
     # @param [String]         foreign_key_name
     def id_column_name_from_foreign_key_metadata(from_table, foreign_key_name)
-      keys = foreign_keys(from_table)
+      keys     = foreign_keys(from_table)
       this_key = keys.find {|key| key.options[:name] == foreign_key_name}
       this_key.options[:column]
     end
@@ -185,8 +192,10 @@ module PgPower # :nodoc:
 
     # Build default name for constraint.
     def foreign_key_name(table, column, options = {})
-      if options[:name]
-        options[:name]
+      name = options[:name]
+
+      if !name.nil? then
+        name
       else
         prefix = table.gsub(".", "_")
         "#{prefix}_#{column}_fk"
