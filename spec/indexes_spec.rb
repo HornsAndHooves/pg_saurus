@@ -23,7 +23,9 @@ describe 'Indexes' do
     end
 
     it 'should allow indexes with expressions using functions with multiple arguments as dumped' do
-      ActiveRecord::Migration.add_index(:pets, "to_tsvector('english'::regconfig, name)", :using => 'gin')
+      ActiveRecord::Migration.add_index(:pets,
+                                        "to_tsvector('english'::regconfig, name)",
+                                        :using => 'gin')
 
       PgPower::Explorer.index_exists?(:pets, "gin(to_tsvector('english', name))" ).should be_true
     end
@@ -79,22 +81,36 @@ describe 'Indexes' do
 
     it 'should be true for a valid set of options' do
       index_options = {:unique => true, :where => 'active'}
-      PgPower::Explorer.index_exists?('demography.citizens', [:country_id, :user_id], index_options).should be_true
+      PgPower::Explorer.index_exists?('demography.citizens',
+                                      [:country_id, :user_id],
+                                      index_options
+                                     ).should be_true
     end
 
     it 'should be true for a valid set of options including name' do
-      index_options = {:unique => true, :where => 'active', :name => 'index_demography_citizens_on_country_id_and_user_id'}
-      PgPower::Explorer.index_exists?('demography.citizens', [:country_id, :user_id], index_options).should be_true
+      index_options = { :unique => true,
+                        :where  => 'active',
+                        :name   => 'index_demography_citizens_on_country_id_and_user_id' }
+      PgPower::Explorer.index_exists?('demography.citizens',
+                                      [:country_id, :user_id],
+                                      index_options
+                                     ).should be_true
     end
 
     it 'should be false for a subset of valid options' do
       index_options = {:where => 'active'}
-      PgPower::Explorer.index_exists?('demography.citizens', [:country_id, :user_id], index_options).should be_false
+      PgPower::Explorer.index_exists?('demography.citizens',
+                                      [:country_id, :user_id],
+                                      index_options
+                                     ).should be_false
     end
 
     it 'should be false for invalid options' do
       index_options = {:where => 'active'}
-      PgPower::Explorer.index_exists?('demography.citizens', [:country_id], index_options).should be_false
+      PgPower::Explorer.index_exists?('demography.citizens',
+                                      [:country_id],
+                                      index_options
+                                     ).should be_false
     end
 
     it 'should be true for a :where clause that includes boolean comparison' do

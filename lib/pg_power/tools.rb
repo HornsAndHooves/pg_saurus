@@ -46,14 +46,14 @@ module PgPower
       sql = "CREATE VIEW #{view_name} AS #{view_definition}"
       connection.execute sql
     end
-    
+
     # Drops PostgreSQL view
     # @param [String, Symbol] view_name
     def drop_view(view_name)
       sql = "DROP VIEW #{view_name}"
       connection.execute sql
     end
-    
+
     # Returns an array of existing, non system views.
     def views
       sql = <<-SQL
