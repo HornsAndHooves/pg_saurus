@@ -33,11 +33,11 @@ describe ActiveRecord::ConnectionAdapters::SchemaStatements do
   describe '#index_name' do
     let(:connection) { ActiveRecord::Base.connection }
 
-    it "returns options[:name] if presents" do
+    it "returns options[:name] if it's present" do
       expect(connection.index_name("sometable", name: "somename")).to eq "somename"
     end
 
-    it "raises ArgumentError if no :column or :name in options" do
+    it "raises ArgumentError if there is no :column or :name in options" do
       expect {
         connection.index_name("sometable", {})
       }.to raise_error(ArgumentError, "You must specify the index name")

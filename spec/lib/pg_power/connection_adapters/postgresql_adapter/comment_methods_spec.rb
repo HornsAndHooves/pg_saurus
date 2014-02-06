@@ -17,30 +17,35 @@ describe PgPower::ConnectionAdapters::PostgreSQLAdapter::CommentMethods do
     let(:connection)   { ActiveRecord::Base.connection }
 
     it "#set_table_comment" do
-      connection.should_receive(:execute).with("COMMENT ON TABLE \"users\" IS $$Users list$$;")
+      connection.should_receive(:execute).
+                 with("COMMENT ON TABLE \"users\" IS $$Users list$$;")
       connection.set_table_comment("users", "Users list")
     end
 
     it "#set_column_comment" do
       connection.should_receive(:execute).
-        with("COMMENT ON COLUMN \"users\".\"name\" IS $$User name$$;")
+                 with("COMMENT ON COLUMN \"users\".\"name\" IS $$User name$$;")
       connection.set_column_comment("users", "name", "User name")
     end
 
     it "#set_column_comments" do
-      connection.should_receive(:set_column_comment).with("users", "name", "User name")
-      connection.should_receive(:set_column_comment).with("users", "email", "User email")
+      connection.should_receive(:set_column_comment).
+                 with("users", "name", "User name")
+      connection.should_receive(:set_column_comment).
+                 with("users", "email", "User email")
 
       connection.set_column_comments("users", {'name' =>  "User name", 'email' => "User email"})
     end
 
     it "#set_index_comment" do
-      connection.should_receive(:execute).with("COMMENT ON INDEX index_users_on_email IS $$Index on user email$$;")
+      connection.should_receive(:execute).
+                 with("COMMENT ON INDEX index_users_on_email IS $$Index on user email$$;")
       connection.set_index_comment("index_users_on_email", "Index on user email")
     end
 
     it "#remove_table_comment" do
-      connection.should_receive(:execute).with("COMMENT ON TABLE \"users\" IS NULL;")
+      connection.should_receive(:execute).
+                 with("COMMENT ON TABLE \"users\" IS NULL;")
       connection.remove_table_comment("users")
     end
 
@@ -58,7 +63,8 @@ describe PgPower::ConnectionAdapters::PostgreSQLAdapter::CommentMethods do
     end
 
     it "#remove_index_comment" do
-      connection.should_receive(:execute).with("COMMENT ON INDEX index_users_on_email IS NULL;")
+      connection.should_receive(:execute).
+                 with("COMMENT ON INDEX index_users_on_email IS NULL;")
       connection.remove_index_comment("index_users_on_email")
     end
 

@@ -15,6 +15,7 @@ describe PgPower::Migration::CommandRecorder::ViewMethods do
   end
 
   it ".invert_create_view" do
-    expect(command_recorder_stub.invert_create_view([:foo, :bar])).to eq([:drop_view, [:foo]])
+    expect(command_recorder_stub.invert_create_view([:foo, :bar])).
+      to eq([:drop_view, [:foo]])
   end
 end

@@ -5,7 +5,7 @@ describe PgPower::ConnectionAdapters::Table::CommentMethods do
     include ::PgPower::ConnectionAdapters::Table::CommentMethods
 
     def initialize
-      @base = Object.new
+      @base       = Object.new
       @table_name = "sometable"
     end
 
@@ -30,7 +30,8 @@ describe PgPower::ConnectionAdapters::Table::CommentMethods do
   end
 
   it ".set_column_comments" do
-    base.should_receive(:set_column_comments).with("sometable", "column1" => "comment1", "column2" => "comment2")
+    base.should_receive(:set_column_comments).
+         with("sometable", "column1" => "comment1", "column2" => "comment2")
     table_stub.set_column_comments("column1" => "comment1", "column2" => "comment2")
   end
 

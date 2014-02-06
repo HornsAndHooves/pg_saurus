@@ -15,10 +15,12 @@ describe PgPower::Migration::CommandRecorder::ExtensionMethods do
   end
 
   it ".invert_create_extension" do
-    expect(command_recorder_stub.invert_create_extension([:foo, :bar])).to eq([:drop_extension, [:foo]])
+    expect(command_recorder_stub.invert_create_extension([:foo, :bar])).
+      to eq([:drop_extension, [:foo]])
   end
 
   it ".invert_drop_extension" do
-    expect(command_recorder_stub.invert_drop_extension([:foo, :bar])).to eq([:create_extension, [:foo]])
+    expect(command_recorder_stub.invert_drop_extension([:foo, :bar])).
+      to eq([:create_extension, [:foo]])
   end
 end

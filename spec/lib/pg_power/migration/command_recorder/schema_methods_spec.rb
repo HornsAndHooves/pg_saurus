@@ -15,11 +15,13 @@ describe PgPower::Migration::CommandRecorder::SchemaMethods do
   end
 
   it ".invert_create_schema" do
-    expect(command_recorder_stub.invert_create_schema([:foo, :bar])).to eq([:drop_schema, [:foo]])
+    expect(command_recorder_stub.invert_create_schema([:foo, :bar])).
+      to eq([:drop_schema, [:foo]])
   end
 
   it ".invert_drop_schema" do
-    expect(command_recorder_stub.invert_drop_schema([:foo, :bar])).to eq([:create_schema, [:foo]])
+    expect(command_recorder_stub.invert_drop_schema([:foo, :bar])).
+      to eq([:create_schema, [:foo]])
   end
 
   it ".invert_move_table_to_schema" do

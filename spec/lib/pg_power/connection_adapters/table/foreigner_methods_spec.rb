@@ -5,7 +5,7 @@ describe PgPower::ConnectionAdapters::Table::ForeignerMethods do
     include ::PgPower::ConnectionAdapters::Table::ForeignerMethods
 
     def initialize
-      @base = Object.new
+      @base       = Object.new
       @table_name = "sometable"
     end
 
@@ -31,9 +31,11 @@ describe PgPower::ConnectionAdapters::Table::ForeignerMethods do
     caller = double("caller").as_null_object.tap { |c| c.stub(:[]).and_return([]) }
     table_stub.stub(:caller).and_return(caller)
 
-    ActiveSupport::Deprecation.should_receive(:send).with(:deprecation_message, caller,
-                                                          ":foreign_key in t.references is deprecated. " \
-                                                          "Use t.foreign_key instead")
+    ActiveSupport::Deprecation.should_receive(:send).
+                               with(:deprecation_message,
+                                    caller,
+                                    ":foreign_key in t.references is deprecated. " \
+                                    "Use t.foreign_key instead")
 
     table_stub.should_receive(:references_without_foreign_keys)
     table_stub.references_with_foreign_keys(foreign_key: "someforeignkey")
