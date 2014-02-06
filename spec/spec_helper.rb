@@ -4,10 +4,8 @@ ENV["RAILS_ENV"] ||= 'test'
 if !ENV['TRAVIS']
   begin
     require 'simplecov'
-    SimpleCov.start do
-      add_filter 'spec'
-    end
-  rescue LoadError; end
+  rescue LoadError
+  end
 end
 
 require File.expand_path("../dummy/config/environment", __FILE__)
