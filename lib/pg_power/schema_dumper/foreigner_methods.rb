@@ -26,18 +26,24 @@ module PgPower::SchemaDumper::ForeignerMethods
   def foreign_keys(table_name, stream)
     if (foreign_keys = @connection.foreign_keys(table_name)).any?
       add_foreign_key_statements = foreign_keys.map do |foreign_key|
+        options         = foreign_key.options
+        table_from_key  = foreign_key.to_table
         statement_parts = [ ('add_foreign_key ' + foreign_key.from_table.inspect) ]
-        statement_parts << foreign_key.to_table.inspect
-        statement_parts << (':name => ' + foreign_key.options[:name].inspect)
+        statement_parts << table_from_key.inspect
+        statement_parts << (':name => ' + options[:name].inspect)
 
-        if foreign_key.options[:column] != "#{foreign_key.to_table.singularize}_id"
-          statement_parts << (':column => ' + foreign_key.options[:column].inspect)
+        column_from_options      = options[:column]
+        primary_key_from_options = options[:primary_key]
+        dependent_from_options   = options[:dependent]
+
+        if column_from_options != "#{table_from_key.singularize}_id"
+          statement_parts << (":column => #{column_from_options.inspect}")
         end
-        if foreign_key.options[:primary_key] != 'id'
-          statement_parts << (':primary_key => ' + foreign_key.options[:primary_key].inspect)
+        if primary_key_from_options != 'id'
+          statement_parts << (":primary_key => #{primary_key_from_options.inspect}")
         end
-        if foreign_key.options[:dependent].present?
-          statement_parts << (':dependent => ' + foreign_key.options[:dependent].inspect)
+        if dependent_from_options.present?
+          statement_parts << (":dependent => #{dependent_from_options.inspect}")
         end
 
         # Always exclude the index

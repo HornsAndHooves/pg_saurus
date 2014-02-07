@@ -33,18 +33,22 @@ describe 'Comment methods' do
     end
 
     it "sets comments on columns of non-public schemas" do
-      PgPower::Explorer.get_column_comment("demography.citizens", "first_name").should == "First name"
-      PgPower::Explorer.get_column_comment("demography.citizens", "last_name").should == "Last name"
+      PgPower::Explorer.get_column_comment("demography.citizens", "first_name").
+                        should == "First name"
+      PgPower::Explorer.get_column_comment("demography.citizens", "last_name").
+                        should == "Last name"
     end
   end
 
   describe '#set_index_comment' do
     it 'sets a comment on an index' do
-      PgPower::Explorer.get_index_comment('index_pets_on_to_tsvector_name_gist').should == 'Functional index on name'
+      PgPower::Explorer.get_index_comment('index_pets_on_to_tsvector_name_gist').
+                        should == 'Functional index on name'
     end
 
     it 'sets a comment on an index in a non-public schema' do
-      PgPower::Explorer.get_index_comment('demography.index_demography_citizens_on_country_id_and_user_id').should == 'Unique index on active citizens'
+      PgPower::Explorer.get_index_comment('demography.index_demography_citizens_on_country_id_and_user_id').
+                        should == 'Unique index on active citizens'
 
     end
   end
@@ -77,8 +81,10 @@ describe 'Comment methods' do
 
   describe '#remove_index_comment' do
     it 'removes comment on index' do
-      PgPower::Explorer.get_index_comment('demography.index_demography_cities_on_country_id').should be_nil
-      PgPower::Explorer.get_index_comment('index_pets_on_breed_id').should be_nil
+      PgPower::Explorer.get_index_comment('demography.index_demography_cities_on_country_id').
+                        should be_nil
+      PgPower::Explorer.get_index_comment('index_pets_on_breed_id').
+                        should be_nil
     end
   end
 

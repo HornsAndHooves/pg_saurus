@@ -40,17 +40,17 @@ module PgPower::ConnectionAdapters::PostgreSQLAdapter::ExtensionMethods
   #    that absorbs the existing objects into the extension, instead of creating new objects
   def create_extension(extension_name, options = {})
     options = CREATE_EXTENSION_DEFAULTS.merge(options.symbolize_keys)
+
     sql = ['CREATE EXTENSION']
-    sql << 'IF NOT EXISTS' if options[:if_not_exists]
+    sql << 'IF NOT EXISTS'                   if options[:if_not_exists]
     sql << %Q{"#{extension_name.to_s}"}
     sql << "SCHEMA #{options[:schema_name]}" if options[:schema_name].present?
-    sql << "VERSION '#{options[:version]}'"    if options[:version].present?
+    sql << "VERSION '#{options[:version]}'"  if options[:version].present?
     sql << "FROM #{options[:old_version]}"   if options[:old_version].present?
 
     sql = sql.join(' ')
     execute(sql)
   end
-
 
   # Execute SQL to remove a postgresql extension module from the current database.
   #
@@ -70,7 +70,9 @@ module PgPower::ConnectionAdapters::PostgreSQLAdapter::ExtensionMethods
       mode = mode.to_sym
 
       unless AVAILABLE_DROP_MODES.include?(mode)
-        raise ArgumentError, "Expected one of #{AVAILABLE_DROP_MODES.KEYS.inspect} drop modes, but #{mode} received"
+        raise ArgumentError,
+              "Expected one of #{AVAILABLE_DROP_MODES.keys.inspect} drop modes, " \
+              "but #{mode} received"
       end
 
       sql << AVAILABLE_DROP_MODES[mode]

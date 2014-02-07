@@ -1,3 +1,5 @@
 --colour
 --format nested
 #--debug
+--profile
+#--order rand

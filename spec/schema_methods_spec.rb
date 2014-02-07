@@ -23,8 +23,9 @@ describe 'Schema methods' do
         select_value('select usesuper from pg_user where usename = current_user')
 
     if is_superuser == 't'
-      pending("examples cannot run. " +
-                  "Revoke SUPERUSER privilege from user '#{ActiveRecord::Base.connection.raw_connection.user}'"
+      pending("examples cannot run. " \
+              "Revoke SUPERUSER privilege from user " \
+              "'#{ActiveRecord::Base.connection.raw_connection.user}'"
       )
     else
       self.use_transactional_fixtures = false
@@ -59,14 +60,15 @@ describe 'Schema methods' do
         stream = StringIO.new
 
         stderr_result = capture_stderr{ ActiveRecord::SchemaDumper.dump(connection, stream) }
-        stderr_result.should match(/ActiveRecord::InsufficientPrivilege:.+no_privileges\.some_table/)
+        stderr_result.
+          should match(/ActiveRecord::InsufficientPrivilege:.+no_privileges\.some_table/)
       end
     end
   end
 
   describe '#move_table_to_schema' do
     it 'moves table to another schema' do
-      PgPower::Explorer.table_exists?('public.people').should == false
+      PgPower::Explorer.table_exists?('public.people')    .should == false
       PgPower::Explorer.table_exists?('demography.people').should == true
     end
   end

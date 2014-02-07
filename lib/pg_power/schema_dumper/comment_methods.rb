@@ -15,10 +15,9 @@ module PgPower::SchemaDumper::CommentMethods
 
     # Now dump index comments
     unless (index_comments = @connection.index_comments).empty?
-      index_comments.each do |row|
-        schema_name = row[0]
-        index_name = schema_name == 'public' ? "'#{row[1]}'" : "'#{schema_name}.#{row[1]}'"
-        comment = format_comment(row[2])
+      index_comments.each do |schema_name, table_name, raw_comment|
+        index_name = schema_name == 'public' ? "'#{table_name}'" : "'#{schema_name}.#{table_name}'"
+        comment    = format_comment(raw_comment)
         stream.puts "  set_index_comment #{index_name}, '#{comment}'"
       end
       stream.puts
@@ -31,7 +30,8 @@ module PgPower::SchemaDumper::CommentMethods
     unless (comments = @connection.comments(table_name)).empty?
       comment_statements = comments.map do |row|
         column_name = row[0]
-        comment = format_comment(row[1])
+        comment     = format_comment(row[1])
+
         if column_name
           "  set_column_comment '#{table_name}', '#{column_name}', '#{comment}'"
         else

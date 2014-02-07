@@ -108,14 +108,16 @@ module PgPower::CreateIndexConcurrently
     #
     # @see ::PgPower::ConnectionAdapters::PostgreSQLAdapter::ForeignerMethods.add_foreign_key
     def add_foreign_key(from_table, to_table, options = {}, &block)
-      from_table = ::ActiveRecord::Migrator.proper_table_name(from_table)
-      if options[:concurrent_index]
+      from_table       = ::ActiveRecord::Migrator.proper_table_name(from_table)
+      concurrent_index = options[:concurrent_index]
+
+      if concurrent_index then
         if options[:exclude_index]
           raise ArgumentError, 'Conflicted options(exclude_index, concurrent_index) was found, both are set to true.'
         end
 
         options[:column] ||= connection.id_column_name_from_table_name(to_table)
-        options = options.merge(:concurrently => options[:concurrent_index])
+        options = options.merge(:concurrently => concurrent_index)
 
         index_options = { :concurrently => true }
         enque(from_table, options[:column], index_options)
