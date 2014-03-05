@@ -9,8 +9,9 @@ Gem::Specification.new do |s|
   s.version = "2.0.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
+  s.require_paths = ["lib"]
   s.authors = ["Potapov Sergey", "Arthur Shagall", "Artem Ignatyev", "Matt Dressel", "TMX Credit"]
-  s.date = "2014-02-07"
+  s.date = "2014-03-05"
   s.description = "ActiveRecord extensions for PostgreSQL. Provides useful tools for schema, foreign_key, index, comment and extensios manipulations in migrations."
   s.email = ["blake131313@gmail.com", "arthur.shagall@gmail.com", "cryo28@gmail.com", "matt.dressel@gmail.com", "rubygems@tmxcredit.com"]
   s.extra_rdoc_files = [
@@ -46,6 +47,10 @@ Gem::Specification.new do |s|
     "lib/pg_power/create_index_concurrently.rb",
     "lib/pg_power/engine.rb",
     "lib/pg_power/errors.rb",
+    "lib/pg_power/generators.rb",
+    "lib/pg_power/generators/migration_generator.rb",
+    "lib/pg_power/generators/templates/create_table_migration.rb",
+    "lib/pg_power/generators/templates/migration.rb",
     "lib/pg_power/migration.rb",
     "lib/pg_power/migration/command_recorder.rb",
     "lib/pg_power/migration/command_recorder/comment_methods.rb",
@@ -65,8 +70,7 @@ Gem::Specification.new do |s|
   ]
   s.homepage = "https://github.com/TMXCredit/pg_power"
   s.licenses = ["MIT"]
-  s.require_paths = ["lib"]
-  s.rubygems_version = "2.1.11"
+  s.rubygems_version = "2.2.1"
   s.summary = "ActiveRecord extensions for PostgreSQL."
 
   if s.respond_to? :specification_version then

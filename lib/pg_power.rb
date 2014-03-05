@@ -12,6 +12,7 @@ module PgPower
   autoload :Adapter
   autoload :SchemaDumper
   autoload :Tools
+  autoload :Generators
   autoload :Migration
   autoload :ConnectionAdapters
   autoload :CreateIndexConcurrently
