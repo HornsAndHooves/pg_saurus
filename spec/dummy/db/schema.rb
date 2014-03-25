@@ -142,17 +142,9 @@ ActiveRecord::Schema.define(version: 20130624154800) do
     t.integer "population"
   end
 
-  create_view "demography.citizens_view", " SELECT citizens.id,
-    citizens.country_id,
-    citizens.user_id,
-    citizens.first_name,
-    citizens.last_name,
-    citizens.birthday,
-    citizens.bio,
-    citizens.created_at,
-    citizens.updated_at,
-    citizens.active
-   FROM demography.citizens;"
+  create_view "demography.citizens_view", <<-SQL
+    SELECT citizens.id, citizens.country_id, citizens.user_id, citizens.first_name, citizens.last_name, citizens.birthday, citizens.bio, citizens.created_at, citizens.updated_at, citizens.active FROM demography.citizens;
+  SQL
 
   set_table_comment 'demography.citizens', 'Citizens Info'
   set_column_comment 'demography.citizens', 'country_id', 'Country key'
