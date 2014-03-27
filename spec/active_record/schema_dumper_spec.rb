@@ -28,8 +28,8 @@ describe ActiveRecord::SchemaDumper do
         s = /(\s|\n)+/
 
         @dump.should =~
-          /create_view#{s}"demography.citizens_view",#{s}
-            "\s?SELECT#{s}citizens.id,#{s}\
+          /create_view#{s}"demography.citizens_view",#{s}<<-SQL#{s}
+            \s?SELECT#{s}citizens.id,#{s}\
               citizens.country_id,#{s}
               citizens.user_id,#{s}
               citizens.first_name,#{s}
@@ -39,7 +39,8 @@ describe ActiveRecord::SchemaDumper do
               citizens.created_at,#{s}
               citizens.updated_at,#{s}
               citizens.active#{s}
-          FROM#{s}demography.citizens;"/x
+          FROM#{s}demography.citizens;
+          #{s}SQL/x
 
 
       end
