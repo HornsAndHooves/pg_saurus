@@ -9,6 +9,27 @@ module ActiveRecord # :nodoc:
       # Regex to find where clause in index statements
       INDEX_WHERE_EXPRESION = /WHERE (.+)$/
 
+      # Checks if index exists for given table.
+      #
+      # == Patch:
+      # Search using provided schema if table_name includes schema name.
+      #
+      def index_name_exists?(table_name, index_name, default)
+        schema, table = Utils.extract_schema_and_table(table_name)
+        schemas = schema ? "ARRAY['#{schema}']" : 'current_schemas(false)'
+
+        exec_query(<<-SQL, 'SCHEMA').rows.first[0].to_i > 0
+          SELECT COUNT(*)
+          FROM pg_class t
+          INNER JOIN pg_index d ON t.oid = d.indrelid
+          INNER JOIN pg_class i ON d.indexrelid = i.oid
+          WHERE i.relkind = 'i'
+            AND i.relname = '#{index_name}'
+            AND t.relname = '#{table}'
+            AND i.relnamespace IN (SELECT oid FROM pg_namespace WHERE nspname = ANY (#{schemas}) )
+        SQL
+      end
+
       # Returns an array of indexes for the given table.
       #
       # == Patch 1 reason:
