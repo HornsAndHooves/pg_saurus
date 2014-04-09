@@ -9,6 +9,21 @@ module ActiveRecord # :nodoc:
       # Regex to find where clause in index statements
       INDEX_WHERE_EXPRESION = /WHERE (.+)$/
 
+      # Returns the list of all tables in the schema search path or a specified schema.
+      #
+      # == Patch:
+      # If current user is not `postgres` original method return all tables from all schemas
+      # without schema prefix. This disables such behavior by querying only default schema.
+      # Tables with schemas will be queried later.
+      #
+      def tables(name = nil)
+        query(<<-SQL, 'SCHEMA').map { |row| row[0] }
+            SELECT tablename
+            FROM pg_tables
+            WHERE schemaname = ANY (ARRAY['public'])
+        SQL
+      end
+
       # Checks if index exists for given table.
       #
       # == Patch:
