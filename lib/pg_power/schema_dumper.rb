@@ -21,7 +21,6 @@ module PgPower::SchemaDumper
     alias_method_chain :header, :schemas
     alias_method_chain :header, :extensions
 
-    alias_method_chain :tables, :schemas
     alias_method_chain :tables, :views
     alias_method_chain :tables, :comments
     alias_method_chain :tables, :foreign_keys
