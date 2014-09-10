@@ -9,14 +9,14 @@ describe PgPower::ConnectionAdapters::PostgreSQLAdapter::ViewMethods do
 
   describe ".create_view" do
     it "refers to tools create_view" do
-      ::PgPower::Tools.should_receive(:create_view).with("someview", "")
+      expect(::PgPower::Tools).to receive(:create_view).with("someview", "")
       adapter_stub.create_view("someview", "")
     end
   end
 
   describe ".drop_view" do
     it "refers to tools drop_view" do
-      ::PgPower::Tools.should_receive(:drop_view).with("someview")
+      expect(::PgPower::Tools).to receive(:drop_view).with("someview")
       adapter_stub.drop_view("someview")
     end
   end

@@ -18,26 +18,27 @@ describe PgPower::ConnectionAdapters::Table::ForeignerMethods do
   let(:base)       { table_stub.instance_variable_get(:@base) }
 
   it ".foreign_key" do
-    base.should_receive(:add_foreign_key).with("sometable", "someothertable", {})
+    expect(base).to receive(:add_foreign_key).with("sometable", "someothertable", {})
     table_stub.foreign_key("someothertable", {})
   end
 
   it ".remove_foreign_key" do
-    base.should_receive(:remove_foreign_key).with("sometable", {})
+    expect(base).to receive(:remove_foreign_key).with("sometable", {})
     table_stub.remove_foreign_key({})
   end
 
   it ".references_with_foreign_keys" do
-    caller = double("caller").as_null_object.tap { |c| c.stub(:[]).and_return([]) }
-    table_stub.stub(:caller).and_return(caller)
+    caller = double("caller").as_null_object.tap do |c|
+      allow(c).to receive(:[]).and_return([])
+    end
+    allow(table_stub).to receive(:caller).and_return(caller)
 
-    ActiveSupport::Deprecation.should_receive(:send).
-                               with(:deprecation_message,
-                                    caller,
-                                    ":foreign_key in t.references is deprecated. " \
-                                    "Use t.foreign_key instead")
+    expect(ActiveSupport::Deprecation).to receive(:send).
+      with(:deprecation_message,
+           caller,
+           ":foreign_key in t.references is deprecated. Use t.foreign_key instead")
 
-    table_stub.should_receive(:references_without_foreign_keys)
+    expect(table_stub).to receive(:references_without_foreign_keys)
     table_stub.references_with_foreign_keys(foreign_key: "someforeignkey")
   end
 end

@@ -8,6 +8,6 @@ describe PgPower::ConnectionAdapters::AbstractAdapter::IndexMethods do
   let(:adapter_stub) { AbstractAdapter.new }
 
   it ".supports_partial_index?" do
-    expect(adapter_stub.supports_partial_index?).to be_false
+    expect(adapter_stub.supports_partial_index?).to be false
   end
 end

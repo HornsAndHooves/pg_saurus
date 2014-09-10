@@ -24,22 +24,22 @@ describe PgPower::Tools do
   let(:connection) { PgPower::Tools.send(:connection) }
 
   it ".create_schema" do
-    connection.should_receive(:execute).with(%{CREATE SCHEMA "someschema"})
+    expect(connection).to receive(:execute).with(%{CREATE SCHEMA "someschema"})
     PgPower::Tools.create_schema("someschema")
   end
 
   it ".drop_schema" do
-    connection.should_receive(:execute).with(%{DROP SCHEMA "someschema"})
+    expect(connection).to receive(:execute).with(%{DROP SCHEMA "someschema"})
     PgPower::Tools.drop_schema("someschema")
   end
 
   it ".create_view" do
-    connection.should_receive(:execute).with("CREATE VIEW someview AS SELECT 1")
+    expect(connection).to receive(:execute).with("CREATE VIEW someview AS SELECT 1")
     PgPower::Tools.create_view("someview", "SELECT 1")
   end
 
   it ".drop_view" do
-    connection.should_receive(:execute).with("DROP VIEW someview")
+    expect(connection).to receive(:execute).with("DROP VIEW someview")
     PgPower::Tools.drop_view("someview")
   end
 

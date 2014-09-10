@@ -8,7 +8,7 @@ describe PgPower::ConnectionAdapters::PostgreSQLAdapter::IndexMethods do
   let(:adapter_stub) { PostgreSQLAdapter.new }
 
   it ".supports_partial_index?" do
-    expect(adapter_stub.supports_partial_index?).to be_true
+    expect(adapter_stub.supports_partial_index?).to be true
   end
 
   describe "#index_name_for_remove" do

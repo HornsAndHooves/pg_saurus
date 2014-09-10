@@ -19,12 +19,12 @@ describe PgPower::ConnectionAdapters::AbstractAdapter do
       :remove_column_comments,
       :set_index_comment,
       :remove_index_comment
-    ].each { |method_name| adapter_stub.respond_to?(method_name).should be_true }
+    ].each { |method_name| adapter_stub.respond_to?(method_name).should be true }
   end
 
   it 'should define method stubs for foreign key methods' do
     [ :add_foreign_key,
       :remove_foreign_key
-    ].each { |method_name| adapter_stub.respond_to?(method_name).should be_true }
+    ].each { |method_name| adapter_stub.respond_to?(method_name).should be true }
   end
 end

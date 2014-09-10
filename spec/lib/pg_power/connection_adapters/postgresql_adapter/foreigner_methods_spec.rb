@@ -8,12 +8,12 @@ describe PgPower::ConnectionAdapters::PostgreSQLAdapter::ForeignerMethods do
   let(:adapter_stub) { PostgreSQLAdapter.new }
 
   it ".supports_foreign_keys?" do
-    expect(adapter_stub.supports_foreign_keys?).to be_true
+    expect(adapter_stub.supports_foreign_keys?).to be true
   end
 
   describe ".drop_table" do
     it "disables referential integrity if options :force" do
-      adapter_stub.should_receive(:disable_referential_integrity)
+      expect(adapter_stub).to receive(:disable_referential_integrity)
       adapter_stub.drop_table(force: true)
     end
   end

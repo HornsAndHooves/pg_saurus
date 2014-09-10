@@ -18,6 +18,11 @@ module PgPower
       connection.execute sql
     end
 
+    def create_schema_if_not_exists(schema_name)
+      sql = %{CREATE SCHEMA IF NOT EXISTS "#{schema_name}"}
+      connection.execute sql
+    end
+
     # Drops PostgreSQL schema
     def drop_schema(schema_name)
       sql = %{DROP SCHEMA "#{schema_name}"}
