@@ -19,7 +19,7 @@ describe PgPower::Migration::CommandRecorder do
     ].each{ |method_name|
 
       it ".#{method_name}" do
-        command_recorder_stub.should_receive(:record).with(method_name, [])
+        expect(command_recorder_stub).to receive(:record).with(method_name, [])
         command_recorder_stub.send(method_name)
       end
     }
@@ -51,7 +51,7 @@ describe PgPower::Migration::CommandRecorder do
     ].each{ |method_name|
 
       it ".#{method_name}" do
-        command_recorder_stub.should_receive(:record).with(method_name, [])
+        expect(command_recorder_stub).to receive(:record).with(method_name, [])
         command_recorder_stub.send(method_name)
       end
     }

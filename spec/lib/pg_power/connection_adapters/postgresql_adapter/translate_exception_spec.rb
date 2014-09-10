@@ -6,9 +6,11 @@ describe PgPower::ConnectionAdapters::PostgreSQLAdapter::TranslateException do
   describe "#translate_exception" do
     it "intercepts insufficient privilege PGError" do
       exception = double("PGError").as_null_object.tap do |error|
-        error.stub(:result) do
+        allow(error).to receive(:result) do
           double("PGResult").as_null_object.tap do |result|
-            result.stub(:error_field).and_return(described_class::INSUFFICIENT_PRIVILEGE)
+            allow(result).
+              to receive(:error_field).
+              and_return(described_class::INSUFFICIENT_PRIVILEGE)
           end
         end
       end

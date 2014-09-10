@@ -6,11 +6,8 @@ describe ActiveRecord::ConnectionAdapters::SchemaStatements do
       'CREATE  INDEX CONCURRENTLY "index_users_on_phone_number" ON "users" ("phone_number")'
     end
 
-    before { ActiveRecord::Base.connection.stub(:execute) }
-
-
     it 'concurrently creates index' do
-      ActiveRecord::Base.connection.should_receive(:execute) do |query|
+      expect(ActiveRecord::Base.connection).to receive(:execute) do |query|
         query.should == expected_query
       end
 
@@ -19,8 +16,8 @@ describe ActiveRecord::ConnectionAdapters::SchemaStatements do
     end
 
     it 'raises index exists error' do
-      ActiveRecord::Base.connection.stub(:index_exists? => true)
-      ActiveRecord::Base.connection.should_receive(:index_exists?).once
+      expect(ActiveRecord::Base.connection).
+        to receive(:index_exists?).once.and_return(true)
 
       ActiveRecord::Migration.add_index :users, :phone_number, :concurrently => true
 

@@ -8,6 +8,6 @@ describe PgPower::ConnectionAdapters::AbstractAdapter::CommentMethods do
   let(:adapter_stub) { AbstractAdapter.new }
 
   it ".supports_comments?" do
-    expect(adapter_stub.supports_comments?).to be_false
+    expect(adapter_stub.supports_comments?).to be false
   end
 end

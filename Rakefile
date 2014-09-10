@@ -47,7 +47,7 @@ load 'rails/tasks/engine.rake'
 require 'rspec/core'
 require 'rspec/core/rake_task'
 RSpec::Core::RakeTask.new(:spec) do |spec|
-  spec.pattern = FileList['spec/**/*_spec.rb']
+  spec.pattern = 'spec/**/*_spec.rb'
 end
 
 task 'spec' => ['db:drop', 'db:create', 'db:migrate', 'app:db:test:load']

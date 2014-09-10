@@ -5,11 +5,8 @@ module PgPower::SchemaDumper::CommentMethods
   def tables_with_comments(stream)
     tables_without_comments(stream)
 
-    table_names = @connection.tables.sort
-    table_names += get_non_public_schema_table_names.sort
-
     # Dump table and column comments
-    table_names.each do |table_name|
+    @connection.tables.sort.each do |table_name|
       dump_comments(table_name, stream)
     end
 

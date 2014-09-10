@@ -33,15 +33,9 @@ describe 'Foreign keys' do
         'CREATE  INDEX CONCURRENTLY "index_steroids_on_user_id" ON "steroids" ("user_id")'
       end
 
-      before do
-        ActiveRecord::Base.connection.stub(:execute)
-        ActiveRecord::Migration.stub(:id_column_name_from_table_name => 'user_id')
-      end
-
-
       it 'should create index concurrently' do
-        ActiveRecord::Base.connection.should_receive(:execute).ordered
-        ActiveRecord::Base.connection.should_receive(:execute).ordered.once do |query|
+        expect(ActiveRecord::Base.connection).to receive(:execute)
+        expect(ActiveRecord::Base.connection).to receive(:execute).once do |query|
           query.should == expected_index_query
         end
 

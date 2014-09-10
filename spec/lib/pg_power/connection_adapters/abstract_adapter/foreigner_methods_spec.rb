@@ -8,7 +8,7 @@ describe PgPower::ConnectionAdapters::AbstractAdapter::ForeignerMethods do
   let(:adapter_stub) { AbstractAdapter.new }
 
   it ".supports_foreign_keys?" do
-    expect(adapter_stub.supports_foreign_keys?).to be_false
+    expect(adapter_stub.supports_foreign_keys?).to be false
   end
 
   it ".foreign_keys" do

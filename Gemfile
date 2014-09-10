@@ -15,26 +15,30 @@ gem 'pg'
 gem 'rails', rails_version
 
 group :development do
-  gem 'rspec-rails'
+  gem 'rspec-rails', "~> 3.1.0"
 
   # code metrics:
   gem 'rcov' if version18
   gem 'yard'
   gem 'metrical' , :require => false if version18
   gem 'metric_fu', :require => false unless version18
-  gem 'jeweler', :require => false
+  gem 'jeweler'  , :require => false
 
 
   unless ENV["RM_INFO"]
-    # RubyMine internal debugger conflicts with ruby-debug. So, require it only when it's run outside of RubyMine
+    # RubyMine internal debugger conflicts with ruby-debug.
+    # So, require it only when it's run outside of RubyMine:
     gem "ruby-debug"   if version18
     gem "ruby-debug19" if version19
-    gem "debugger"     if version2x
+    # debugger does not support Ruby 2.x:
+    # ref: https://github.com/cldwalker/debugger/issues/125#issuecomment-43353446
+    gem "byebug"       if version2x
   end
 end
 
 group :development, :test do
-  gem 'pry'
+  gem "pry"
+  gem "pry-byebug"
 end
 
 group :test do

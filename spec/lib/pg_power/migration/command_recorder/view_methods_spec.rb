@@ -9,7 +9,7 @@ describe PgPower::Migration::CommandRecorder::ViewMethods do
 
   [:create_view, :drop_view].each do |method_name|
     it ".#{method_name}" do
-      command_recorder_stub.should_receive(:record).with(method_name, [:foo, :bar])
+      expect(command_recorder_stub).to receive(:record).with(method_name, [:foo, :bar])
       command_recorder_stub.send(method_name, :foo, :bar)
     end
   end
