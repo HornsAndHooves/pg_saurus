@@ -17,6 +17,16 @@ module  PgPower::Migration::CommandRecorder::SchemaMethods
   end
 
   # :nodoc:
+  def create_schema_if_not_exists(*args)
+    record(:create_schema_if_not_exists, args)
+  end
+
+  # :nodoc:
+  def drop_schema_if_exists(*args)
+    record(:drop_schema_if_exists, args)
+  end
+
+  # :nodoc:
   def invert_create_schema(args)
     [:drop_schema, [args.first]]
   end
@@ -35,5 +45,15 @@ module  PgPower::Migration::CommandRecorder::SchemaMethods
 
     invert_args = ["#{current_schema}.#{table}", new_schema]
     [:move_table_to_schema, invert_args]
+  end
+
+  # :nodoc:
+  def invert_create_schema_if_not_exists(*args)
+    [:drop_schema_if_exists, args]
+  end
+
+  # :nodoc:
+  def invert_drop_schema_if_exists(*args)
+    [:create_schema_if_not_exists, args]
   end
 end

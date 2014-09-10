@@ -30,6 +30,9 @@ class ReplaceDemographySchemaWithPolitics < ActiveRecord::Migration
   def change
     drop_schema 'demography'
     create_schema 'politics'
+
+    drop_schema_if_exists('demography')
+    create_schema_if_not_exists('politics')
   end
 end
 ```

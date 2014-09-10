@@ -20,6 +20,20 @@ module PgPower::ConnectionAdapters::PostgreSQLAdapter::SchemaMethods
     ::PgPower::Tools.move_table_to_schema(table, schema)
   end
 
+  # Create schema if it does not exist yet.
+  #
+  # @param schema_name [String]
+  def create_schema_if_not_exists(schema_name)
+    ::PgPower::Tools.create_schema_if_not_exists(schema_name)
+  end
+
+  # Drop schema if it exists.
+  #
+  # @param schema_name [String]
+  def drop_schema_if_exists(schema_name)
+    ::PgPower::Tools.drop_schema_if_exists(schema_name)
+  end
+
   # Make method +tables+ return tables not only from public schema.
   #
   # @note
