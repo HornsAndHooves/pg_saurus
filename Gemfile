@@ -1,10 +1,7 @@
 source "https://rubygems.org"
 
 # To test against different rails versions with TravisCI
-#
-# NOTE: migrations fail on Rails 4.0.9 because remove_foreign_key can't proceed.
-# sergey.potapov 2014-09-10
-rails_version = ENV['RAILS_VERSION'] || '4.0.0'
+rails_version = ENV['RAILS_VERSION'] || '~> 4.0'
 
 # NOTE: This is a Gemfile for a gem.
 # Using 'platforms' is contraindicated because they won't make it into
