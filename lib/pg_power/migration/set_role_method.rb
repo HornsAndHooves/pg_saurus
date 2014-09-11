@@ -15,6 +15,18 @@ module PgPower
         def set_role(role)
           @role = role
         end
+
+        # Prevents raising exception when ensure_role_set=true and no role is set.
+        def keep_default_role
+          @keep_default_role = true
+        end
+
+        # Was +keep_default_role+ called for the migration?
+        #
+        # @return [Boolean]
+        def keep_default_role?
+          @keep_default_role
+        end
       end
 
       alias_method_chain :exec_migration, :role
@@ -23,6 +35,11 @@ module PgPower
     # Get role
     def role
       self.class.role
+    end
+
+    # :nodoc:
+    def keep_default_role?
+      self.class.keep_default_role?
     end
 
     # Wrap original `exec_migration` to run migration with set role.
@@ -39,7 +56,7 @@ module PgPower
         ensure
           conn.execute "RESET ROLE"
         end
-      elsif PgPower.config.ensure_role_set
+      elsif PgPower.config.ensure_role_set && !keep_default_role?
         msg =
           "Role for migration #{self.class} is not set\n\n" \
           "You've configured PgPower with ensure_role_set=true. \n" \

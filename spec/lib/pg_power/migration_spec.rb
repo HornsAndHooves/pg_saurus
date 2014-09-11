@@ -46,6 +46,21 @@ describe ActiveRecord::Migration do
           expect { migration.exec_migration(conn, :up) }.
             to raise_error(PgPower::RoleNotSetError, /TestMigration/)
         end
+
+        context "keep_default_role was called" do
+          before do
+            class TestMigration < described_class
+              keep_default_role
+            end
+          end
+
+        it "executes migrations" do
+          migration = TestMigration.new
+
+          expect(migration).to receive(:up)
+          migration.exec_migration(conn, :up)
+        end
+        end
       end
 
       context "config.ensure_role_set=false" do
