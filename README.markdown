@@ -270,9 +270,49 @@ with the understanding that it is preliminary 'alpha' at best.
 create_view "demography.citizens_view", "select * from demography.citizens"
 ```
 
+## Roles
+
+If you want to execute a migration as a specific PostgreSQL role you can use the `set_role` method:
+
+```ruby
+class CreateRockBands < ActiveRecord::Migration
+  set_role "rocker"
+
+  def change
+    create_table :rock_bands do |t|
+      # create columns
+    end
+  end
+end
+```
+
+Technically it is equivalent to the following:
+
+```ruby
+class CreateRockBands < ActiveRecord::Migration
+  def change
+    execute "SET ROLE rocker"
+    create_table :rock_bands do |t|
+      # create columns
+    end
+  ensure
+    execute "RESET ROLE"
+  end
+end
+```
+
+You may force all migrations to have `set_role`, for this, configure PgSaurus with
+`ensure_role_set=true`:
+
+```ruby
+PgSaurus.configre do |config|
+  config.ensure_role_set = true
+end
+```
+
 ## Tools
 
-PgSaurus::Tools provides number of useful methods:
+PgSaurus::Tools provides a number of useful methods:
 
 ```ruby
 PgSaurus::Tools.create_schema "services"                 # => create new PG schema "services"
