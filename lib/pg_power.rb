@@ -1,5 +1,6 @@
 require "pg_power/engine"
 require "pg_power/errors"
+require "pg_power/config"
 
 # Rails engine which allows to use some PostgreSQL features:
 # * Schemas.
@@ -15,4 +16,12 @@ module PgPower
   autoload :Migration
   autoload :ConnectionAdapters
   autoload :CreateIndexConcurrently
+
+  mattr_accessor :config
+  self.config = PgPower::Config.new
+
+  # Configure the engine.
+  def self.configure
+    yield(config)
+  end
 end
