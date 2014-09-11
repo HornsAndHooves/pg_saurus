@@ -1,5 +1,5 @@
 module PgSaurus
-  # Base error for PgPower errors.
+  # Base error for PgSaurus errors.
   class Error < StandardError; end
 
   # Raised when an unexpected index exists

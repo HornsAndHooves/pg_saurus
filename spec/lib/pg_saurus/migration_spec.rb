@@ -6,7 +6,7 @@ describe ActiveRecord::Migration do
   let(:ensure_role_set) { false }
 
   before do
-    allow(PgPower.config).
+    allow(PgSaurus.config).
       to receive(:ensure_role_set).and_return(ensure_role_set)
   end
 
@@ -44,7 +44,7 @@ describe ActiveRecord::Migration do
           migration = TestMigration.new
 
           expect { migration.exec_migration(conn, :up) }.
-            to raise_error(PgPower::RoleNotSetError, /TestMigration/)
+            to raise_error(PgSaurus::RoleNotSetError, /TestMigration/)
         end
 
         context "keep_default_role was called" do

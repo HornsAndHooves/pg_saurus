@@ -15,7 +15,7 @@ module PgSaurus
         ActiveRecord::SchemaDumper.class_eval { include ::PgSaurus::SchemaDumper }
 
         ActiveRecord::Migration.class_eval do
-          include ::PgPower::Migration::SetRoleMethod
+          include ::PgSaurus::Migration::SetRoleMethod
         end
 
         if defined?(ActiveRecord::Migration::CommandRecorder)

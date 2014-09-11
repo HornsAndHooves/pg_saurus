@@ -18,7 +18,7 @@ module PgSaurus
   autoload :CreateIndexConcurrently
 
   mattr_accessor :config
-  self.config = PgPower::Config.new
+  self.config = PgSaurus::Config.new
 
   # Configure the engine.
   def self.configure

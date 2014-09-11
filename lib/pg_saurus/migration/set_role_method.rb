@@ -1,6 +1,6 @@
-module PgPower
-  # Wrap original `exec_migration` to run migration with set postgresql rol.
-  # If config.ensure_role_set=true but not role set for migration that
+module PgSaurus
+  # Wrap original `exec_migration` to run migration with set postgresql role.
+  # If config.ensure_role_set=true but no role is set for the migration, then an
   # exception is raised.
   module Migration::SetRoleMethod
     extend ActiveSupport::Concern
@@ -56,17 +56,17 @@ module PgPower
         ensure
           conn.execute "RESET ROLE"
         end
-      elsif PgPower.config.ensure_role_set && !keep_default_role?
+      elsif PgSaurus.config.ensure_role_set && !keep_default_role?
         msg =
           "Role for migration #{self.class} is not set\n\n" \
-          "You've configured PgPower with ensure_role_set=true. \n" \
+          "You've configured PgSaurus with ensure_role_set=true. \n" \
           "That means that every migration must explicitly set role with set_role method.\n\n" \
           "Example:\n" \
           "  class CreateNewTable < ActiveRecord::Migration\n" \
           "    set_role \"superhero\"\n" \
           "  end\n\n" \
-          "If you want to set ensure_role_set=false, take a look at config/initializers/pg_power.rb\n\n"
-        raise PgPower::RoleNotSetError, msg
+          "If you want to set ensure_role_set=false, take a look at config/initializers/pg_saurus.rb\n\n"
+        raise PgSaurus::RoleNotSetError, msg
       else
         exec_migration_without_role(conn, direction)
       end
