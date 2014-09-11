@@ -249,6 +249,47 @@ that it is preliminary 'alpha' at best.
 create_view "demography.citizens_view", "select * from demography.citizens"
 ```
 
+## Roles
+
+If you want to execute migration as specific PostgreSQL role you can use
+`set_role` method:
+
+```ruby
+class CreateRockBands < ActiveRecord::Migration
+  set_role "rocker"
+
+  def change
+    create_table :rock_bands do |t|
+      # create columns
+    end
+  end
+end
+```
+
+Technically it is equal to the following:
+
+```ruby
+class CreateRockBands < ActiveRecord::Migration
+  def change
+    execute "SET ROLE rocker"
+    create_table :rock_bands do |t|
+      # create columns
+    end
+  ensure
+    execute "RESET ROLE"
+  end
+end
+```
+
+You may force all migration to have `set_role`, for this configre PgPower with
+`ensure_role_set=true`:
+
+```ruby
+PgPower.configre do |config|
+  config.ensure_role_set = true
+end
+```
+
 ## Tools
 
 PgPower::Tools provides number of useful methods:
