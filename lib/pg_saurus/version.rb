@@ -1,4 +1,4 @@
 module PgSaurus
   # Version of pg_saurus gem.
-  VERSION = '2.0.4'
+  VERSION = '1.0.0'
 end
