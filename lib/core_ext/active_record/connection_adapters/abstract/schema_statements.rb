@@ -44,7 +44,7 @@ module ActiveRecord
         #   creation can fail!!! All other case should be procesed manually.
         #   -- zekefast 2012-09-25
         if creation_method.present? && index_exists?(table_name, column_name, options)
-          raise ::PgPower::IndexExistsError,
+          raise ::PgSaurus::IndexExistsError,
                 "Index #{index_name} for `#{table_name}.#{column_name}` " \
                 "column can not be created concurrently, because such index already exists."
         end

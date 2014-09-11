@@ -1,4 +1,4 @@
-# PgPower
+# PgSaurus
 
 [![Build Status](https://secure.travis-ci.org/TMXCredit/pg_power.png)](http://travis-ci.org/TMXCredit/pg_power)
 [![Dependency Status](https://gemnasium.com/TMXCredit/pg_power.png)](https://gemnasium.com/TMXCredit/pg_power)
@@ -89,7 +89,7 @@ Remove comments from multiple columns in the table.
 ```ruby
 remove_column_comments :phone_numbers, :npa, :nxx
 ```
-PgPower also adds extra methods to change_table.
+PgSaurus also adds extra methods to change_table.
 
 Set comments:
 ```ruby
@@ -119,7 +119,7 @@ end
 We imported some code of [foreigner](https://github.com/matthuhiggins/foreigner)
 gem and patched it to be schema-aware. We also added support for index auto-generation.
 
-You should disable `foreigner` in your Gemfile if you want to use `pg_power`.
+You should disable `foreigner` in your Gemfile if you want to use `pg_saurus`.
 
 If you do not want to generate an index, pass the :exclude_index => true option.
 
@@ -208,7 +208,7 @@ add_foreign_key :table1, :table2, :column => :column_id, :concurrent_index => tr
 ## Loading/Unloading postgresql extension modules
 
 Postgresql is shipped with a number of [extension modules](http://www.postgresql.org/docs/9.1/static/contrib.html).
-PgPower provides some tools
+PgSaurus provides some tools
 to [load](http://www.postgresql.org/docs/9.1/static/sql-createextension.html)/[unload](http://www.postgresql.org/docs/9.1/static/sql-dropextension.html)
 such modules by the means of migrations.
 
@@ -251,21 +251,21 @@ create_view "demography.citizens_view", "select * from demography.citizens"
 
 ## Tools
 
-PgPower::Tools provides number of useful methods:
+PgSuarus::Tools provides number of useful methods:
 ```ruby
-PgPower::Tools.create_schema "services"                 # => create new PG schema "services"
-PgPower::Tools.create_schema "nets"                     # => create new PG schema "nets"
-PgPower::Tools.drop_schema "services"                   # => remove the PG schema "services"
-PgPower::Tools.schemas                                  # => ["public", "information_schema", "nets"]
-PgPower::Tools.index_exists?(table, columns, options)   # => returns true if an index exists for the given params
+PgSuarus::Tools.create_schema "services"                 # => create new PG schema "services"
+PgSuarus::Tools.create_schema "nets"                     # => create new PG schema "nets"
+PgSuarus::Tools.drop_schema "services"                   # => remove the PG schema "services"
+PgSuarus::Tools.schemas                                  # => ["public", "information_schema", "nets"]
+PgSuarus::Tools.index_exists?(table, columns, options)   # => returns true if an index exists for the given params
 ```
 
 ## Rails 3
 
-If you are using rails 3.x, use previous pg_power version:
+If you are using rails 3.x, use previous pg_saurus version:
 
 ```ruby
-gem 'pg_power', '~> 1.6.4'
+gem 'pg_saurus', '~> 1.6.4'
 ```
 
 ## Running tests:

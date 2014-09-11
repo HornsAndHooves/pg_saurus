@@ -8,7 +8,7 @@ require "sprockets/railtie"
 # require "rails/test_unit/railtie"
 
 Bundler.require
-require "pg_power"
+require "pg_saurus"
 
 module Dummy
   class Application < Rails::Application

@@ -62,7 +62,7 @@ module ActiveRecord # :nodoc:
       #
       # == Patch 2:
       # Search the postgres indexdef for the where clause and pass the output to
-      # the custom {PgPower::ConnectionAdapters::IndexDefinition}
+      # the custom {PgSaurus::ConnectionAdapters::IndexDefinition}
       #
       def indexes(table_name, name = nil)
         schema, table = Utils.extract_schema_and_table(table_name)
@@ -97,7 +97,7 @@ module ActiveRecord # :nodoc:
             where   = find_where_statement(index)
             lengths = find_lengths(index)
 
-            PgPower::ConnectionAdapters::IndexDefinition.new(table_name, index[:name], index[:unique], column_names, lengths, where, index[:access_method])
+            PgSaurus::ConnectionAdapters::IndexDefinition.new(table_name, index[:name], index[:unique], column_names, lengths, where, index[:access_method])
           end
         end.compact
       end

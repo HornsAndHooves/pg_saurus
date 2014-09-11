@@ -23,7 +23,7 @@ describe ActiveRecord::ConnectionAdapters::SchemaStatements do
 
       expect {
         ActiveRecord::Migration.process_postponed_queries
-      }.to raise_exception(::PgPower::IndexExistsError)
+      }.to raise_exception(::PgSaurus::IndexExistsError)
     end
   end
 
