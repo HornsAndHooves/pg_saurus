@@ -6,7 +6,7 @@ module PgSaurus
 
     # Instantiate and set default config settings.
     def initialize
-      @ensure_role_set = true
+      @ensure_role_set = false
     end
   end
 end
