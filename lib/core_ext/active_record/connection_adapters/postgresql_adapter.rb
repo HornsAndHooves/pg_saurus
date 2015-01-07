@@ -70,7 +70,7 @@ module ActiveRecord # :nodoc:
       # the custom {PgSaurus::ConnectionAdapters::IndexDefinition}
       #
       def indexes(table_name, name = nil)
-        schema, table = Utils.extract_schema_and_table(table_name)
+        schema, table = extract_schema_and_table(table_name)
         schemas = schema ? "ARRAY['#{schema}']" : 'current_schemas(false)'
 
         result = query(<<-SQL, name)
