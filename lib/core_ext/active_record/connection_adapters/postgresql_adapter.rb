@@ -26,7 +26,7 @@ module ActiveRecord # :nodoc:
       # Utils is gone in 4.2 so copying method in here as simplest patch.
       # it's possible there is a better solution.
       def extract_schema_and_table(name)
-        table, schema = name.scan(/[^".\s]+|"[^"]*"/)[0..1].collect{|m| m.gsub(/(^"|"$)/,'') }.reverse
+        table, schema = name.to_s.scan(/[^".\s]+|"[^"]*"/)[0..1].collect{|m| m.gsub(/(^"|"$)/,'') }.reverse
         [schema, table]
       end
       # Checks if index exists for given table.
