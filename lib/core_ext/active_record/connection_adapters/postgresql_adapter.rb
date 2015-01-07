@@ -23,14 +23,19 @@ module ActiveRecord # :nodoc:
             WHERE schemaname = ANY (ARRAY['public'])
         SQL
       end
-
+      # Utils is gone in 4.2 so copying method in here as simplest patch.
+      # it's possible there is a better solution.
+      def extract_schema_and_table(name)
+        table, schema = name.scan(/[^".\s]+|"[^"]*"/)[0..1].collect{|m| m.gsub(/(^"|"$)/,'') }.reverse
+        [schema, table]
+      end
       # Checks if index exists for given table.
       #
       # == Patch:
       # Search using provided schema if table_name includes schema name.
       #
       def index_name_exists?(table_name, index_name, default)
-        schema, table = Utils.extract_schema_and_table(table_name)
+        schema, table = extract_schema_and_table(table_name)
         schemas = schema ? "ARRAY['#{schema}']" : 'current_schemas(false)'
 
         exec_query(<<-SQL, 'SCHEMA').rows.first[0].to_i > 0
