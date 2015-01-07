@@ -70,7 +70,7 @@ module PgSaurus::CreateIndexConcurrently
     #
     # @see ActiveRecord::ConnectionAdapters::SchemaStatements.add_index in pg_saurus gem
     def add_index(table_name, column_name, options = {}, &block)
-      table_name = ::ActiveRecord::Migrator.proper_table_name(table_name)
+      table_name = to_table
       # GOTCHA:
       #   checks if index should be created concurretnly then put it into
       #   the queue to wait till queue processing will be called (should be
