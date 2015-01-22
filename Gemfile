@@ -15,7 +15,7 @@ gem 'pg'
 gem 'rails', rails_version
 
 group :development do
-  gem 'rspec-rails', "~> 3.1.0"
+  gem 'rspec-rails'
 
   # code metrics:
   gem 'rcov' if version18
