@@ -30,7 +30,8 @@ module ActiveRecord # :nodoc:
       # Search using provided schema if table_name includes schema name.
       #
       def index_name_exists?(table_name, index_name, default)
-        schema, table = Utils.extract_schema_and_table(table_name)
+        postgre_sql_name = PostgreSQL::Utils.extract_schema_qualified_name(table_name)
+        schema, table = postgre_sql_name.schema, postgre_sql_name.identifier
         schemas = schema ? "ARRAY['#{schema}']" : 'current_schemas(false)'
 
         exec_query(<<-SQL, 'SCHEMA').rows.first[0].to_i > 0
@@ -65,7 +66,8 @@ module ActiveRecord # :nodoc:
       # the custom {PgSaurus::ConnectionAdapters::IndexDefinition}
       #
       def indexes(table_name, name = nil)
-        schema, table = Utils.extract_schema_and_table(table_name)
+        postgre_sql_name = PostgreSQL::Utils.extract_schema_qualified_name(table_name)
+        schema, table = postgre_sql_name.schema, postgre_sql_name.identifier
         schemas = schema ? "ARRAY['#{schema}']" : 'current_schemas(false)'
 
         result = query(<<-SQL, name)

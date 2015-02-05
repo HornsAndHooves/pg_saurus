@@ -25,20 +25,20 @@ ActiveRecord::Schema.define(version: 20140910125700) do
   enable_extension "fuzzystrmatch"
   enable_extension "btree_gist"
 
-  create_table "breeds", force: true do |t|
+  create_table "breeds", force: :cascade do |t|
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "demography.cities", force: true do |t|
+  create_table "demography.cities", force: :cascade do |t|
     t.integer "country_id"
     t.integer "name"
   end
 
   add_index "demography.cities", ["country_id"], :name => "index_demography_cities_on_country_id"
 
-  create_table "demography.citizens", force: true do |t|
+  create_table "demography.citizens", force: :cascade do |t|
     t.integer  "country_id"
     t.integer  "user_id"
     t.string   "first_name"
@@ -52,29 +52,29 @@ ActiveRecord::Schema.define(version: 20140910125700) do
 
   add_index "demography.citizens", ["country_id", "user_id"], :name => "index_demography_citizens_on_country_id_and_user_id", :unique => true, :where => "active"
 
-  create_table "demography.countries", force: true do |t|
+  create_table "demography.countries", force: :cascade do |t|
     t.string   "name"
     t.string   "continent"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "demography.people", force: true do |t|
+  create_table "demography.people", force: :cascade do |t|
     t.string "name"
   end
 
-  create_table "demography.population_statistics", force: true do |t|
+  create_table "demography.population_statistics", force: :cascade do |t|
     t.integer "year"
     t.integer "population"
   end
 
-  create_table "owners", force: true do |t|
+  create_table "owners", force: :cascade do |t|
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "pets", force: true do |t|
+  create_table "pets", force: :cascade do |t|
     t.string  "name"
     t.string  "color"
     t.integer "user_id"
@@ -91,10 +91,9 @@ ActiveRecord::Schema.define(version: 20140910125700) do
   add_index "pets", ["lower(name)"], :name => "index_pets_on_lower_name"
   add_index "pets", ["to_tsvector('english'::regconfig, name)"], :name => "index_pets_on_to_tsvector_name_gist", :using => "gist"
   add_index "pets", ["upper(color)"], :name => "index_pets_on_upper_color", :where => "(name IS NULL)"
-  add_index "pets", ["user_id"], :name => "index_pets_on_user_id"
   add_index "pets", ["user_id"], :name => "index_pets_on_user_id_gist", :using => "gist"
 
-  create_table "users", force: true do |t|
+  create_table "users", force: :cascade do |t|
     t.string   "name"
     t.string   "email"
     t.string   "phone_number"
@@ -105,6 +104,9 @@ ActiveRecord::Schema.define(version: 20140910125700) do
   add_index "users", ["email"], :name => "index_users_on_email"
   add_index "users", ["name"], :name => "index_users_on_name"
 
+  add_foreign_key "demography.cities", "demography.countries", column: "country_id", name: "demography_cities_country_id_fk"
+  add_foreign_key "demography.citizens", "public.users", column: "user_id", name: "demography_citizens_user_id_fk"
+  add_foreign_key "pets", "public.users", column: "user_id", name: "pets_user_id_fk"
   create_view "demography.citizens_view", <<-SQL
      SELECT citizens.id,
     citizens.country_id,
@@ -134,10 +136,7 @@ ActiveRecord::Schema.define(version: 20140910125700) do
   set_index_comment 'demography.index_demography_citizens_on_country_id_and_user_id', 'Unique index on active citizens'
   set_index_comment 'index_pets_on_to_tsvector_name_gist', 'Functional index on name'
 
-  add_foreign_key "demography.cities", "demography.countries", :name => "demography_cities_country_id_fk", :column => "country_id", :exclude_index => true
-
-  add_foreign_key "demography.citizens", "public.users", :name => "demography_citizens_user_id_fk", :column => "user_id", :exclude_index => true
-
-  add_foreign_key "pets", "public.users", :name => "pets_user_id_fk", :column => "user_id", :exclude_index => true
-
+  add_foreign_key "demography.cities", "demography.countries", column: "country_id", name: "demography_cities_country_id_fk"
+  add_foreign_key "demography.citizens", "public.users", column: "user_id", name: "demography_citizens_user_id_fk"
+  add_foreign_key "pets", "public.users", column: "user_id", name: "pets_user_id_fk"
 end

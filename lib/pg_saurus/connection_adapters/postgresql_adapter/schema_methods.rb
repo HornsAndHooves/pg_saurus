@@ -34,6 +34,14 @@ module PgSaurus::ConnectionAdapters::PostgreSQLAdapter::SchemaMethods
     ::PgSaurus::Tools.drop_schema_if_exists(schema_name)
   end
 
+  # Provide :schema option to +drop_table+ method.
+  def drop_table_with_schema_option(table_name, options = {})
+    options     = options.dup
+    schema_name = options.delete(:schema)
+    table_name  = "#{schema_name}.#{table_name}" if schema_name
+    drop_table_without_schema_option(table_name, options)
+  end
+
   # Make method +tables+ return tables not only from public schema.
   #
   # @note
