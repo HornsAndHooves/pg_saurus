@@ -8,8 +8,10 @@ describe PgSaurus::ConnectionAdapters::PostgreSQLAdapter::FunctionMethods do
     expect(connection.supports_functions?).to be true
   end
 
-  it '.create_function' do
-    sql = <<-SQL
+  context '.create_function' do
+
+    it 'default behavior' do
+      sql = <<-SQL
 CREATE OR REPLACE FUNCTION public.pets_not_empty()
   RETURNS boolean
   LANGUAGE plpgsql
@@ -23,11 +25,11 @@ BEGIN
   END IF;
 END;
 $function$
-    SQL
+      SQL
 
-    expect(connection).to receive(:execute).with(sql)
+      expect(connection).to receive(:execute).with(sql)
 
-    connection.create_function 'pets_not_empty()', :boolean, <<-FUNCTION, schema: 'public'
+      connection.create_function 'pets_not_empty()', :boolean, <<-FUNCTION, schema: 'public'
 BEGIN
   IF (SELECT COUNT(*) FROM pets) > 0
   THEN
@@ -36,7 +38,39 @@ BEGIN
     RETURN false;
   END IF;
 END;
-    FUNCTION
+      FUNCTION
+    end
+
+    it 'no schema and replace set to false' do
+      sql = <<-SQL
+CREATE FUNCTION pets_not_empty()
+  RETURNS boolean
+  LANGUAGE plpgsql
+AS $function$
+BEGIN
+  IF (SELECT COUNT(*) FROM pets) > 0
+  THEN
+    RETURN true;
+  ELSE
+    RETURN false;
+  END IF;
+END;
+$function$
+      SQL
+
+      expect(connection).to receive(:execute).with(sql)
+
+      connection.create_function 'pets_not_empty()', :boolean, <<-FUNCTION, replace: false
+BEGIN
+  IF (SELECT COUNT(*) FROM pets) > 0
+  THEN
+    RETURN true;
+  ELSE
+    RETURN false;
+  END IF;
+END;
+      FUNCTION
+    end
   end
 
   it '.drop_function' do
