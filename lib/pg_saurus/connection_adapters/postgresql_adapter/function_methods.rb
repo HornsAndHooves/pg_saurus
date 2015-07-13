@@ -51,21 +51,6 @@ module PgSaurus::ConnectionAdapters::PostgreSQLAdapter::FunctionMethods
     end
   end
 
-  def parse_function_name(function_str)
-    function_str.split("\n").find{ |line| line =~ /^CREATE[\s\S]+FUNCTION/ }.split(' ').last
-  end
-  private :parse_function_name
-
-  def parse_function_language(function_str)
-    function_str.split("\n").find { |line| line =~ /LANGUAGE/ }.split(' ').last
-  end
-  private :parse_function_language
-
-  def parse_function_definition(function_str)
-    function_str[/#{Regexp.escape("AS $function$\n")}(.*?)#{Regexp.escape("$function$")}/m,1]
-  end
-  private :parse_function_definition
-
   # Create a new database function
   def create_function(function_name, returning, definition, options = {})
     function_name = full_function_name(function_name, options)
@@ -94,6 +79,21 @@ $function$
 
     execute "DROP FUNCTION #{function_name}"
   end
+
+  def parse_function_name(function_str)
+    function_str.split("\n").find { |line| line =~ /^CREATE[\s\S]+FUNCTION/ }.split(' ').last
+  end
+  private :parse_function_name
+
+  def parse_function_language(function_str)
+    function_str.split("\n").find { |line| line =~ /LANGUAGE/ }.split(' ').last
+  end
+  private :parse_function_language
+
+  def parse_function_definition(function_str)
+    function_str[/#{Regexp.escape("AS $function$\n")}(.*?)#{Regexp.escape("$function$")}/m,1]
+  end
+  private :parse_function_definition
 
   # Write out the fully qualified function name if the schema option is passed.
   def full_function_name(function_name, options)
