@@ -10,19 +10,22 @@ module PgSaurus::SchemaDumper
   autoload :SchemaMethods
   autoload :ForeignerMethods
   autoload :ViewMethods
+  autoload :FunctionMethods
 
   include ExtensionMethods
   include CommentMethods
   include SchemaMethods
   include ForeignerMethods
   include ViewMethods
+  include FunctionMethods
 
   included do
     alias_method_chain :header, :schemas
     alias_method_chain :header, :extensions
 
     alias_method_chain :tables, :views
-    alias_method_chain :tables, :comments
     alias_method_chain :tables, :foreign_keys
+    alias_method_chain :tables, :functions
+    alias_method_chain :tables, :comments
   end
 end

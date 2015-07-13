@@ -8,10 +8,12 @@ module PgSaurus::Migration::CommandRecorder
   autoload :CommentMethods
   autoload :ForeignerMethods
   autoload :ViewMethods
+  autoload :FunctionMethods
 
   include ExtensionMethods
   include SchemaMethods
   include CommentMethods
   include ForeignerMethods
   include ViewMethods
+  include FunctionMethods
 end

@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 # To test against different rails versions with TravisCI
-rails_version = ENV['RAILS_VERSION'] || '~> 4.0'
+rails_version = ENV['RAILS_VERSION'] || ['~> 4.0', '< 4.2']
 
 # NOTE: This is a Gemfile for a gem.
 # Using 'platforms' is contraindicated because they won't make it into
@@ -15,7 +15,7 @@ gem 'pg'
 gem 'rails', rails_version
 
 group :development do
-  gem 'rspec-rails'
+  gem 'rspec-rails', "~> 3.1.0"
 
   # code metrics:
   gem 'rcov' if version18

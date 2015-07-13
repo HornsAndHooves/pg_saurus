@@ -7,11 +7,13 @@ module PgSaurus::ConnectionAdapters::AbstractAdapter
   autoload :ForeignerMethods
   autoload :SchemaMethods
   autoload :IndexMethods
+  autoload :FunctionMethods
 
   include CommentMethods
   include ForeignerMethods
   include SchemaMethods
   include IndexMethods
+  include FunctionMethods
 
   included do
     alias_method_chain :create_table, :schema_option
