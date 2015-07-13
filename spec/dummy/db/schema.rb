@@ -125,16 +125,16 @@ ActiveRecord::Schema.define(version: 20150713035548) do
 
   add_foreign_key "pets", "public.users", :name => "pets_user_id_fk", :column => "user_id", :exclude_index => true
 
-  create_function 'public.pets_not_empty()', :boolean, <<-DEFINITION
-BEGIN
-  IF (SELECT COUNT(*) FROM pets) > 0
-  THEN
-    RETURN true;
-  ELSE
-    RETURN false;
-  END IF;
-END;
-DEFINITION
+  create_function 'public.pets_not_empty()', :boolean, <<-FUNCTION_DEFINITION.gsub(/^[ ]{4}/, '')
+    BEGIN
+      IF (SELECT COUNT(*) FROM pets) > 0
+      THEN
+        RETURN true;
+      ELSE
+        RETURN false;
+      END IF;
+    END;
+  FUNCTION_DEFINITION
 
   set_table_comment 'demography.citizens', 'Citizens Info'
   set_column_comment 'demography.citizens', 'country_id', 'Country key'
