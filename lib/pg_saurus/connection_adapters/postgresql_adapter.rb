@@ -13,6 +13,7 @@ module PgSaurus::ConnectionAdapters::PostgreSQLAdapter
   autoload :TranslateException, 'pg_saurus/connection_adapters/postgresql_adapter/translate_exception'
   autoload :ViewMethods,        'pg_saurus/connection_adapters/postgresql_adapter/view_methods'
   autoload :FunctionMethods,    'pg_saurus/connection_adapters/postgresql_adapter/function_methods'
+  autoload :TriggerMethods,     'pg_saurus/connection_adapters/postgresql_adapter/trigger_methods'
 
   include ExtensionMethods
   include SchemaMethods
@@ -22,6 +23,7 @@ module PgSaurus::ConnectionAdapters::PostgreSQLAdapter
   include TranslateException
   include ViewMethods
   include FunctionMethods
+  include TriggerMethods
 
   included do
     alias_method_chain :tables, :non_public_schema_tables

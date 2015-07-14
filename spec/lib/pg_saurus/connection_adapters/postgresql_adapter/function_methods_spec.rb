@@ -12,7 +12,7 @@ describe PgSaurus::ConnectionAdapters::PostgreSQLAdapter::FunctionMethods do
 
     it "default behavior" do
       sql = <<-SQL.gsub(/^[ ]{8}/, "")
-        CREATE OR REPLACE FUNCTION public.pets_not_empty()
+        CREATE OR REPLACE FUNCTION "public".pets_not_empty()
           RETURNS boolean
           LANGUAGE plpgsql
         AS $function$

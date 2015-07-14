@@ -102,7 +102,7 @@ module PgSaurus::ConnectionAdapters::PostgreSQLAdapter::FunctionMethods
   # Write out the fully qualified function name if the :schema option is passed.
   def full_function_name(function_name, options)
     schema        = options[:schema]
-    function_name = "#{schema}.#{function_name}" if schema
+    function_name = "\"#{schema}\".#{function_name}" if schema
     function_name
   end
   private :full_function_name

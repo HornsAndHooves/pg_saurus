@@ -9,6 +9,7 @@ module PgSaurus::Migration::CommandRecorder
   autoload :ForeignerMethods
   autoload :ViewMethods
   autoload :FunctionMethods
+  autoload :TriggerMethods
 
   include ExtensionMethods
   include SchemaMethods
@@ -16,4 +17,5 @@ module PgSaurus::Migration::CommandRecorder
   include ForeignerMethods
   include ViewMethods
   include FunctionMethods
+  include TriggerMethods
 end

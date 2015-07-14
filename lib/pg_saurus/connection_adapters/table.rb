@@ -6,10 +6,11 @@ module PgSaurus::ConnectionAdapters::Table
 
   autoload :CommentMethods
   autoload :ForeignerMethods
+  autoload :TriggerMethods
 
   include CommentMethods
   include ForeignerMethods
-
+  include TriggerMethods
 
   included do
     alias_method_chain :references, :foreign_keys
