@@ -1,4 +1,4 @@
-# Provides methods to extend ActiveRecord::Migration::CommandRecorder to
+# Methods to extend ActiveRecord::Migration::CommandRecorder to
 # support comments feature.
 module  PgSaurus::Migration::CommandRecorder::FunctionMethods
 

@@ -18,8 +18,10 @@ describe PgSaurus::Migration::CommandRecorder do
 
     it '.invert_create_functions' do
       expect(
-        command_recorder_stub.invert_create_function(['pets_not_empty()', :boolean, 'FU', { schema: 'public' }])
-      ).to eq([:drop_function, ["pets_not_empty()", {:schema=>"public"}]])
+        command_recorder_stub.invert_create_function(
+          [ 'pets_not_empty()', :boolean, 'FU', { :schema => 'public' } ]
+        )
+      ).to eq([ :drop_function, [ "pets_not_empty()", { :schema => "public" } ] ])
     end
 
   end

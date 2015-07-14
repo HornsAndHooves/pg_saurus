@@ -1,4 +1,4 @@
-# Adapter definitions for db functions
+# Adapter definitions for DB functions.
 module PgSaurus::ConnectionAdapters::AbstractAdapter::FunctionMethods
 
   # :nodoc
@@ -6,17 +6,17 @@ module PgSaurus::ConnectionAdapters::AbstractAdapter::FunctionMethods
     false
   end
 
-  # Creates a database function
+  # Create a database function.
   def create_function(function_name, returning, definition, options = {})
 
   end
 
-  # Deletes the database function
+  # Delete the database function.
   def drop_function(function_name, options)
 
   end
 
-  # Returns the listing of currently defined db functions
+  # Return the listing of currently defined DB functions.
   def functions
 
   end

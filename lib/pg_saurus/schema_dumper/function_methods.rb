@@ -1,4 +1,4 @@
-# Support for dumping database functions
+# Support for dumping database functions.
 module PgSaurus::SchemaDumper::FunctionMethods
 
   # :nodoc
