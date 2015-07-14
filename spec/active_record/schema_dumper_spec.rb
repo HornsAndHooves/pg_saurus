@@ -110,6 +110,12 @@ describe ActiveRecord::SchemaDumper do
       end
     end
 
+    context 'Functions' do
+      it 'dumps function definitions' do
+        @dump.should =~ /create_function 'public.pets_not_empty\(\)'/
+      end
+    end
+
     context 'Comments' do
       it 'dumps table comments' do
         @dump.should =~ /set_table_comment 'users', 'Information about users'/

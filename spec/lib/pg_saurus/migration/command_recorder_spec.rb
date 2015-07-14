@@ -7,6 +7,25 @@ describe PgSaurus::Migration::CommandRecorder do
 
   let(:command_recorder_stub) { CommandRecorderStub.new }
 
+  describe 'Functions' do
+
+    [ :create_function, :drop_function ].each do |method_name|
+      it ".#{method_name}" do
+        expect(command_recorder_stub).to receive(:record).with(method_name)
+        command_recorder_stub.send(method_name)
+      end
+    end
+
+    it '.invert_create_functions' do
+      expect(
+        command_recorder_stub.invert_create_function(
+          [ 'pets_not_empty()', :boolean, 'FU', { :schema => 'public' } ]
+        )
+      ).to eq([ :drop_function, [ "pets_not_empty()", { :schema => "public" } ] ])
+    end
+
+  end
+
   describe 'Comments' do
     [ :set_table_comment,
       :remove_table_comment,

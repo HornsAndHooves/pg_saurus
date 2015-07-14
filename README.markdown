@@ -310,6 +310,32 @@ PgSaurus.configre do |config|
 end
 ```
 
+## Functions
+
+You can create, list, and drop functions.
+
+### Examples
+
+```ruby
+pets_not_empty_function = <<-SQL
+BEGIN
+  IF (SELECT COUNT(*) FROM pets) > 0
+  THEN
+    RETURN true;
+  ELSE
+    RETURN false;
+  END IF;
+END;
+SQL
+
+create_function 'pets_not_empty()', :boolean, pets_not_empty_function, schema: 'public'
+functions.any?{ |function| function.name == 'public.pets_not_empty()' }
+# => true
+drop_function 'pets_not_empty()'
+functions.any?{ |function| function.name == 'public.pets_not_empty()' }
+# => false
+```
+
 ## Tools
 
 PgSaurus::Tools provides a number of useful methods:
@@ -357,14 +383,14 @@ Support for JRuby:
 ## Credits
 
 * [Potapov Sergey](https://github.com/greyblake) - schema support
-* [Arthur Shagall](https://github.com/albertosaurus) - thanks for [pg_comment](https://github.com/albertosaurus/pg_comment)
+* [Arthur Shagall](https://github.com/albertosaurus) - function support - and thanks for [pg_comment](https://github.com/albertosaurus/pg_comment)
 * [Matthew Higgins](https://github.com/matthuhiggins) - thanks for [foreigner](https://github.com/matthuhiggins/foreigner), which was used as a base for the foreign key support
 * [Artem Ignatyev](https://github.com/cryo28) - extension modules load/unload support
 * [Marcelo Silveira](https://github.com/mhfs) - thanks for rails partial index support that was backported into this gem
 
 ## Copyright and License
 
-* Copyright (c) 2014 HornsAndHooves.
+* Copyright (c) 2015 HornsAndHooves.
 * Initial foreign key code taken from foreigner, Copyright (c) 2009 Matthew Higgins
 * pg_comment Copyright (c) 2011 Arthur Shagall
 * Partial index Copyright (c) 2012 Marcelo Silveira

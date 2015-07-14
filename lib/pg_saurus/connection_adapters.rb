@@ -6,4 +6,5 @@ module PgSaurus::ConnectionAdapters # :nodoc:
   autoload :Table
   autoload :ForeignKeyDefinition
   autoload :IndexDefinition, 'pg_saurus/connection_adapters/index_definition'
+  autoload :FunctionDefinition, 'pg_saurus/connection_adapters/function_definition'
 end
