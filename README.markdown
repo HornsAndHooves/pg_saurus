@@ -2,8 +2,7 @@
 
 [![Build Status](https://secure.travis-ci.org/HornsAndHooves/pg_saurus.png)](http://travis-ci.org/HornsAndHooves/pg_saurus)
 [![Dependency Status](https://gemnasium.com/HornsAndHooves/pg_saurus.png)](https://gemnasium.com/HornsAndHooves/pg_saurus)
-[![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/HornsAndHooves/pg_saurus)
-
+[![Code Climate](https://codeclimate.com/github/HornsAndHooves/pg_saurus/badges/gpa.svg)](https://codeclimate.com/github/HornsAndHooves/pg_saurus)
 ActiveRecord extension to get more from PostgreSQL:
 
 * Create/drop schemas.
