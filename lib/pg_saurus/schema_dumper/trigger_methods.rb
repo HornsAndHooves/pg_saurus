@@ -26,23 +26,9 @@ module PgSaurus::SchemaDumper::TriggerMethods
       if trigger.condition
         statement << ", condition: '#{trigger.condition.gsub("'", %q(\\\'))}'"
       end
-puts statement
+
       stream.puts "#{statement}\n"
     end
   end
-=begin
-class TriggerDefinition < Struct.new( :name,
-                                        :proc_name,
-                                        :constraint,
-                                        :event,
-                                        :for_each,
-                                        :deferrable,
-                                        :initially_deferred,
-                                        :condition,
-                                        :table,
-                                        :schema )
-
-  end
-=end
 
 end
