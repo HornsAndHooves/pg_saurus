@@ -142,7 +142,7 @@ ActiveRecord::Schema.define(version: 20150714003209) do
     END;
   FUNCTION_DEFINITION
 
-  create_trigger 'pets', 'pets_not_empty_trigger_proc()', 'AFTER INSERT', name: 'trigger_pets_not_empty_trigger_proc', constraint: true, for_each: :row, deferrable: true, initially_deferred: false, schema: 'public'
+  create_trigger 'pets', 'pets_not_empty_trigger_proc()', 'AFTER INSERT', name: 'trigger_pets_not_empty_trigger_proc', constraint: true, for_each: :row, deferrable: true, initially_deferred: false, schema: 'public', condition: '(new.name::text = \'fluffy\'::text)'
 
   set_table_comment 'demography.citizens', 'Citizens Info'
   set_column_comment 'demography.citizens', 'country_id', 'Country key'

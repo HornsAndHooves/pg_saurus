@@ -7,6 +7,7 @@ module PgSaurus::ConnectionAdapters::PostgreSQLAdapter::TriggerMethods
     true
   end
 
+  # See lib/pg_saurus/connection_adapters/trigger_methods.rb
   def create_trigger(table_name, proc_name, event, options = {})
     proc_name = "#{proc_name}"
     proc_name = "#{proc_name}()" unless proc_name.end_with?(')')
@@ -37,11 +38,14 @@ module PgSaurus::ConnectionAdapters::PostgreSQLAdapter::TriggerMethods
     execute sql
   end
 
+  # See lib/pg_saurus/connection_adapters/trigger_methods.rb
   def remove_trigger(table_name, proc_name, options = {})
     execute "DROP TRIGGER #{trigger_name(proc_name, options)} ON #{quote_table_or_view(table_name, options)}"
   end
 
   # Returns the listing of currently defined db triggers
+  #
+  # @return [Array<::PgSaurus::ConnectionAdapters::TriggerDefinition>]
   def triggers
     res = select_all <<-SQL
       SELECT n.nspname as schema,
@@ -96,14 +100,17 @@ module PgSaurus::ConnectionAdapters::PostgreSQLAdapter::TriggerMethods
   def parse_condition(trigger_definition)
     trigger_definition[/WHEN[\s](.*?)[\s]EXECUTE[\s]PROCEDURE/m, 1]
   end
+  private :parse_condition
 
   def parse_event(trigger_definition, trigger_name)
     trigger_definition[/^CREATE[\sA-Z]+TRIGGER[\s]#{Regexp.escape(trigger_name)}[\s](.*?)[\s]ON[\s]/m, 1]
   end
+  private :parse_event
 
   def parse_proc_name(trigger_definition)
     trigger_definition[/EXECUTE[\s]PROCEDURE[\s](.*?)$/m,1]
   end
+  private :parse_proc_name
 
   def is_constraint?(trigger_definition)
     !!(trigger_definition =~ /^CREATE CONSTRAINT TRIGGER/)
@@ -118,6 +125,7 @@ module PgSaurus::ConnectionAdapters::PostgreSQLAdapter::TriggerMethods
       "\"#{name}\""
     end
   end
+  private :quote_table_or_view
 
   def trigger_name(proc_name, options)
     if name = options[:name]
@@ -126,5 +134,6 @@ module PgSaurus::ConnectionAdapters::PostgreSQLAdapter::TriggerMethods
       "trigger_#{proc_name.gsub('(', '').gsub(')', '')}"
     end
   end
+  private :trigger_name
 
 end

@@ -24,9 +24,9 @@ module PgSaurus::SchemaDumper::TriggerMethods
         " schema: '#{trigger.schema}'"
 
       if trigger.condition
-        statement << ", condition: '#{trigger.condition}'"
+        statement << ", condition: '#{trigger.condition.gsub("'", %q(\\\'))}'"
       end
-
+puts statement
       stream.puts "#{statement}\n"
     end
   end

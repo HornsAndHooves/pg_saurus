@@ -116,6 +116,12 @@ describe ActiveRecord::SchemaDumper do
       end
     end
 
+    context 'Triggers' do
+      it 'dumps trigger definitions' do
+        @dump.should =~ /create_trigger 'pets', 'pets_not_empty_trigger_proc\(\)', 'AFTER INSERT'/
+      end
+    end
+
     context 'Comments' do
       it 'dumps table comments' do
         @dump.should =~ /set_table_comment 'users', 'Information about users'/

@@ -8,6 +8,6 @@ describe PgSaurus::ConnectionAdapters::AbstractAdapter::FunctionMethods do
   let(:adapter_stub) { AbstractAdapter.new }
 
   it ".supports_functions?" do
-    expect(adapter_stub.supports_comments?).to be false
+    expect(adapter_stub.supports_functions?).to be false
   end
 end
