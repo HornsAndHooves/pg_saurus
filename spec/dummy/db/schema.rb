@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150713035548) do
+ActiveRecord::Schema.define(version: 20150714003209) do
 
   create_schema "demography"
   create_schema "later"
@@ -135,6 +135,14 @@ ActiveRecord::Schema.define(version: 20150713035548) do
       END IF;
     END;
   FUNCTION_DEFINITION
+
+  create_function 'public.pets_not_empty_trigger_proc()', :trigger, <<-FUNCTION_DEFINITION.gsub(/^[ ]{4}/, '')
+    BEGIN
+      RETURN null;
+    END;
+  FUNCTION_DEFINITION
+
+  create_trigger 'pets', 'pets_not_empty_trigger_proc()', 'AFTER INSERT', name: 'trigger_pets_not_empty_trigger_proc', constraint: true, for_each: :row, deferrable: true, initially_deferred: false, schema: 'public', condition: '(new.name::text = \'fluffy\'::text)'
 
   set_table_comment 'demography.citizens', 'Citizens Info'
   set_column_comment 'demography.citizens', 'country_id', 'Country key'

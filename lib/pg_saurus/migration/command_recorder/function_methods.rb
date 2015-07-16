@@ -1,15 +1,15 @@
 # Methods to extend ActiveRecord::Migration::CommandRecorder to
-# support comments feature.
+# support database functions.
 module  PgSaurus::Migration::CommandRecorder::FunctionMethods
 
   # :nodoc
   def create_function(*args)
-    record :create_function, *args
+    record :create_function, args
   end
 
   # :nodoc
   def drop_function(*args)
-    record :drop_function, *args
+    record :drop_function, args
   end
 
   # :nodoc

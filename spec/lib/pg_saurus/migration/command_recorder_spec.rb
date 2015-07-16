@@ -7,11 +7,30 @@ describe PgSaurus::Migration::CommandRecorder do
 
   let(:command_recorder_stub) { CommandRecorderStub.new }
 
+  describe 'Triggers' do
+
+    [ :create_trigger, :remove_trigger ].each do |method_name|
+      it ".#{method_name}" do
+        expect(command_recorder_stub).to receive(:record).with(method_name, [])
+        command_recorder_stub.send(method_name)
+      end
+    end
+
+    it '.invert_create_trigger' do
+      expect(
+        command_recorder_stub.invert_create_trigger(
+                               ['pets', 'pets_not_empty', 'AFTER CREATE', {}]
+        )
+      ).to eq([:remove_trigger, ['pets', 'pets_not_empty', {}]])
+    end
+
+  end
+
   describe 'Functions' do
 
     [ :create_function, :drop_function ].each do |method_name|
       it ".#{method_name}" do
-        expect(command_recorder_stub).to receive(:record).with(method_name)
+        expect(command_recorder_stub).to receive(:record).with(method_name, [])
         command_recorder_stub.send(method_name)
       end
     end

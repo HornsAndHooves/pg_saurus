@@ -10,6 +10,8 @@ ActiveRecord extension to get more from PostgreSQL:
 * Use foreign keys.
 * Use partial indexes.
 * Run index creation concurrently.
+* Create/drop functions.
+* Create/drop triggers.
 
 PgSaurus is a fork of PgPower.
 
@@ -316,6 +318,7 @@ You can create, list, and drop functions.
 ### Examples
 
 ```ruby
+# Create a function
 pets_not_empty_function = <<-SQL
 BEGIN
   IF (SELECT COUNT(*) FROM pets) > 0
@@ -326,13 +329,39 @@ BEGIN
   END IF;
 END;
 SQL
-
+# Arguments are: function_name, return_type, function_definition, options (currently, only :schema)
 create_function 'pets_not_empty()', :boolean, pets_not_empty_function, schema: 'public'
-functions.any?{ |function| function.name == 'public.pets_not_empty()' }
-# => true
+
+# Drop a function
 drop_function 'pets_not_empty()'
-functions.any?{ |function| function.name == 'public.pets_not_empty()' }
-# => false
+
+# Get a list of defined functions
+ActiveRecord::Base.connection.functions
+```
+
+## Triggers
+
+You can create and remove triggers on tables and views.
+
+### Examples
+
+```ruby
+# Create a trigger
+create_trigger :pets,                           # Table or view name
+               :pets_not_empty_trigger_proc,    # Procedure name. Parentheses are optional if you have no arguments.
+               'AFTER INSERT',                  # Trigger event
+               for_each: 'ROW',                 # Can be row or statement. Default is row.
+               schema: 'public',                # Optional schema name
+               constraint: true,                # Sets if the trigger is a constraint. Default is false.
+               deferrable: true,                # Sets if the trigger is immediate or deferrable. Default is immediate.
+               initially_deferred: true,        # Sets if the trigger is initially deferred. Default is immediate. Only relevant if the trigger is deferrable.
+               condition: "new.name = 'fluffy'" # Optional when condition. Default is none.
+
+# Drop a trigger
+remove_trigger :pets, :pets_not_empty_trigger_proc
+
+# Get a list of defined triggers on a table or view
+ActiveRecord::Base.connection.triggers
 ```
 
 ## Tools
@@ -374,6 +403,10 @@ PgSaurus does not support Rails 3.
 * Done!
 
 ## TODO:
+
+Support for Rails 4.2+
+
+* This will likely necessitate a major rewrite.
 
 Support for JRuby:
 
