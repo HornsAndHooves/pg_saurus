@@ -1,32 +1,50 @@
-source "http://rubygems.org"
+source "https://rubygems.org"
 
-# Declare your gem's dependencies in pg_power.gemspec.
-# Bundler will treat runtime dependencies like base dependencies, and
-# development dependencies will be added by default to the :development group.
-gemspec
+# To test against different rails versions with TravisCI
+rails_version = ENV['RAILS_VERSION'] || ['~> 4.0', '< 4.2']
 
 # NOTE: This is a Gemfile for a gem.
 # Using 'platforms' is contraindicated because they won't make it into
 # the gemspec correctly.
-java_platform = (RUBY_PLATFORM =~ /java/)
+version2x = (RUBY_VERSION =~ /^2\.\d/)
 version19 = (RUBY_VERSION =~ /^1\.9/)
 version18 = (RUBY_VERSION =~ /^1\.8/)
 
 gem 'pg'
-#gem 'activerecord-jdbcpostgresql-adapter'
 
-# rake spec fails if this is in the :development group:
-gem 'rspec-rails'
-gem 'rails', '~> 3.1'
+gem 'rails', rails_version
 
 group :development do
-  # code metrics:
-  gem 'rcov'
-  gem 'yard'
-  gem 'metrical', :require => false
-  gem 'gemfury', :require => false
-  gem 'jeweler', :require => false
+  gem 'rspec-rails', "~> 3.1.0"
 
-  gem "ruby-debug"   if version18 && !java_platform
-  gem "ruby-debug19" if version19 && !java_platform
+  # code metrics:
+  gem 'rcov' if version18
+  gem 'yard'
+  gem 'metrical' , :require => false if version18
+  gem 'metric_fu', :require => false unless version18
+  gem 'jeweler'  , :require => false
+
+
+  unless ENV["RM_INFO"]
+    # RubyMine internal debugger conflicts with ruby-debug.
+    # So, require it only when it's run outside of RubyMine:
+    gem "ruby-debug"   if version18
+    gem "ruby-debug19" if version19
+    # debugger does not support Ruby 2.x:
+    # ref: https://github.com/cldwalker/debugger/issues/125#issuecomment-43353446
+    gem "byebug"       if version2x
+  end
+end
+
+group :development, :test do
+  gem "pry"
+  gem "pry-byebug"
+end
+
+group :test do
+  # Only load simplecov for Ruby 1.9+, use rcov above for 1.8.
+  unless version18
+    gem 'simplecov'          , :require => false
+    gem 'simplecov-rcov-text', :require => false
+  end
 end

@@ -1,11 +1,9 @@
 MetricFu::Configuration.run do |config|
-  config.code_dirs = ['.']
-  config.flay = {
-    :dirs_to_flay => config.code_dirs,
-    :minimum_score => 10
-  }
-  config.flog[:dirs_to_flog] = config.code_dirs
-  config.reek[:dirs_to_reek] = config.code_dirs
-  config.roodi[:dirs_to_roodi] = config.code_dirs
-  config.saikuro[:input_directory] = config.code_dirs
+  config.configure_metric(:cane) do |cane|
+    cane.line_length = 100
+  end
+
+  config.configure_metric(:flay) do |flay|
+    flay.minimum_score = 10
+  end
 end

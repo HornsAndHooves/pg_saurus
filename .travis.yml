@@ -1,0 +1,14 @@
+language: ruby
+before_script:
+  - psql -c "create database pg_saurus_dummy_test;" -U postgres
+script: "bundle exec rake spec"
+rvm:
+  - 1.9.3
+  - 2.0.0
+  - 2.1.0
+env:
+  - RAILS_VERSION="4.0.2"
+  - RAILS_VERSION="4.1.0.beta1"
+notifications:
+  email:
+    - blake131313@gmail.com

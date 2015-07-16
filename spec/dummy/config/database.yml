@@ -1,19 +1,13 @@
-development:
+development: &default
   adapter: postgresql
   #adapter: jdbcpostgresql
   encoding: unicode
-  database: pg_power_dummy_development
+  database: pg_saurus_dummy_development
   pool: 5
   username: postgres
   password: secret
   host: localhost
 
 test:
-  adapter: postgresql
-  #adapter: jdbcpostgresql
-  encoding: unicode
-  database: pg_power_dummy_test
-  pool: 5
-  username: postgres
-  password: secret
-  host: localhost
+  <<: *default
+  database: pg_saurus_dummy_test

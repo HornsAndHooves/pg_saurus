@@ -1,6 +1,6 @@
 # Provides methods to fetch meta information about DB like comments and
 # foreign keys. It's used in test purpose.
-module PgPower::Explorer
+module PgSaurus::Explorer
   extend self
 
   def get_table_comment(table_name)
@@ -30,6 +30,19 @@ module PgPower::Explorer
         AND c.relname = '#{table}'
         AND pg_namespace.nspname = '#{schema}'
         AND a.attname = '#{column}'
+    SQL
+  end
+
+  def get_index_comment(index_name)
+    schema, index = to_schema_and_table(index_name)
+    connection.query(<<-SQL).flatten.first
+      SELECT d.description AS comment
+      FROM pg_description d
+      JOIN pg_class c ON c.oid = d.objoid
+      JOIN pg_namespace ON c.relnamespace = pg_namespace.oid
+      WHERE c.relkind = 'i'
+        AND c.relname = '#{index}'
+        AND pg_namespace.nspname = '#{schema}'
     SQL
   end
 

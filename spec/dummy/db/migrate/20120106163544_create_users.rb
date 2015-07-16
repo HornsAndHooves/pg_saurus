@@ -9,7 +9,7 @@ class CreateUsers < ActiveRecord::Migration
     end
 
     add_index(:users, :name)
-    
+
     set_table_comment :users, "Information about users"
 
     set_column_comment :users, :name, "User name"

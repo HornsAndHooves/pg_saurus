@@ -12,20 +12,23 @@ rescue LoadError
   RDoc::Task = Rake::RDocTask
 end
 
-require 'pg_power/version'
+require './lib/pg_saurus/version'
 
 begin
   require "jeweler"
 
   Jeweler::Tasks.new do |gem|
-    gem.name = "pg_power"
-    gem.summary = "ActiveRecord extensions for PostgreSQL."
-    gem.description = "ActiveRecord extensions for PostgreSQL. Provides useful tools and ability to create/drop schemas in migrations."
-    gem.email = ["blake131313@gmail.com", "arthur.shagall@gmail.com"]
-    gem.authors = ['Potapov Sergey', 'Arthur Shagall']
-    gem.files = Dir["{app,config,db,lib}/**/*"] + Dir['Rakefie', 'README.markdown']
+    gem.name        = "pg_saurus"
+    gem.summary     = "ActiveRecord extensions for PostgreSQL."
+    gem.description = "ActiveRecord extensions for PostgreSQL. Provides useful tools for schema, foreign_key, index, comment and extension manipulations in migrations."
+    gem.email       = ["blake131313@gmail.com", "arthur.shagall@gmail.com", "cryo28@gmail.com",
+                       "matt.dressel@gmail.com", "rubygems.org@bruceburdick.com"]
+    gem.authors     = ["Potapov Sergey", "Arthur Shagall", "Artem Ignatyev", "Matt Dressel", "Bruce Burdick", "HornsAndHooves"]
+    gem.files       = Dir["{app,config,db,lib}/**/*"] + Dir['Rakefie', 'README.markdown']
     # Need to explicitly specify version here so gemspec:validate task doesn't whine.
-    gem.version = PgPower::VERSION
+    gem.version     = PgSaurus::VERSION
+    gem.homepage    = "https://github.com/HornsAndHooves/pg_saurus"
+    gem.license     = 'MIT'
   end
 rescue
   puts "Jeweler or one of its dependencies is not installed."
@@ -33,7 +36,7 @@ end
 
 RDoc::Task.new(:rdoc) do |rdoc|
   rdoc.rdoc_dir = 'rdoc'
-  rdoc.title    = 'PgPower'
+  rdoc.title    = 'PgSaurus'
   rdoc.options << '--line-numbers'
   rdoc.rdoc_files.include('README.rdoc')
   rdoc.rdoc_files.include('lib/**/*.rb')
@@ -42,33 +45,10 @@ end
 APP_RAKEFILE = File.expand_path("../spec/dummy/Rakefile", __FILE__)
 load 'rails/tasks/engine.rake'
 
-def gemspec
-  @gem_spec ||= eval( open( `ls *.gemspec`.strip ){|file| file.read } )
+require 'rspec/core'
+require 'rspec/core/rake_task'
+RSpec::Core::RakeTask.new(:spec) do |spec|
+  spec.pattern = 'spec/**/*_spec.rb'
 end
 
-def gem_version
-  gemspec.version
-end
-
-def gem_version_tag
-  "v#{gem_version}"
-end
-
-def gem_name
-  gemspec.name
-end
-
-def gem_file_name
-  "#{gem_name}-#{gem_version}.gem"
-end
-
-namespace :gemfury do
-  desc "Build version #{gem_version} into the pkg directory and upload to GemFury"
-  task :push => [:build] do
-    sh "fury push pkg/#{gem_file_name} --as=TMXCredit"
-  end
-end
-
-desc 'Run specs'
-task 'spec' => ['db:drop', 'db:create', 'db:migrate', 'app:spec']
-task :default => :spec
+task 'spec' => ['db:drop', 'db:create', 'db:migrate', 'app:db:test:load']
