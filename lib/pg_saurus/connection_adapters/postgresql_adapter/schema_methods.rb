@@ -55,4 +55,28 @@ module PgSaurus::ConnectionAdapters::PostgreSQLAdapter::SchemaMethods
 
     public_tables + non_public_tables
   end
+
+  # Provide :schema option to +rename_table+ method.
+  def rename_table_with_schema_option(table_name, new_name, options = {})
+    schema_name = options[:schema]
+    if schema_name
+      old_table_name = "#{schema_name}.\"#{table_name}\""
+      sql = "ALTER TABLE #{old_table_name} RENAME TO #{quote_table_name(new_name)}"
+      execute(sql)
+
+      pk, seq = pk_and_sequence_for("#{schema_name}.#{new_name}")
+      if seq == "#{table_name}_#{pk}_seq"
+        new_seq = "#{new_name}_#{pk}_seq"
+        sql = "ALTER TABLE #{schema_name}.\"#{seq}\" RENAME TO #{quote_table_name(new_seq)}"
+        execute sql
+      end
+
+      # TODO: Fix renaming of indexes
+      # Not convinced this is a good idea to begin with.
+      # rename_table_indexes("#{schema_name}.#{table_name}", "#{schema_name}.#{new_name}")
+    else
+      rename_table_without_schema_option(table_name, new_name)
+    end
+  end
+
 end

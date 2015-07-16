@@ -53,4 +53,29 @@ describe PgSaurus::ConnectionAdapters::PostgreSQLAdapter::SchemaMethods do
       adapter_stub.move_table_to_schema("sometable", "someschema")
     end
   end
+
+  describe "#rename_table_with_schema_option" do
+    let(:connection) { ActiveRecord::Base.connection }
+
+    it "renames table with schema option" do
+      connection.create_table("something", schema: "demography") do |t|
+        t.integer :foo
+      end
+      connection.add_index 'demography.something', 'foo'
+      expect(connection.table_exists?("demography.something")).to be true
+
+      connection.rename_table("something", "something_else", schema: "demography")
+
+      expect(connection.table_exists?("demography.something")     ).to be false
+      expect(connection.table_exists?("demography.something_else")).to be true
+
+      connection.drop_table("something_else", schema: "demography")
+    end
+
+    it "allows options to be a frozen Hash" do
+      options = { schema: "demography" }.freeze
+      connection.create_table("something", options)
+      expect { connection.rename_table("something", "something_else", options) }.not_to raise_error
+    end
+  end
 end

@@ -17,12 +17,4 @@ module PgSaurus::ConnectionAdapters::AbstractAdapter::SchemaMethods
     table_name  = "#{schema_name}.#{table_name}" if schema_name
     drop_table_without_schema_option(table_name, options)
   end
-
-  # Provide :schema option to +rename_table+ method.
-  def rename_table_with_schema_option(table_name, options = {})
-    options     = options.dup
-    schema_name = options.delete(:schema)
-    table_name  = "#{schema_name}.#{table_name}" if schema_name
-    rename_table_without_schema_option(table_name, options)
-  end
 end
