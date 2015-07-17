@@ -60,15 +60,22 @@ module PgSaurus::ConnectionAdapters::PostgreSQLAdapter::SchemaMethods
   def rename_table_with_schema_option(table_name, new_name, options = {})
     schema_name = options[:schema]
     if schema_name
-      search_path = schema_search_path
-      begin
-        execute("SET search_path TO '%s'" % schema_name)
+      in_schema schema_name do
         rename_table_without_schema_option(table_name, new_name)
-      ensure
-        execute("SET search_path TO #{search_path};")
       end
     else
       rename_table_without_schema_option(table_name, new_name)
+    end
+  end
+
+  # Execute operations in the context of the schema
+  def in_schema(schema_name)
+    search_path = schema_search_path
+    begin
+      execute("SET search_path TO '%s'" % schema_name)
+      yield
+    ensure
+      execute("SET search_path TO #{search_path};")
     end
   end
 
