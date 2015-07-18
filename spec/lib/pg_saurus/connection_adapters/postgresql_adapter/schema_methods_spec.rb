@@ -77,5 +77,19 @@ describe PgSaurus::ConnectionAdapters::PostgreSQLAdapter::SchemaMethods do
       connection.create_table("something", options)
       expect { connection.rename_table("something", "something_else", options) }.not_to raise_error
     end
+
+    it 'renames the table created in the default schema' do
+      connection.create_table("something") do |t|
+        t.integer :foo
+      end
+      connection.add_index 'something', 'foo'
+
+      connection.rename_table("something", "something_else")
+
+      expect(connection.table_exists?("public.something")     ).to be false
+      expect(connection.table_exists?("public.something_else")).to be true
+
+      connection.drop_table("something_else")
+    end
   end
 end

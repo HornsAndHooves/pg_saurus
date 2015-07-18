@@ -70,13 +70,19 @@ module PgSaurus::ConnectionAdapters::PostgreSQLAdapter::SchemaMethods
 
   # Execute operations in the context of the schema
   def in_schema(schema_name)
-    search_path = schema_search_path
+    search_path = current_schema_search_path
     begin
       execute("SET search_path TO '%s'" % schema_name)
       yield
     ensure
       execute("SET search_path TO #{search_path};")
     end
+  end
+
+  # Reads the current schema search path (it may have been altered
+  # from the initial value used when creating the connection)
+  def current_schema_search_path
+    select_value("SHOW search_path;")
   end
 
 end
