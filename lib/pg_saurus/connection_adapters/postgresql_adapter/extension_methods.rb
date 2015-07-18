@@ -52,6 +52,20 @@ module PgSaurus::ConnectionAdapters::PostgreSQLAdapter::ExtensionMethods
     execute(sql)
   end
 
+  # Execute SQL to load a postgresql extension module into the current database
+  # if it does not already exist. Then reload the type map.
+  #
+  # @param [#to_s] extension_name Name of the extension module to load
+  # @param [Hash] options
+  # @option options [#to_s,nil] :schema_name The name of the schema in which to install the extension's objects
+  # @option options [#to_s,nil] :version The version of the extension to install
+  # @option options [#to_s,nil] :old_version Alternative installation script name
+  #    that absorbs the existing objects into the extension, instead of creating new objects
+  def enable_extension(extension_name, options = {})
+    options[:if_not_exists] = true
+    create_extension(extension_name, options).tap { reload_type_map }
+  end
+
   # Execute SQL to remove a postgresql extension module from the current database.
   #
   # @param [#to_s] extension_name Name of the extension module to unload
