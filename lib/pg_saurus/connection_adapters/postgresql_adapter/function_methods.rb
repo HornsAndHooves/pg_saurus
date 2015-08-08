@@ -14,10 +14,8 @@ module PgSaurus::ConnectionAdapters::PostgreSQLAdapter::FunctionMethods
         p.proname AS "Name",
         pg_catalog.pg_get_function_result(p.oid) AS "Returning",
        CASE
-        WHEN p.proisagg    THEN 'agg'
-        WHEN p.proiswindow THEN 'window'
-        WHEN p.prorettype = 'pg_catalog.trigger'::pg_catalog.regtype
-        THEN 'trigger'
+        WHEN p.proiswindow                                           THEN 'window'
+        WHEN p.prorettype = 'pg_catalog.trigger'::pg_catalog.regtype THEN 'trigger'
         ELSE 'normal'
        END   AS "Type",
        p.oid AS "Oid"
@@ -26,6 +24,7 @@ module PgSaurus::ConnectionAdapters::PostgreSQLAdapter::FunctionMethods
       WHERE pg_catalog.pg_function_is_visible(p.oid)
             AND n.nspname <> 'pg_catalog'
             AND n.nspname <> 'information_schema'
+            AND p.proisagg <> TRUE
       ORDER BY 1, 2, 3, 4;
     SQL
     res.inject([]) do |buffer, row|

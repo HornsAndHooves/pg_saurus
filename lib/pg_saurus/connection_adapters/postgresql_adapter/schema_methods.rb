@@ -55,4 +55,34 @@ module PgSaurus::ConnectionAdapters::PostgreSQLAdapter::SchemaMethods
 
     public_tables + non_public_tables
   end
+
+  # Provide :schema option to +rename_table+ method.
+  def rename_table_with_schema_option(table_name, new_name, options = {})
+    schema_name = options[:schema]
+    if schema_name
+      in_schema schema_name do
+        rename_table_without_schema_option(table_name, new_name)
+      end
+    else
+      rename_table_without_schema_option(table_name, new_name)
+    end
+  end
+
+  # Execute operations in the context of the schema
+  def in_schema(schema_name)
+    search_path = current_schema_search_path
+    begin
+      execute("SET search_path TO '%s'" % schema_name)
+      yield
+    ensure
+      execute("SET search_path TO #{search_path};")
+    end
+  end
+
+  # Reads the current schema search path (it may have been altered
+  # from the initial value used when creating the connection)
+  def current_schema_search_path
+    select_value("SHOW search_path;")
+  end
+
 end
