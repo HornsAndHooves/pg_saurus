@@ -12,7 +12,7 @@ module PgSaurus
   module Tools
     extend self
 
-    # Creates PostgreSQL schema
+    # Create a PostgreSQL schema.
     def create_schema(schema_name)
       sql = %{CREATE SCHEMA "#{schema_name}"}
       connection.execute sql
@@ -31,7 +31,7 @@ module PgSaurus
       end
     end
 
-    # Ensure schema does not exists.
+    # Ensure schema does not exist.
     #
     # @return [void]
     def drop_schema_if_exists(schema_name)
@@ -40,13 +40,13 @@ module PgSaurus
       end
     end
 
-    # Drops PostgreSQL schema
+    # Drop PostgreSQL schema.
     def drop_schema(schema_name)
       sql = %{DROP SCHEMA "#{schema_name}"}
       connection.execute sql
     end
 
-    # Returns an array of existing schemas.
+    # Return an array of existing schemas.
     def schemas
       sql = "SELECT nspname FROM pg_namespace WHERE nspname !~ '^pg_.*' order by nspname"
       connection.query(sql).flatten
@@ -61,7 +61,7 @@ module PgSaurus
       connection.execute sql
     end
 
-    # Creates PostgreSQL view
+    # Create PostgreSQL view.
     # @param [String, Symbol] view_name
     # @param [String] view_definition
     def create_view(view_name, view_definition)
@@ -69,7 +69,7 @@ module PgSaurus
       connection.execute sql
     end
 
-    # Drops PostgreSQL view
+    # Drop PostgreSQL view.
     # @param [String, Symbol] view_name
     def drop_view(view_name)
       sql = "DROP VIEW #{view_name}"
@@ -86,7 +86,17 @@ module PgSaurus
       connection.execute sql
     end
 
-    # Return database connections
+    # Rename constraint.
+    # @param [String, Symbol] table table name
+    # @param [String, Symbol] old_constaint_name
+    # @param [String, Symbol] new_constraint_name
+    def rename_constraint(table, old_constaint_name, new_constraint_name)
+      schema, table = to_schema_and_table(table)
+      sql = %{ALTER TABLE "#{schema}"."#{table}" RENAME CONSTRAINT "#{old_constaint_name}" TO "#{new_constraint_name}"}
+      connection.execute sql
+    end
+
+    # Return database connections.
     def connection
       ActiveRecord::Base.connection
     end

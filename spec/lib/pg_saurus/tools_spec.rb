@@ -59,4 +59,20 @@ describe PgSaurus::Tools do
 
     PgSaurus::Tools.drop_view("someview")
   end
+
+  describe '#rename_constraint' do
+    it 'renames constraint' do
+      expect(PgSaurus::Explorer.constraints_on_table('demography.people')).to include 'people_citizen_id_fk'
+      PgSaurus::Tools.rename_constraint('demography.people', 'people_citizen_id_fk', 'new_people_citizen_id_fk')
+
+      expect(PgSaurus::Explorer.constraints_on_table('demography.people')).not_to include 'people_citizen_id_fk'
+      expect(PgSaurus::Explorer.constraints_on_table('demography.people')).to include 'new_people_citizen_id_fk'
+
+      # Rename back
+      PgSaurus::Tools.rename_constraint('demography.people', 'new_people_citizen_id_fk', 'people_citizen_id_fk')
+
+      expect(PgSaurus::Explorer.constraints_on_table('demography.people')).to include 'people_citizen_id_fk'
+      expect(PgSaurus::Explorer.constraints_on_table('demography.people')).not_to include 'new_people_citizen_id_fk'
+    end
+  end
 end
