@@ -70,7 +70,7 @@ module PgSaurus::CreateIndexConcurrently
     #
     # @see ActiveRecord::ConnectionAdapters::SchemaStatements.add_index in pg_saurus gem
     def add_index(table_name, column_name, options = {}, &block)
-      table_name = ::ActiveRecord::Migrator.proper_table_name(table_name)
+      table_name = proper_table_name(table_name)
       # GOTCHA:
       #   checks if index should be created concurretnly then put it into
       #   the queue to wait till queue processing will be called (should be
@@ -107,29 +107,29 @@ module PgSaurus::CreateIndexConcurrently
     # @raise [ArgumentError] in case of conflicted option were set
     #
     # @see ::PgSaurus::ConnectionAdapters::PostgreSQLAdapter::ForeignerMethods.add_foreign_key
-    def add_foreign_key(from_table, to_table, options = {}, &block)
-      from_table       = ::ActiveRecord::Migrator.proper_table_name(from_table)
-      concurrent_index = options[:concurrent_index]
+    # def add_foreign_key(from_table, to_table, options = {}, &block)
+    #   from_table       = proper_table_name(from_table)
+    #   concurrent_index = options[:concurrent_index]
 
-      if concurrent_index then
-        if options[:exclude_index]
-          raise ArgumentError, 'Conflicted options(exclude_index, concurrent_index) was found, both are set to true.'
-        end
+    #   if concurrent_index then
+    #     if options[:exclude_index]
+    #       raise ArgumentError, 'Conflicted options(exclude_index, concurrent_index) was found, both are set to true.'
+    #     end
 
-        options[:column] ||= connection.id_column_name_from_table_name(to_table)
-        options = options.merge(:concurrently => concurrent_index)
+    #     options[:column] ||= connection.id_column_name_from_table_name(to_table)
+    #     options = options.merge(:concurrently => concurrent_index)
 
-        index_options = { :concurrently => true }
-        enque(from_table, options[:column], index_options)
-      end
+    #     index_options = { :concurrently => true }
+    #     enque(from_table, options[:column], index_options)
+    #   end
 
-      # GOTCHA:
-      #   proceed foreign key creation, but giving :concurrent_index => true
-      #   prevent normal index creation in PgSaurus's `add_foreign_key`.
-      #   So, postponed creation could be done after transaction.
-      #   -- zekefast 2012-09-12
-      connection.add_foreign_key(from_table, to_table, options, &block)
-    end
+    #   # GOTCHA:
+    #   #   proceed foreign key creation, but giving :concurrent_index => true
+    #   #   prevent normal index creation in PgSaurus's `add_foreign_key`.
+    #   #   So, postponed creation could be done after transaction.
+    #   #   -- zekefast 2012-09-12
+    #   connection.add_foreign_key(from_table, to_table, options, &block)
+    # end
 
     # Execute all postponed index creation.
     #

@@ -4,14 +4,14 @@ module PgSaurus::ConnectionAdapters::AbstractAdapter
   extend ActiveSupport::Concern
 
   autoload :CommentMethods
-  autoload :ForeignerMethods
+  # autoload :ForeignerMethods
   autoload :SchemaMethods
   autoload :IndexMethods
   autoload :FunctionMethods
   autoload :TriggerMethods
 
   include CommentMethods
-  include ForeignerMethods
+  # include ForeignerMethods
   include SchemaMethods
   include IndexMethods
   include FunctionMethods
@@ -19,6 +19,6 @@ module PgSaurus::ConnectionAdapters::AbstractAdapter
 
   included do
     alias_method_chain :create_table, :schema_option
-    alias_method_chain :drop_table  , :schema_option
+    #alias_method_chain :drop_table  , :schema_option
   end
 end

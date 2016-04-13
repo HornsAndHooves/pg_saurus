@@ -44,7 +44,7 @@ module PgSaurus # :nodoc:
           when 'r' then :restrict
           end
 
-        PgSaurus::ConnectionAdapters::ForeignKeyDefinition.new(table_name, row['to_table'], options)
+        ActiveRecord::ConnectionAdapters::ForeignKeyDefinition.new(table_name, row['to_table'], options)
       end
     end
 
@@ -128,7 +128,7 @@ module PgSaurus # :nodoc:
       sql =
         "ADD CONSTRAINT #{quote_column_name(foreign_key_name)} " +
         "FOREIGN KEY (#{quote_column_name(column)}) " +
-        "REFERENCES #{quote_table_name(ActiveRecord::Migrator.proper_table_name(to_table))}(#{primary_key})"
+        "REFERENCES #{quote_table_name(ActiveRecord::Migration.proper_table_name(to_table))}(#{primary_key})"
       sql << " #{dependency}"      if dependency.present?
       sql << " #{options_options}" if options_options
 

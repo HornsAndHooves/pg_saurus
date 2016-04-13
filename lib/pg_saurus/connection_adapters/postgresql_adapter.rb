@@ -28,6 +28,8 @@ module PgSaurus::ConnectionAdapters::PostgreSQLAdapter
   included do
     alias_method_chain :tables, :non_public_schema_tables
     alias_method_chain :add_index, :concurrently
+    alias_method_chain :drop_table, :schema_option
     alias_method_chain :rename_table, :schema_option
   end
+
 end

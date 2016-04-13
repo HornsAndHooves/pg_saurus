@@ -22,9 +22,9 @@ describe PgSaurus::ConnectionAdapters::AbstractAdapter do
     ].each { |method_name| adapter_stub.respond_to?(method_name).should be true }
   end
 
-  it 'should define method stubs for foreign key methods' do
-    [ :add_foreign_key,
-      :remove_foreign_key
-    ].each { |method_name| adapter_stub.respond_to?(method_name).should be true }
-  end
+  # it 'should define method stubs for foreign key methods' do
+  #   [ :add_foreign_key,
+  #     :remove_foreign_key
+  #   ].each { |method_name| adapter_stub.respond_to?(method_name).should be true }
+  # end
 end
