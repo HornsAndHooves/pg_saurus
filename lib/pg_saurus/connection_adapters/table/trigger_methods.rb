@@ -16,7 +16,7 @@ module PgSaurus::ConnectionAdapters::Table::TriggerMethods
   #                      initially_deferred: true
   #   end
   def create_trigger(proc_name, event, options = {})
-    @base.create_trigger(@table_name, proc_name, event, options)
+    @base.create_trigger(@name, proc_name, event, options)
   end
 
   # Removes a trigger.
@@ -27,7 +27,7 @@ module PgSaurus::ConnectionAdapters::Table::TriggerMethods
   #     t.remove_trigger :pets_not_empty_trigger_proc
   #   end
   def remove_trigger(proc_name, options = {})
-    @base.remove_trigger(@table_name, proc_name, options)
+    @base.remove_trigger(@name, proc_name, options)
   end
 
 end
