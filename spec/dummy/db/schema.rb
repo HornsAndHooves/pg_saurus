@@ -121,12 +121,9 @@ ActiveRecord::Schema.define(version: 20150714003209) do
    FROM demography.citizens;
   SQL
 
-  add_foreign_key "demography.cities", "demography.countries", :name => "demography_cities_country_id_fk", :column => "country_id", :exclude_index => true
-
-  add_foreign_key "demography.citizens", "public.users", :name => "demography_citizens_user_id_fk", :column => "user_id", :exclude_index => true
-
-  add_foreign_key "pets", "public.users", :name => "pets_user_id_fk", :column => "user_id", :exclude_index => true
-
+  add_foreign_key "demography.cities", "demography.countries", column: "country_id", name: "demography_cities_country_id_fk"
+  add_foreign_key "demography.citizens", "public.users", column: "user_id", name: "demography_citizens_user_id_fk"
+  add_foreign_key "pets", "public.users", column: "user_id", name: "pets_user_id_fk"
   create_function 'public.pets_not_empty()', :boolean, <<-FUNCTION_DEFINITION.gsub(/^[ ]{4}/, '')
     BEGIN
       IF (SELECT COUNT(*) FROM pets) > 0
@@ -161,7 +158,4 @@ ActiveRecord::Schema.define(version: 20150714003209) do
   set_index_comment 'demography.index_demography_citizens_on_country_id_and_user_id', 'Unique index on active citizens'
   set_index_comment 'index_pets_on_to_tsvector_name_gist', 'Functional index on name'
 
-  add_foreign_key "demography.cities", "demography.countries", column: "country_id", name: "demography_cities_country_id_fk"
-  add_foreign_key "demography.citizens", "public.users", column: "user_id", name: "demography_citizens_user_id_fk"
-  add_foreign_key "pets", "public.users", column: "user_id", name: "pets_user_id_fk"
 end

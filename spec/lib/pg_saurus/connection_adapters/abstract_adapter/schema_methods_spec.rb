@@ -26,9 +26,6 @@ describe PgSaurus::ConnectionAdapters::AbstractAdapter::SchemaMethods do
       connection.create_table("something", schema: "demography")
       expect(connection.table_exists?("demography.something")).to be true
 
-      # expect(connection).to receive(:drop_table_without_schema_option).
-      #   with("demography.something", {}).and_call_original
-
       connection.drop_table("something", schema: "demography")
 
       expect(connection.table_exists?("demography.something")).to be false
