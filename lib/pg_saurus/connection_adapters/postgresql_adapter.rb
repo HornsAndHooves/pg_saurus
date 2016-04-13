@@ -31,5 +31,4 @@ module PgSaurus::ConnectionAdapters::PostgreSQLAdapter
     alias_method_chain :drop_table, :schema_option
     alias_method_chain :rename_table, :schema_option
   end
-
 end
