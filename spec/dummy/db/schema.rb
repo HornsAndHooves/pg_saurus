@@ -104,9 +104,9 @@ ActiveRecord::Schema.define(version: 20150714003209) do
   add_index "users", ["email"], :name => "index_users_on_email"
   add_index "users", ["name"], :name => "index_users_on_name"
 
-  add_foreign_key "demography.cities", "demography.countries", column: "country_id", name: "demography_cities_country_id_fk"
-  add_foreign_key "demography.citizens", "public.users", column: "user_id", name: "demography_citizens_user_id_fk"
-  add_foreign_key "pets", "public.users", column: "user_id", name: "pets_user_id_fk"
+  add_foreign_key "demography.cities", "demography.countries", column: "country_id", name: "demography_cities_country_id_fk", :exclude_index => true
+  add_foreign_key "demography.citizens", "public.users", column: "user_id", name: "demography_citizens_user_id_fk", :exclude_index => true
+  add_foreign_key "pets", "public.users", column: "user_id", name: "pets_user_id_fk", :exclude_index => true
   create_view "demography.citizens_view", <<-SQL
      SELECT citizens.id,
     citizens.country_id,
@@ -121,9 +121,6 @@ ActiveRecord::Schema.define(version: 20150714003209) do
    FROM demography.citizens;
   SQL
 
-  add_foreign_key "demography.cities", "demography.countries", column: "country_id", name: "demography_cities_country_id_fk"
-  add_foreign_key "demography.citizens", "public.users", column: "user_id", name: "demography_citizens_user_id_fk"
-  add_foreign_key "pets", "public.users", column: "user_id", name: "pets_user_id_fk"
   create_function 'public.pets_not_empty()', :boolean, <<-FUNCTION_DEFINITION.gsub(/^[ ]{4}/, '')
     BEGIN
       IF (SELECT COUNT(*) FROM pets) > 0
