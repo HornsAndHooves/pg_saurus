@@ -17,11 +17,10 @@ PgSaurus is a fork of PgPower.
 
 ## Environment notes
 
-PgSaurus was tested with Rails 4.0.x, Ruby 2.1.2.
+PgSaurus v3 was tested with Rails 4.2, Ruby 2.2.4. For Rails 4.1, use PgSaurus v2.5+.
 
-NOTE: JRuby is not yet supported. The current ActiveRecord JDBC
-adapter has its own Rails4-compatible method named "create_schema" which
-conflicts with this gem.
+NOTE: JRuby is not supported. The current ActiveRecord JDBC adapter has its own Rails4-compatible
+method named "create_schema" which conflicts with this gem.
 
 ## Schemas
 
