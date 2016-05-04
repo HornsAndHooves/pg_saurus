@@ -132,15 +132,14 @@ end
 ```
 ## Foreign keys
 
-PgPower imported some code of [foreigner](https://github.com/matthuhiggins/foreigner)
-gem and patched it to be schema-aware. Support was also added for index auto-generation.
+PgSaurus v3 augments Rails 4.2's foreign key methods with:
 
-You should disable `foreigner` in your Gemfile if you want to use `pg_saurus`.
+* schema support
+* index auto-generation
 
-If you do not want to generate an index, pass the :exclude_index => true option.
+If you do not want to generate an index, pass the `exclude_index: true` option.
 
-The syntax is compatible with `foreigner`:
-
+The syntax is compatible with Rails 4.2's foreign key handling methods.
 
 Add foreign key from `comments` to `posts` using `post_id` column as key by default:
 
