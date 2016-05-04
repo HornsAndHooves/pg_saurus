@@ -235,26 +235,26 @@ add_foreign_key :table1, :table2, :column => :column_id, :concurrent_index => tr
 
 ## Loading/Unloading postgresql extension modules
 
-Postgresql is shipped with a number of [extension modules](http://www.postgresql.org/docs/9.1/static/contrib.html).
+PostgreSQL ships with a number of [extension modules](http://www.postgresql.org/docs/9.4/static/contrib.html).
 PgSaurus provides some tools
-to [load](http://www.postgresql.org/docs/9.1/static/sql-createextension.html)/[unload](http://www.postgresql.org/docs/9.1/static/sql-dropextension.html)
-such modules by the means of migrations.
+to [load](http://www.postgresql.org/docs/9.4/static/sql-createextension.html) and
+[unload](http://www.postgresql.org/docs/9.4/static/sql-dropextension.html)
+such modules using migrations.
 
-Please note. CREATE/DROP EXTENSION command has been introduced in postgresql 9.1 only.
-So this functionality will not be available for the previous versions.
+Please note: `CREATE`/`DROP EXTENSION` command was introduced in PostgreSQL 9.1.
+So this functionality is not available in previous versions.
 
 ### Examples
 
-Load [fuzzystrmatch](http://www.postgresql.org/docs/9.1/static/fuzzystrmatch.html) extension module
-and create its objects in schema *public*:
+Load [fuzzystrmatch](http://www.postgresql.org/docs/9.4/static/fuzzystrmatch.html)
+extension module; and create its objects in schema *public*:
 
 ```ruby
 create_extension "fuzzystrmatch"
 ```
 
-
-Load version *1.0* of the [btree_gist](http://www.postgresql.org/docs/9.1/static/btree-gist.html) extension module
-and create its objects in schema *demography*.
+Load version *1.0* of the [btree_gist](http://www.postgresql.org/docs/9.4/static/btree-gist.html)
+extension module; and create its objects in schema *demography*.
 
 ```ruby
 create_extension "btree_gist", :schema_name => "demography", :version => "1.0"
