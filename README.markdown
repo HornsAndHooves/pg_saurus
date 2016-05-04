@@ -411,7 +411,7 @@ PgSaurus does not support Rails 3.
  * `sudo port -k -s build postgresql94`
  * (adjust the version number above appropriately)
 * Now you can make and install the `btree_gist` and any other contrib modules
- * `cd ``port work postgresql94``/postgresql-9.4.7/contrib/btree_gist`
+ * `cd $(port work postgresql94)/postgresql-9.4.7/contrib/btree_gist`
  * (again, you may need to adjust the version number to your specific version)
  * `sudo make all`
  * `sudo make install`
