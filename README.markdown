@@ -412,11 +412,11 @@ PgSaurus does not support Rails 3.
 
 ## TODO:
 
-Support for Rails 4.2+
+Support for Rails 5+
 
-* This will likely necessitate a major rewrite.
+* Rails 5 introduces its own schema support. PgSaurus v4+ will have to drop any conflicting support and modify its other features to accommodate Rails 5's schema support.
 
-Support for JRuby:
+Possible support for JRuby:
 
 * Jdbc driver provides its own `create_schema(schema, user)` method - solve conflicts.
 
