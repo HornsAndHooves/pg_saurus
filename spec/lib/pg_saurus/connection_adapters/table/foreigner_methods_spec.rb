@@ -1,12 +1,12 @@
 require 'spec_helper'
 
-describe PgSaurus::ConnectionAdapters::Table::ForeignerMethods do
+describe PgSaurus::ConnectionAdapters::Table::ForeignKeyMethods do
   class AbstractTable
-    include ::PgSaurus::ConnectionAdapters::Table::ForeignerMethods
+    include ::PgSaurus::ConnectionAdapters::Table::ForeignKeyMethods
 
     def initialize
       @base       = Object.new
-      @table_name = "sometable"
+      @name = "sometable"
     end
 
     def references_without_foreign_keys(*args)

@@ -8,7 +8,7 @@ module PgSaurus::ConnectionAdapters::PostgreSQLAdapter
   autoload :ExtensionMethods,   'pg_saurus/connection_adapters/postgresql_adapter/extension_methods'
   autoload :SchemaMethods,      'pg_saurus/connection_adapters/postgresql_adapter/schema_methods'
   autoload :CommentMethods,     'pg_saurus/connection_adapters/postgresql_adapter/comment_methods'
-  autoload :ForeignerMethods,   'pg_saurus/connection_adapters/postgresql_adapter/foreigner_methods'
+  autoload :ForeignKeyMethods,  'pg_saurus/connection_adapters/postgresql_adapter/foreign_key_methods'
   autoload :IndexMethods,       'pg_saurus/connection_adapters/postgresql_adapter/index_methods'
   autoload :TranslateException, 'pg_saurus/connection_adapters/postgresql_adapter/translate_exception'
   autoload :ViewMethods,        'pg_saurus/connection_adapters/postgresql_adapter/view_methods'
@@ -18,7 +18,7 @@ module PgSaurus::ConnectionAdapters::PostgreSQLAdapter
   include ExtensionMethods
   include SchemaMethods
   include CommentMethods
-  include ForeignerMethods
+  include ForeignKeyMethods
   include IndexMethods
   include TranslateException
   include ViewMethods
@@ -30,5 +30,16 @@ module PgSaurus::ConnectionAdapters::PostgreSQLAdapter
     alias_method_chain :add_index, :concurrently
     alias_method_chain :drop_table, :schema_option
     alias_method_chain :rename_table, :schema_option
+
+    alias_method_chain :add_foreign_key, :index
+    alias_method_chain :remove_foreign_key, :index
+    alias_method_chain :foreign_key_column_for, :schema
+    alias_method_chain :foreign_keys, :schema
+
+    ::ActiveRecord::ConnectionAdapters::ForeignKeyDefinition.module_eval do
+      def from_schema
+        options[:from_schema] || 'public'
+      end
+    end
   end
 end

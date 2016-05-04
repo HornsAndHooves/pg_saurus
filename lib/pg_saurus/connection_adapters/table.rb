@@ -5,11 +5,11 @@ module PgSaurus::ConnectionAdapters::Table
   extend ActiveSupport::Concern
 
   autoload :CommentMethods
-  autoload :ForeignerMethods
+  autoload :ForeignKeyMethods
   autoload :TriggerMethods
 
   include CommentMethods
-  include ForeignerMethods
+  include ForeignKeyMethods
   include TriggerMethods
 
   included do

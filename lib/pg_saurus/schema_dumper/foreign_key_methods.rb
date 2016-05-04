@@ -6,8 +6,15 @@ module PgSaurus::SchemaDumper::ForeignKeyMethods
   def foreign_keys_with_indexes(table, stream)
     if (foreign_keys = @connection.foreign_keys(table)).any?
       add_foreign_key_statements = foreign_keys.map do |foreign_key|
+
+        from_table = if foreign_key.from_schema && foreign_key.from_schema != 'public'
+                       "#{foreign_key.from_schema}.#{remove_prefix_and_suffix(foreign_key.from_table)}"
+                     else
+                       remove_prefix_and_suffix(foreign_key.from_table)
+                     end
+
         parts = [
-          "add_foreign_key #{remove_prefix_and_suffix(foreign_key.from_table).inspect}",
+          "add_foreign_key #{from_table.inspect}",
           remove_prefix_and_suffix(foreign_key.to_table).inspect,
         ]
 

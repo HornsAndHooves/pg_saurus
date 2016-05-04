@@ -91,6 +91,7 @@ ActiveRecord::Schema.define(version: 20150714003209) do
   add_index "pets", ["lower(name)"], :name => "index_pets_on_lower_name"
   add_index "pets", ["to_tsvector('english'::regconfig, name)"], :name => "index_pets_on_to_tsvector_name_gist", :using => "gist"
   add_index "pets", ["upper(color)"], :name => "index_pets_on_upper_color", :where => "(name IS NULL)"
+  add_index "pets", ["user_id"], :name => "index_pets_on_user_id"
   add_index "pets", ["user_id"], :name => "index_pets_on_user_id_gist", :using => "gist"
 
   create_table "users", force: :cascade do |t|
@@ -104,9 +105,9 @@ ActiveRecord::Schema.define(version: 20150714003209) do
   add_index "users", ["email"], :name => "index_users_on_email"
   add_index "users", ["name"], :name => "index_users_on_name"
 
-  add_foreign_key "demography.cities", "demography.countries", column: "country_id", name: "demography_cities_country_id_fk", :exclude_index => true
-  add_foreign_key "demography.citizens", "public.users", column: "user_id", name: "demography_citizens_user_id_fk", :exclude_index => true
-  add_foreign_key "pets", "public.users", column: "user_id", name: "pets_user_id_fk", :exclude_index => true
+  add_foreign_key "demography.cities", "demography.countries", :exclude_index => true
+  add_foreign_key "demography.citizens", "users", :exclude_index => true
+  add_foreign_key "pets", "users", :exclude_index => true
   create_view "demography.citizens_view", <<-SQL
      SELECT citizens.id,
     citizens.country_id,
