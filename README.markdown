@@ -47,7 +47,7 @@ end
 Use schema `:schema` option to specify schema name:
 
 ```ruby
-create_table "countries", :schema => "demography" do |t|
+create_table "countries", schema: "demography" do |t|
   # columns goes here
 end
 ```
@@ -95,15 +95,15 @@ remove_column_comment :phone_numbers, :npa
 Set comments on multiple columns in the table.
 
 ```ruby
-set_column_comments :phone_numbers, :npa => 'Numbering Plan Area Code - Allowed ranges: [2-9] for first digit, [0-9] for second and third digit.',
-                                    :nxx => 'Central Office Number'
+set_column_comments :phone_numbers, npa: 'Numbering Plan Area Code - Allowed ranges: [2-9] for first digit, [0-9] for second and third digit.',
+                                    nxx: 'Central Office Number'
 ```
 Remove comments from multiple columns in the table.
 
 ```ruby
 remove_column_comments :phone_numbers, :npa, :nxx
 ```
-PgSaurus also adds extra methods to change_table.
+PgSaurus also adds extra table methods to the `change_table` block.
 
 Set comments:
 
@@ -114,8 +114,8 @@ change_table :phone_numbers do |t|
 end
 
 change_table :phone_numbers do |t|
-  t.set_column_comments :npa => 'Numbering Plan Area Code - Allowed ranges: [2-9] for first digit, [0-9] for second and third digit.',
-                        :nxx => 'Central Office Number'
+  t.set_column_comments npa: 'Numbering Plan Area Code - Allowed ranges: [2-9] for first digit, [0-9] for second and third digit.',
+                        nxx: 'Central Office Number'
 end
 ```
 Remove comments:
@@ -149,19 +149,19 @@ add_foreign_key(:comments, :posts)
 Specify key explicitly:
 
 ```ruby
-add_foreign_key(:comments, :posts, :column => :blog_post_id)
+add_foreign_key(:comments, :posts, column: :blog_post_id)
 ```
 Specify name of foreign key constraint:
 
 ```ruby
-add_foreign_key(:comments, :posts, :name => "comments_posts_fk")
+add_foreign_key(:comments, :posts, name: "comments_posts_fk")
 ```
 It works with schemas as expected:
 
 ```ruby
 add_foreign_key('blog.comments', 'blog.posts')
 ```
-Adds the index 'index_comments_on_post_id':
+Adds the index `'index_comments_on_post_id'`:
 
 ```ruby
 add_foreign_key(:comments, :posts)
@@ -169,7 +169,7 @@ add_foreign_key(:comments, :posts)
 Does not add an index:
 
 ```ruby
-add_foreign_key(:comments, :posts, :exclude_index => true)
+add_foreign_key(:comments, :posts, exclude_index: true)
 ```
 
 ### Migration notes
@@ -183,15 +183,15 @@ starting point to patch it to be schema-aware.
 
 ### Examples
 
-Add a partial index to a table
+Add a partial index to a table:
 
 ```ruby
-add_index(:comments, [:country_id, :user_id], :where => 'active')
+add_index(:comments, [:country_id, :user_id], where: 'active')
 ```
-Add a partial index to a schema table
+Add a partial index to a schema table:
 
 ```ruby
-add_index('blog.comments', :user_id, :where => 'active')
+add_index('blog.comments', :user_id, where: 'active')
 ```
 ## Indexes on Expressions
 
@@ -200,18 +200,18 @@ expressions are supported.
 
 ### Examples
 
-Add an index to a column with a function
+Add an index to a column with a function:
 
 ```ruby
 add_index(:comments, "lower(text)")
 ```
 
-You can also specify index access method
+You can also specify the index access method:
 
 ```ruby
 create_extension 'btree_gist'
 create_extension 'fuzzystrmatch'
-add_index(:comments, 'dmetaphone(author)', :using => 'gist')
+add_index(:comments, 'dmetaphone(author)', using: 'gist')
 ```
 
 ## Concurrent index creation
@@ -221,16 +221,16 @@ to the migration DSL on index and foreign key creation.
 
 ### Examples
 
-Add an index concurrently to a table
+Add an index concurrently to a table:
 
 ```ruby
-add_index :table, :column_id, :concurrently => true
+add_index :table, :column_id, concurrently: true
 ```
 
-Add an index concurrently along with foreign key
+Add an index concurrently along with foreign key:
 
 ```ruby
-add_foreign_key :table1, :table2, :column => :column_id, :concurrent_index => true
+add_foreign_key :table1, :table2, column: :column_id, concurrent_index: true
 ```
 
 ## Loading/Unloading postgresql extension modules
@@ -257,10 +257,10 @@ Load version *1.0* of the [btree_gist](http://www.postgresql.org/docs/9.4/static
 extension module; and create its objects in schema *demography*.
 
 ```ruby
-create_extension "btree_gist", :schema_name => "demography", :version => "1.0"
+create_extension "btree_gist", schema_name: "demography", version: "1.0"
 ```
 
-Unload extension module:
+Unload an extension module:
 
 ```ruby
 drop_extension "fuzzystrmatch"
@@ -268,10 +268,10 @@ drop_extension "fuzzystrmatch"
 
 ## Views
 
-Version 1.6.0 introduces experimental support for creating views. This API should only be used
+PgSaurus v1.6.0 introduced experimental support for creating views. This API should only be used
 with the understanding that it is preliminary 'alpha' at best.
 
-### Example
+### Examples
 
 ```ruby
 create_view "demography.citizens_view", "select * from demography.citizens"
@@ -311,7 +311,7 @@ end
 ```
 
 You may force all migrations to have `set_role`, for this, configure PgSaurus with
-`ensure_role_set=true`:
+`ensure_role_set = true`:
 
 ```ruby
 PgSaurus.configure do |config|
@@ -325,8 +325,9 @@ You can create, list, and drop functions.
 
 ### Examples
 
+Create a function:
+
 ```ruby
-# Create a function
 pets_not_empty_function = <<-SQL
 BEGIN
   IF (SELECT COUNT(*) FROM pets) > 0
@@ -337,13 +338,18 @@ BEGIN
   END IF;
 END;
 SQL
+
 # Arguments are: function_name, return_type, function_definition, options (currently, only :schema)
 create_function 'pets_not_empty()', :boolean, pets_not_empty_function, schema: 'public'
+```
+Drop a function:
 
-# Drop a function
+```ruby
 drop_function 'pets_not_empty()'
+```
+Get a list of defined functions:
 
-# Get a list of defined functions
+```ruby
 ActiveRecord::Base.connection.functions
 ```
 
@@ -353,28 +359,34 @@ You can create and remove triggers on tables and views.
 
 ### Examples
 
+Create a trigger:
+
 ```ruby
-# Create a trigger
 create_trigger :pets,                           # Table or view name
                :pets_not_empty_trigger_proc,    # Procedure name. Parentheses are optional if you have no arguments.
                'AFTER INSERT',                  # Trigger event
-               for_each: 'ROW',                 # Can be row or statement. Default is row.
+               for_each: 'ROW',                 # Can be a row or a statement. Default is row.
                schema: 'public',                # Optional schema name
-               constraint: true,                # Sets if the trigger is a constraint. Default is false.
-               deferrable: true,                # Sets if the trigger is immediate or deferrable. Default is immediate.
-               initially_deferred: true,        # Sets if the trigger is initially deferred. Default is immediate. Only relevant if the trigger is deferrable.
+               constraint: true,                # Sets whether the trigger is a constraint. Default is false.
+               deferrable: true,                # Sets whether the trigger is immediate or deferrable. Default is immediate.
+               initially_deferred: true,        # Sets whether the trigger is initially deferred. Default is immediate.
+                                                # Only relevant if the trigger is deferrable.
                condition: "new.name = 'fluffy'" # Optional when condition. Default is none.
+```
+Drop a trigger:
 
-# Drop a trigger
+```ruby
 remove_trigger :pets, :pets_not_empty_trigger_proc
+```
+Get a list of defined triggers on a table or view:
 
-# Get a list of defined triggers on a table or view
+```ruby
 ActiveRecord::Base.connection.triggers
 ```
 
 ## Tools
 
-PgSaurus::Tools provides a number of useful methods:
+PgSaurus::Tools provides a number of useful methods for managing schemas, etc.:
 
 ```ruby
 PgSaurus::Tools.create_schema "services"                 # => create new PG schema "services"
@@ -392,8 +404,8 @@ PgSaurus does not support Rails 3.
 
 ## Running tests:
 
-* Ensure your postgresql has postgres-contrib (Ubuntu) package installed. Tests depend on btree_gist and fuzzystrmatch extensions
- * If on Mac, see below for installing contrib packages
+* Ensure your `postgresql` has `postgres-contrib` (if you're on Ubuntu) package installed. Tests depend on the `btree_gist` and `fuzzystrmatch` extensions
+ * If you're on a Mac, see below for installing contrib packages
 * Configure `spec/dummy/config/database.yml` for development and test environments.
 * Run `rake spec`.
 * Make sure migrations don't raise exceptions and all specs pass.
