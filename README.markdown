@@ -8,6 +8,7 @@ An ActiveRecord extension to get more from PostgreSQL:
 * Create/drop schemas.
 * Use existing functionality in the context of schemas.
 * Set/remove comments on columns and tables.
+* Enhancements to the Rails 4.2 foreign key support.
 * Use partial indexes.
 * Run index creation concurrently.
 * Create/drop views.
@@ -137,25 +138,10 @@ PgSaurus v3 augments Rails 4.2's foreign key methods with:
 * schema support
 * index auto-generation
 
+When you create a foreign key PgSaurus automatically creates an index.
 If you do not want to generate an index, pass the `exclude_index: true` option.
-
 The syntax is compatible with Rails 4.2's foreign key handling methods.
 
-Add foreign key from `comments` to `posts` using `post_id` column as key by default:
-
-```ruby
-add_foreign_key(:comments, :posts)
-```
-Specify key explicitly:
-
-```ruby
-add_foreign_key(:comments, :posts, column: :blog_post_id)
-```
-Specify name of foreign key constraint:
-
-```ruby
-add_foreign_key(:comments, :posts, name: "comments_posts_fk")
-```
 It works with schemas as expected:
 
 ```ruby
@@ -172,9 +158,18 @@ Does not add an index:
 add_foreign_key(:comments, :posts, exclude_index: true)
 ```
 
+Note that removing a foreign key does not drop the index of the foreign key column.
+If you want to remove the index, pass in the `remove_index: true` option.
+
+```ruby
+remove_foreign_key(:comments, column: :post_id, remove_index: true)
+```
+
+
 ### Migration notes
 
-PgSaurus v3+ no longer provides `add_foreign_key`. That method is now handled by Rails 4.2+. A few things have changed.
+PgSaurus v3+ no longer provides `add_foreign_key`. That method is now handled by Rails 4.2+.
+A few things have changed.
 
 ## Partial Indexes
 
