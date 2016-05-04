@@ -179,10 +179,29 @@ remove_foreign_key(:comments, column: :post_id, remove_index: true)
 ```
 
 
-### Migration notes
+### Migration notes - upgrading from Rails 4.1
 
-PgSaurus v3+ no longer provides `add_foreign_key`. That method is now handled by Rails 4.2+.
-A few things have changed.
+PgSaurus v3+ now uses the Rails 4.2 semantics for `add_foreign_key` and `remove_foreign_key`. See http://api.rubyonrails.org/v4.2/classes/ActiveRecord/ConnectionAdapters/SchemaStatements.html
+
+A few things have changed. The most breaking change is that the syntax `remove_foreign_key :from_table, :to_table, options` no longer works.
+
+```ruby
+#THIS FAILS
+remove_foreign_key :comments, :posts, remove_index: true
+
+#DO THIS INSTEAD
+remove_foreign_key :comments, column: :post_id, remove_index: true
+```
+
+For adding foreign keys, the `:dependent` option is replaced with `:on_delete` and `:on_update`. The `:delete` value is replaced with `:cascade`.
+
+```ruby
+#OLD STYLE - NO LONGER WORKS
+add_foreign_key :comments, :posts, dependent: :delete
+
+#NEW STYLE - DO THIS INSTEAD
+add_foreign_key :comments, :posts, on_delete: :cascade
+```
 
 ## Partial Indexes
 
