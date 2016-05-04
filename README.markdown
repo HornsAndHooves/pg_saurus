@@ -6,12 +6,15 @@
 An ActiveRecord extension to get more from PostgreSQL:
 
 * Create/drop schemas.
+* Use existing functionality in the context of schemas.
 * Set/remove comments on columns and tables.
-* Use foreign keys.
 * Use partial indexes.
 * Run index creation concurrently.
+* Create/drop views.
 * Create/drop functions.
 * Create/drop triggers.
+* Load/unload postgres extensions.
+* Select a specific DB role to conduct a migration.
 
 PgSaurus is a fork of PgPower.
 
