@@ -26,6 +26,8 @@ PgSaurus v3 was tested with Rails 4.2, Ruby 2.2.4. For Rails 4.1, use PgSaurus v
 NOTE: JRuby is not supported. The current ActiveRecord JDBC adapter has its own Rails4-compatible
 method named "create_schema" which conflicts with this gem.
 
+NOTE: PgSaurus does not support Rails 3.
+
 ## Schemas
 
 ### Create schema
@@ -393,11 +395,7 @@ PgSaurus::Tools.schemas                                  # => ["public", "inform
 PgSaurus::Tools.index_exists?(table, columns, options)   # => returns true if an index exists for the given params
 ```
 
-## Rails 3
-
-PgSaurus does not support Rails 3.
-
-## Running tests:
+## Running tests
 
 * Ensure your `postgresql` has `postgres-contrib` (if you're on Ubuntu) package installed. Tests depend on the `btree_gist` and `fuzzystrmatch` extensions
  * If you're on a Mac, see below for installing contrib packages
@@ -417,7 +415,7 @@ PgSaurus does not support Rails 3.
  * `sudo make install`
 * Done!
 
-## TODO:
+## TODO
 
 Support for Rails 5+
 
