@@ -7,7 +7,7 @@ An ActiveRecord extension to get more from PostgreSQL:
 
 * Create/drop schemas.
 * Set/remove comments on columns and tables.
-* Use foreign keys.
+* Enhancements to the Rails 4.2 foreign key support.
 * Use partial indexes.
 * Run index creation concurrently.
 * Create/drop functions.
@@ -129,31 +129,9 @@ end
 ```
 ## Foreign keys
 
-PgPower imported some code of [foreigner](https://github.com/matthuhiggins/foreigner)
-gem and patched it to be schema-aware. Support was also added for index auto-generation.
+PgPower automatically creates an index when you create a foreign key.
+If you do not want to generate an index, pass the `:exclude_index => true` option.
 
-You should disable `foreigner` in your Gemfile if you want to use `pg_saurus`.
-
-If you do not want to generate an index, pass the :exclude_index => true option.
-
-The syntax is compatible with `foreigner`:
-
-
-Add foreign key from `comments` to `posts` using `post_id` column as key by default:
-
-```ruby
-add_foreign_key(:comments, :posts)
-```
-Specify key explicitly:
-
-```ruby
-add_foreign_key(:comments, :posts, :column => :blog_post_id)
-```
-Specify name of foreign key constraint:
-
-```ruby
-add_foreign_key(:comments, :posts, :name => "comments_posts_fk")
-```
 It works with schemas as expected:
 
 ```ruby
@@ -169,6 +147,14 @@ Does not add an index:
 ```ruby
 add_foreign_key(:comments, :posts, :exclude_index => true)
 ```
+
+Note that removing a foreign key does not drop the index of the foreign key column.
+If you want to remove the index, pass in the `:remove_index => true` option.
+
+```ruby
+remove_foreign_key(:comments, column: :post_id, remove_index: true)
+```
+
 ## Partial Indexes
 
 Rails 4.x [pull request](https://github.com/rails/rails/pull/4956) was used as a

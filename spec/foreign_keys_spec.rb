@@ -15,7 +15,6 @@ describe 'Foreign keys' do
     end
 
     it 'should raise a PgSaurus::IndexExistsError when the index already exists' do
-      puts ActiveRecord::Base::connection.indexes('demography.citizens')
       expect {
         connection = ActiveRecord::Base::connection
         connection.add_index 'demography.citizens', :user_id

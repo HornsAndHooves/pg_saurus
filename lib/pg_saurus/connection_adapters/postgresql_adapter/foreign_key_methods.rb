@@ -41,6 +41,7 @@ module PgSaurus # :nodoc:
       end
     end
 
+    # See activerecord/lib/active_record/connection_adapters/abstract/schema_statements.rb
     def remove_foreign_key_with_index(from_table, options_or_to_table = {})
       if options_or_to_table.is_a?(Hash) && options_or_to_table[:remove_index]
         column = options_or_to_table[:column]
@@ -57,6 +58,7 @@ module PgSaurus # :nodoc:
       foreign_key_column_for_without_schema table
     end
 
+    # see activerecord/lib/active_record/connection_adapters/postgresql/schema_statements.rb
     def foreign_keys_with_schema(table_name)
       namespace  = table_name.to_s.split('.').first
       table_name = table_name.to_s.split('.').last
