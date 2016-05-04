@@ -399,12 +399,12 @@ PgSaurus does not support Rails 3.
 * Make sure migrations don't raise exceptions and all specs pass.
 
 ### Installing contrib packages on Mac OS X:
-* This assumes you are using MacPorts to install Postgres.  If using homebrew or the Postgres App, you will need to adjust the instructions accordingly (please add to this README when you do)
-* Assuming you installed with default options (including auto-clean), you will need to rebuild the postgresql port and keep the build files
- * `sudo port -k -s build postgresql91`
+* This assumes you are using [MacPorts](https://www.macports.org) to install `postgresql`. If you're using [Homebrew](http://brew.sh) or the Postgres App, you will need to adjust the instructions accordingly (please add to this README when you do)
+* Assuming you installed with default options (including auto-clean), you will need to rebuild the `postgresql` port and keep the build files
+ * `sudo port -k -s build postgresql94`
  * (adjust the version number above appropriately)
-* Now you can make and install the btree_gist and any other contrib modules
- * `cd ```port work postgresql91```/postgresql-9.1.7/contrib/btree_gist`
+* Now you can make and install the `btree_gist` and any other contrib modules
+ * `cd `` `port work postgresql94` ``/postgresql-9.4.7/contrib/btree_gist`
  * (again, you may need to adjust the version number to your specific version)
  * `sudo make all`
  * `sudo make install`
