@@ -422,15 +422,15 @@ Possible support for JRuby:
 
 ## Credits
 
-* [Potapov Sergey](https://github.com/greyblake) - schema support
-* [Arthur Shagall](https://github.com/albertosaurus) - function support - and thanks for [pg_comment](https://github.com/albertosaurus/pg_comment)
-* [Matthew Higgins](https://github.com/matthuhiggins) - thanks for [foreigner](https://github.com/matthuhiggins/foreigner), which was used as a base for the foreign key support
+* [Potapov Sergey](https://github.com/greyblake) - schema support, role support
+* [Arthur Shagall](https://github.com/albertosaurus) - function and trigger support, Rails 4.2 support - and thanks for [pg_comment](https://github.com/albertosaurus/pg_comment)
+* [Mitya Lyubarskyy](https://github.com/MityaLiu) - view support, Rails 4.2 support
 * [Artem Ignatyev](https://github.com/cryo28) - extension modules load/unload support
 * [Marcelo Silveira](https://github.com/mhfs) - thanks for rails partial index support that was backported into this gem
 
 ## Copyright and License
 
-* Copyright (c) 2015 HornsAndHooves.
+* Copyright (c) 2016 HornsAndHooves.
 * Initial foreign key code taken from foreigner, Copyright (c) 2009 Matthew Higgins
 * pg_comment Copyright (c) 2011 Arthur Shagall
 * Partial index Copyright (c) 2012 Marcelo Silveira
