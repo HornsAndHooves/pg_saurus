@@ -314,7 +314,7 @@ You may force all migrations to have `set_role`, for this, configure PgSaurus wi
 `ensure_role_set=true`:
 
 ```ruby
-PgSaurus.configre do |config|
+PgSaurus.configure do |config|
   config.ensure_role_set = true
 end
 ```
