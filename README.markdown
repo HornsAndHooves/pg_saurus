@@ -171,6 +171,11 @@ Does not add an index:
 ```ruby
 add_foreign_key(:comments, :posts, :exclude_index => true)
 ```
+
+### Migration notes
+
+PgSaurus v3+ no longer provides `add_foreign_key`. That method is now handled by Rails 4.2+. A few things have changed.
+
 ## Partial Indexes
 
 Rails 4.x [pull request](https://github.com/rails/rails/pull/4956) was used as a
