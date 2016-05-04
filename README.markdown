@@ -216,8 +216,8 @@ add_index(:comments, 'dmetaphone(author)', :using => 'gist')
 
 ## Concurrent index creation
 
-PostgreSQL supports concurent index creation. We added that feature to migration
-DSL on index and foreign keys creation.
+PostgreSQL supports concurrent index creation. PgSaurus supports that feature by adding support
+to the migration DSL on index and foreign key creation.
 
 ### Examples
 
