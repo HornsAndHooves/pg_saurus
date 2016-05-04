@@ -275,6 +275,8 @@ with the understanding that it is preliminary 'alpha' at best.
 
 ```ruby
 create_view "demography.citizens_view", "select * from demography.citizens"
+
+drop_view "demography.citizens_view"
 ```
 
 ## Roles
