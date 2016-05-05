@@ -9,12 +9,6 @@ describe 'Foreign keys' do
     end
 
     # AddForeignKeys migration
-    #   add_foreign_key 'pets', 'users'
-    it 'adds an index on the foreign key' do
-      PgSaurus::Explorer.index_exists?('pets', :user_id).should == true
-    end
-
-    # AddForeignKeys migration
     #   add_foreign_key 'demography.citizens', 'users', :exclude_index => true
     it 'should not add an index on the foreign key when :exclude_index is true' do
       PgSaurus::Explorer.index_exists?('demography.citizens', :user_id).should == false
@@ -26,30 +20,6 @@ describe 'Foreign keys' do
         connection.add_index 'demography.citizens', :user_id
         connection.add_foreign_key 'demography.citizens', 'users'
       }.to raise_exception(PgSaurus::IndexExistsError)
-    end
-
-    describe 'with creating index concurrently' do
-      let(:expected_index_query) do
-        'CREATE  INDEX CONCURRENTLY "index_steroids_on_user_id" ON "steroids" ("user_id")'
-      end
-
-      it 'should create index concurrently' do
-        expect(ActiveRecord::Base.connection).to receive(:execute)
-        expect(ActiveRecord::Base.connection).to receive(:execute).once do |query|
-          query.should == expected_index_query
-        end
-
-        ActiveRecord::Migration.add_foreign_key :steroids, :users, :concurrent_index => true
-        ActiveRecord::Migration.process_postponed_queries
-      end
-
-      it 'should raise ArgumentError when conflicting options are given' do
-        expect do
-          ActiveRecord::Migration.add_foreign_key(:steroids, :users,
-            :exclude_index => true, :concurrent_index => true)
-        end.to raise_error(ArgumentError,
-          'Conflicted options(exclude_index, concurrent_index) was found, both are set to true.')
-      end
     end
   end
 

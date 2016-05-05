@@ -83,24 +83,4 @@ describe PgSaurus::Migration::CommandRecorder do
     end
   end
 
-  describe 'Foreign Keys' do
-    [ :add_foreign_key,
-      :remove_foreign_key
-    ].each{ |method_name|
-
-      it ".#{method_name}" do
-        expect(command_recorder_stub).to receive(:record).with(method_name, [])
-        command_recorder_stub.send(method_name)
-      end
-    }
-
-    it '.invert_add_foreign_key' do
-      command_recorder_stub.invert_add_foreign_key([:foo, :bar]).
-                            should == [:remove_foreign_key, [:foo, :bar]]
-      command_recorder_stub.invert_add_foreign_key([:foo, nil, {:column => :baz}]).
-                            should == [:remove_foreign_key, [:foo, {:column => :baz}]]
-      command_recorder_stub.invert_add_foreign_key([:foo, nil, {:name => :bar}]).
-                            should == [:remove_foreign_key, [:foo, {:name => :bar}]]
-    end
-  end
 end

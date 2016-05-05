@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 # To test against different rails versions with TravisCI
-rails_version = ENV['RAILS_VERSION'] || ['~> 4.0', '< 4.2']
+rails_version = ENV['RAILS_VERSION'] || '~> 4.2'
 
 # NOTE: This is a Gemfile for a gem.
 # Using 'platforms' is contraindicated because they won't make it into
@@ -10,7 +10,7 @@ version2x = (RUBY_VERSION =~ /^2\.\d/)
 version19 = (RUBY_VERSION =~ /^1\.9/)
 version18 = (RUBY_VERSION =~ /^1\.8/)
 
-gem 'pg'
+gem 'pg', '~> 0.18.1'
 
 gem 'rails', rails_version
 

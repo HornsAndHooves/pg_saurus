@@ -6,7 +6,7 @@ describe PgSaurus::ConnectionAdapters::Table::CommentMethods do
 
     def initialize
       @base       = Object.new
-      @table_name = "sometable"
+      @name = "sometable"
     end
 
   end

@@ -4,14 +4,12 @@ module PgSaurus::ConnectionAdapters::AbstractAdapter
   extend ActiveSupport::Concern
 
   autoload :CommentMethods
-  autoload :ForeignerMethods
   autoload :SchemaMethods
   autoload :IndexMethods
   autoload :FunctionMethods
   autoload :TriggerMethods
 
   include CommentMethods
-  include ForeignerMethods
   include SchemaMethods
   include IndexMethods
   include FunctionMethods

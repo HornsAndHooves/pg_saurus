@@ -5,8 +5,8 @@ describe PgSaurus::ConnectionAdapters::Table::TriggerMethods do
     include ::PgSaurus::ConnectionAdapters::Table::TriggerMethods
 
     def initialize
-      @base       = Object.new
-      @table_name = "sometable"
+      @base = Object.new
+      @name = "sometable"
     end
 
   end

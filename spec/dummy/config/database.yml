@@ -4,9 +4,9 @@ development: &default
   encoding: unicode
   database: pg_saurus_dummy_development
   pool: 5
-  username: postgres
-  password: secret
-  host: localhost
+  #username: postgres
+  #password: secret
+  #host: localhost
 
 test:
   <<: *default

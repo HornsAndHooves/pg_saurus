@@ -20,7 +20,7 @@ begin
   Jeweler::Tasks.new do |gem|
     gem.name        = "pg_saurus"
     gem.summary     = "ActiveRecord extensions for PostgreSQL."
-    gem.description = "ActiveRecord extensions for PostgreSQL. Provides useful tools for schema, foreign_key, index, comment and extension manipulations in migrations."
+    gem.description = "ActiveRecord extensions for PostgreSQL. Provides useful tools for schema, foreign_key, index, function, trigger, comment and extension manipulations in migrations."
     gem.email       = ["blake131313@gmail.com", "arthur.shagall@gmail.com", "cryo28@gmail.com",
                        "matt.dressel@gmail.com", "rubygems.org@bruceburdick.com"]
     gem.authors     = ["Potapov Sergey", "Arthur Shagall", "Artem Ignatyev", "Matt Dressel", "Bruce Burdick", "HornsAndHooves"]
