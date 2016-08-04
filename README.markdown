@@ -213,12 +213,12 @@ starting point to patch it to be schema-aware.
 Add a partial index to a table:
 
 ```ruby
-add_index(:comments, [:country_id, :user_id], where: 'active')
+add_index(:comments, [:country_id, :user_id, :category], where: "category IN ('foo', 'bar')")
 ```
-Add a partial index to a schema table:
+Add a partial index to a schema-qualified table:
 
 ```ruby
-add_index('blog.comments', :user_id, where: 'active')
+add_index('blog.comments', :status, where: "status = 'active'")
 ```
 ## Indexes on Expressions
 
