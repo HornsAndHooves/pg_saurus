@@ -1,10 +1,10 @@
 require File.expand_path('../boot', __FILE__)
 
 # Pick the frameworks you want:
- require "active_record/railtie"
-require "action_controller/railtie"
-require "action_mailer/railtie"
-require "sprockets/railtie"
+require "active_record/railtie"
+# require "action_controller/railtie"
+# require "action_mailer/railtie"
+# require "sprockets/railtie"
 # require "rails/test_unit/railtie"
 
 Bundler.require
@@ -41,10 +41,10 @@ module Dummy
     config.filter_parameters += [:password]
 
     # Enable the asset pipeline
-    config.assets.enabled = true
+    #config.assets.enabled = true
 
     # Version of your assets, change this if you want to expire all your assets
-    config.assets.version = '1.0'
+    #config.assets.version = '1.0'
   end
 end
 
