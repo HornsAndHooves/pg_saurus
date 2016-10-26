@@ -10,6 +10,8 @@ version2x = (RUBY_VERSION =~ /^2\.\d/)
 version19 = (RUBY_VERSION =~ /^1\.9/)
 version18 = (RUBY_VERSION =~ /^1\.8/)
 
+# 2016-10-26: There is a published pg v0.19.0 gem. But there's no tag in the repo.
+# And its gemspec declares it an alpha version.
 gem 'pg', '~> 0.18.1'
 
 gem "railties",      rails_version
