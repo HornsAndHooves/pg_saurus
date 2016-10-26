@@ -12,7 +12,10 @@ version18 = (RUBY_VERSION =~ /^1\.8/)
 
 gem 'pg', '~> 0.18.1'
 
-gem 'rails', rails_version
+gem "railties",      rails_version
+gem "activemodel",   rails_version
+gem "activerecord",  rails_version
+gem "activesupport", rails_version
 
 group :development do
   gem 'rspec-rails', "~> 3.1.0"
