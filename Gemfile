@@ -10,9 +10,10 @@ version2x = (RUBY_VERSION =~ /^2\.\d/)
 version19 = (RUBY_VERSION =~ /^1\.9/)
 version18 = (RUBY_VERSION =~ /^1\.8/)
 
-# 2016-10-26: There is a published pg v0.19.0 gem. But there's no tag in the repo.
-# And its gemspec declares it an alpha version.
-gem 'pg', '~> 0.18.1'
+# 2017-01-12: Note: The GitHub pg mirror lacks the recent tags appearing in the Bitbucket Hg repo:
+# https://github.com/ged/ruby-pg/blob/master/History.rdoc
+# https://bitbucket.org/ged/ruby-pg/wiki/Home
+gem 'pg'
 
 gem "railties",      rails_version
 gem "activemodel",   rails_version
@@ -20,7 +21,7 @@ gem "activerecord",  rails_version
 gem "activesupport", rails_version
 
 group :development do
-  gem 'rspec-rails', "~> 3.1.0"
+  gem 'rspec-rails'
 
   # code metrics:
   gem 'rcov' if version18
