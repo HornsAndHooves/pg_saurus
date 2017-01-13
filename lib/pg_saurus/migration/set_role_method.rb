@@ -45,7 +45,7 @@ module PgSaurus
     # Wrap original `exec_migration` to run migration with set role.
     #
     # @param conn [ActiveRecord::ConnectionAdapters::PostgreSQLAdapter]
-    # @param direction [Symbole] :up or :down
+    # @param direction [Symbol] :up or :down
     #
     # @return [void]
     def exec_migration_with_role(conn, direction)
