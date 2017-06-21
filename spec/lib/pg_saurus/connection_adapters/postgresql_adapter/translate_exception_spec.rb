@@ -4,8 +4,8 @@ describe PgSaurus::ConnectionAdapters::PostgreSQLAdapter::TranslateException do
   let(:connection) { ActiveRecord::Base.connection }
 
   describe "#translate_exception" do
-    it "intercepts insufficient privilege PGError" do
-      exception = double("PGError").as_null_object.tap do |error|
+    it "intercepts insufficient privilege PG::Error" do
+      exception = double("PG::Error").as_null_object.tap do |error|
         allow(error).to receive(:result) do
           double("PGResult").as_null_object.tap do |result|
             allow(result).
