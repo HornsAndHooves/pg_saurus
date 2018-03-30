@@ -10,7 +10,7 @@ describe PgSaurus::ConnectionAdapters::PostgreSQLAdapter::FunctionMethods do
 
   context ".create_function" do
 
-    it "default behavior" do
+    specify "default behavior" do
       sql = <<-SQL.gsub(/^[ ]{8}/, "")
         CREATE OR REPLACE FUNCTION "public".pets_not_empty()
           RETURNS boolean
@@ -43,7 +43,40 @@ describe PgSaurus::ConnectionAdapters::PostgreSQLAdapter::FunctionMethods do
       FUNCTION
     end
 
-    it "no schema and replace set to false" do
+    specify "function with arguments" do
+      sql = <<-SQL.gsub(/^[ ]{8}/, "")
+        CREATE OR REPLACE FUNCTION "public".pet_exists(type text, size numeric)
+          RETURNS boolean
+          LANGUAGE plpgsql
+        AS $function$
+        BEGIN
+          IF (SELECT 1 FROM pets p WHERE p.type = type AND p.size = size) = 1
+          THEN
+            RETURN true;
+          ELSE
+            RETURN false;
+          END IF;
+        END;
+        $function$
+      SQL
+
+      expect(connection).to receive(:execute).with(sql)
+
+      connection.create_function "pet_exists(type text, size numeric)",
+                                 :boolean,
+                                 <<-FUNCTION.gsub(/^[ ]{8}/, ""), schema: "public"
+        BEGIN
+          IF (SELECT 1 FROM pets p WHERE p.type = type AND p.size = size) = 1
+          THEN
+            RETURN true;
+          ELSE
+            RETURN false;
+          END IF;
+        END;
+      FUNCTION
+    end
+
+    specify "no schema and replace set to false" do
       sql = <<-SQL.gsub(/^[ ]{8}/, "")
         CREATE FUNCTION pets_not_empty()
           RETURNS boolean

@@ -236,7 +236,7 @@ cp.cf	coverage/assets/0.8.0/application.js	17;"	f	line:17
 create_extension	lib/pg_saurus/connection_adapters/postgresql_adapter/extension_methods.rb	41;"	f	line:41	class:PgSaurus
 create_extension	lib/pg_saurus/migration/command_recorder/extension_methods.rb	5;"	f	line:5	class:PgSaurus
 create_function	lib/pg_saurus/connection_adapters/abstract_adapter/function_methods.rb	26;"	f	line:26	class:PgSaurus
-create_function	lib/pg_saurus/connection_adapters/postgresql_adapter/function_methods.rb	54;"	f	line:54	class:PgSaurus
+create_function	lib/pg_saurus/connection_adapters/postgresql_adapter/function_methods.rb	56;"	f	line:56	class:PgSaurus
 create_function	lib/pg_saurus/migration/command_recorder/function_methods.rb	6;"	f	line:6	class:PgSaurus
 create_schema	lib/pg_saurus/connection_adapters/postgresql_adapter/schema_methods.rb	6;"	f	line:6	class:PgSaurus
 create_schema	lib/pg_saurus/migration/command_recorder/schema_methods.rb	5;"	f	line:5	class:PgSaurus
@@ -262,7 +262,7 @@ down	spec/dummy/db/migrate/20120904114120_remove_foreign_key_from_pets_on_user_i
 drop_extension	lib/pg_saurus/connection_adapters/postgresql_adapter/extension_methods.rb	75;"	f	line:75	class:PgSaurus
 drop_extension	lib/pg_saurus/migration/command_recorder/extension_methods.rb	10;"	f	line:10	class:PgSaurus
 drop_function	lib/pg_saurus/connection_adapters/abstract_adapter/function_methods.rb	37;"	f	line:37	class:PgSaurus
-drop_function	lib/pg_saurus/connection_adapters/postgresql_adapter/function_methods.rb	77;"	f	line:77
+drop_function	lib/pg_saurus/connection_adapters/postgresql_adapter/function_methods.rb	79;"	f	line:79
 drop_function	lib/pg_saurus/migration/command_recorder/function_methods.rb	11;"	f	line:11	class:PgSaurus
 drop_schema	lib/pg_saurus/connection_adapters/postgresql_adapter/schema_methods.rb	12;"	f	line:12	class:PgSaurus
 drop_schema	lib/pg_saurus/migration/command_recorder/schema_methods.rb	10;"	f	line:10	class:PgSaurus
@@ -292,12 +292,12 @@ foreign_keys_with_indexes	lib/pg_saurus/schema_dumper/foreign_key_methods.rb	6;"
 foreign_keys_with_schema	lib/pg_saurus/connection_adapters/postgresql_adapter/foreign_key_methods.rb	62;"	f	line:62	class:PgSaurus.ConnectionAdapters
 format_comment	lib/pg_saurus/schema_dumper/comment_methods.rb	47;"	f	line:47	class:PgSaurus
 from_schema	lib/pg_saurus/connection_adapters/postgresql_adapter.rb	40;"	f	line:40	class:PgSaurus
-full_function_name	lib/pg_saurus/connection_adapters/postgresql_adapter/function_methods.rb	102;"	f	line:102
+full_function_name	lib/pg_saurus/connection_adapters/postgresql_adapter/function_methods.rb	107;"	f	line:107
 function.cr	coverage/assets/0.10.0/application.js	17;"	f	line:17
 function.cr	coverage/assets/0.10.1/application.js	17;"	f	line:17
 function.cr	coverage/assets/0.8.0/application.js	17;"	f	line:17
 functions	lib/pg_saurus/connection_adapters/abstract_adapter/function_methods.rb	42;"	f	line:42	class:PgSaurus
-functions	lib/pg_saurus/connection_adapters/postgresql_adapter/function_methods.rb	11;"	f	line:11	class:PgSaurus
+functions	lib/pg_saurus/connection_adapters/postgresql_adapter/function_methods.rb	13;"	f	line:13	class:PgSaurus
 get_column_comment	spec/support/explorer.rb	20;"	f	line:20	class:PgSaurus
 get_index_comment	spec/support/explorer.rb	36;"	f	line:36	class:PgSaurus
 get_table_comment	spec/support/explorer.rb	6;"	f	line:6	class:PgSaurus
@@ -334,7 +334,7 @@ invert_set_column_comment	lib/pg_saurus/migration/command_recorder/comment_metho
 invert_set_column_comments	lib/pg_saurus/migration/command_recorder/comment_methods.rb	58;"	f	line:58	class:PgSaurus
 invert_set_index_comment	lib/pg_saurus/migration/command_recorder/comment_methods.rb	64;"	f	line:64	class:PgSaurus
 invert_set_table_comment	lib/pg_saurus/migration/command_recorder/comment_methods.rb	45;"	f	line:45	class:PgSaurus
-is_constraint?	lib/pg_saurus/connection_adapters/postgresql_adapter/trigger_methods.rb	115;"	f	line:115
+is_constraint?	lib/pg_saurus/connection_adapters/postgresql_adapter/trigger_methods.rb	119;"	f	line:119
 k.function.J	coverage/assets/0.10.0/application.js	17;"	f	line:17
 k.function.J	coverage/assets/0.10.1/application.js	17;"	f	line:17
 k.function.J	coverage/assets/0.8.0/application.js	17;"	f	line:17
@@ -347,15 +347,15 @@ keep_default_role?	lib/pg_saurus/migration/set_role_method.rb	41;"	f	line:41	cla
 move_table_to_schema	lib/pg_saurus/connection_adapters/postgresql_adapter/schema_methods.rb	19;"	f	line:19	class:PgSaurus
 move_table_to_schema	lib/pg_saurus/migration/command_recorder/schema_methods.rb	15;"	f	line:15	class:PgSaurus
 move_table_to_schema	lib/pg_saurus/tools.rb	58;"	f	line:58	class:PgSaurus.Tools
-parse_condition	lib/pg_saurus/connection_adapters/postgresql_adapter/trigger_methods.rb	100;"	f	line:100
-parse_event	lib/pg_saurus/connection_adapters/postgresql_adapter/trigger_methods.rb	105;"	f	line:105
-parse_function_definition	lib/pg_saurus/connection_adapters/postgresql_adapter/function_methods.rb	96;"	f	line:96
-parse_function_language	lib/pg_saurus/connection_adapters/postgresql_adapter/function_methods.rb	90;"	f	line:90
-parse_function_name	lib/pg_saurus/connection_adapters/postgresql_adapter/function_methods.rb	84;"	f	line:84
-parse_proc_name	lib/pg_saurus/connection_adapters/postgresql_adapter/trigger_methods.rb	110;"	f	line:110
+parse_condition	lib/pg_saurus/connection_adapters/postgresql_adapter/trigger_methods.rb	101;"	f	line:101
+parse_event	lib/pg_saurus/connection_adapters/postgresql_adapter/trigger_methods.rb	107;"	f	line:107
+parse_function_definition	lib/pg_saurus/connection_adapters/postgresql_adapter/function_methods.rb	101;"	f	line:101
+parse_function_language	lib/pg_saurus/connection_adapters/postgresql_adapter/function_methods.rb	95;"	f	line:95
+parse_function_name	lib/pg_saurus/connection_adapters/postgresql_adapter/function_methods.rb	86;"	f	line:86
+parse_proc_name	lib/pg_saurus/connection_adapters/postgresql_adapter/trigger_methods.rb	113;"	f	line:113
 pg_extensions	lib/pg_saurus/connection_adapters/postgresql_adapter/extension_methods.rb	113;"	f	line:113	class:PgSaurus
 process_postponed_queries	lib/pg_saurus/create_index_concurrently.rb	92;"	f	line:92	class:PgSaurus.Migration
-quote_table_or_view	lib/pg_saurus/connection_adapters/postgresql_adapter/trigger_methods.rb	120;"	f	line:120
+quote_table_or_view	lib/pg_saurus/connection_adapters/postgresql_adapter/trigger_methods.rb	125;"	f	line:125
 quoted_columns_for_index	lib/core_ext/active_record/connection_adapters/abstract/schema_statements.rb	133;"	f	line:133	class:ActiveRecord.ConnectionAdapters
 red	lib/colorized_text.rb	25;"	f	line:25	class:ColorizedText
 remove_column_comment	lib/pg_saurus/connection_adapters/abstract_adapter/comment_methods.rb	59;"	f	line:59	class:PgSaurus
@@ -405,7 +405,7 @@ supports_comments?	lib/pg_saurus/connection_adapters/abstract_adapter/comment_me
 supports_comments?	lib/pg_saurus/connection_adapters/postgresql_adapter/comment_methods.rb	4;"	f	line:4	class:PgSaurus
 supports_extensions?	lib/pg_saurus/connection_adapters/postgresql_adapter/extension_methods.rb	28;"	f	line:28	class:PgSaurus
 supports_functions?	lib/pg_saurus/connection_adapters/abstract_adapter/function_methods.rb	5;"	f	line:5	class:PgSaurus
-supports_functions?	lib/pg_saurus/connection_adapters/postgresql_adapter/function_methods.rb	6;"	f	line:6	class:PgSaurus
+supports_functions?	lib/pg_saurus/connection_adapters/postgresql_adapter/function_methods.rb	8;"	f	line:8	class:PgSaurus
 supports_partial_index?	lib/pg_saurus/connection_adapters/abstract_adapter/index_methods.rb	3;"	f	line:3	class:PgSaurus
 supports_partial_index?	lib/pg_saurus/connection_adapters/postgresql_adapter/index_methods.rb	4;"	f	line:4	class:PgSaurus
 supports_triggers?	lib/pg_saurus/connection_adapters/abstract_adapter/trigger_methods.rb	5;"	f	line:5	class:PgSaurus
@@ -421,7 +421,7 @@ tables_with_views	lib/pg_saurus/schema_dumper/view_methods.rb	4;"	f	line:4	class
 to_schema_and_table	lib/pg_saurus/tools.rb	98;"	f	line:98	class:PgSaurus.Tools
 to_schema_and_table	spec/support/explorer.rb	82;"	f	line:82	class:PgSaurus
 translate_exception	lib/pg_saurus/connection_adapters/postgresql_adapter/translate_exception.rb	8;"	f	line:8	class:PgSaurus
-trigger_name	lib/pg_saurus/connection_adapters/postgresql_adapter/trigger_methods.rb	130;"	f	line:130
+trigger_name	lib/pg_saurus/connection_adapters/postgresql_adapter/trigger_methods.rb	136;"	f	line:136
 triggers	lib/pg_saurus/connection_adapters/abstract_adapter/trigger_methods.rb	10;"	f	line:10	class:PgSaurus
 triggers	lib/pg_saurus/connection_adapters/postgresql_adapter/trigger_methods.rb	49;"	f	line:49
 up	spec/dummy/db/migrate/20120207103858_remove_comments_on_countries_table.rb	2;"	f	line:2	class:RemoveCommentsOnCountriesTable
