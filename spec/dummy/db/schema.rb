@@ -17,8 +17,8 @@ ActiveRecord::Schema.define(version: 20150714003209) do
   create_schema "later"
   create_schema "latest"
 
-  create_extension "fuzzystrmatch", :version => "1.0"
-  create_extension "btree_gist", :schema_name => "demography", :version => "1.0"
+  create_extension "fuzzystrmatch", :version => "1.1"
+  create_extension "btree_gist", :schema_name => "demography", :version => "1.2"
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
