@@ -13,7 +13,9 @@ version18 = (RUBY_VERSION =~ /^1\.8/)
 # 2017-01-12: Note: The GitHub pg mirror lacks the recent tags appearing in the Bitbucket Hg repo:
 # https://github.com/ged/ruby-pg/blob/master/History.rdoc
 # https://bitbucket.org/ged/ruby-pg/wiki/Home
-gem 'pg'
+
+# pg >= 1.0.0 doesn't work with Rails at the moment. It's a Rails bug.
+gem 'pg', "< 1.0"
 
 gem "railties",      rails_version
 gem "activemodel",   rails_version
