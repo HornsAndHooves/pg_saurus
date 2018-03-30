@@ -1,6 +1,8 @@
 # Methods to extend {ActiveRecord::ConnectionAdapters::PostgreSQLAdapter}
 # to support database functions.
 module PgSaurus::ConnectionAdapters::PostgreSQLAdapter::FunctionMethods
+  # Regular expression used in function signature parsing:
+  FUNCTION_PARSE_REGEXP = /^CREATE[\s\S]+FUNCTION /
 
   # Return +true+.
   def supports_functions?
@@ -82,7 +84,10 @@ module PgSaurus::ConnectionAdapters::PostgreSQLAdapter::FunctionMethods
 
   # Retrieve the function name from the function SQL.
   def parse_function_name(function_str)
-    function_str.split("\n").find { |line| line =~ /^CREATE[\s\S]+FUNCTION/ }.split(' ').last
+    function_str.
+      split("\n").
+      find { |line| line =~ FUNCTION_PARSE_REGEXP }.
+      sub(FUNCTION_PARSE_REGEXP, '')
   end
   private :parse_function_name
 
