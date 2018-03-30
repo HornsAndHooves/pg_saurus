@@ -12,7 +12,7 @@ module PgSaurus::ConnectionAdapters::PostgreSQLAdapter::TriggerMethods
     proc_name = "#{proc_name}"
     proc_name = "#{proc_name}()" unless proc_name.end_with?(')')
 
-    for_each = options[:for_each] || 'ROW'
+    for_each   = options[:for_each] || 'ROW'
     constraint = options[:constraint]
 
     sql = if constraint
@@ -97,26 +97,31 @@ module PgSaurus::ConnectionAdapters::PostgreSQLAdapter::TriggerMethods
     end
   end
 
+  # Parse the condition from the trigger definition.
   def parse_condition(trigger_definition)
     trigger_definition[/WHEN[\s](.*?)[\s]EXECUTE[\s]PROCEDURE/m, 1]
   end
   private :parse_condition
 
+  # Parse the event from the trigger definition.
   def parse_event(trigger_definition, trigger_name)
     trigger_definition[/^CREATE[\sA-Z]+TRIGGER[\s]#{Regexp.escape(trigger_name)}[\s](.*?)[\s]ON[\s]/m, 1]
   end
   private :parse_event
 
+  # Parse the procedure name from the trigger definition.
   def parse_proc_name(trigger_definition)
     trigger_definition[/EXECUTE[\s]PROCEDURE[\s](.*?)$/m,1]
   end
   private :parse_proc_name
 
+  # Whether the trigger is a constraint.
   def is_constraint?(trigger_definition)
     !!(trigger_definition =~ /^CREATE CONSTRAINT TRIGGER/)
   end
   private :is_constraint?
 
+  # Properly quote the table name or view name.
   def quote_table_or_view(name, options)
     schema = options[:schema]
     if schema
@@ -127,6 +132,7 @@ module PgSaurus::ConnectionAdapters::PostgreSQLAdapter::TriggerMethods
   end
   private :quote_table_or_view
 
+  # The name provided in the options, or constructed from the procedure name.
   def trigger_name(proc_name, options)
     if name = options[:name]
       name
