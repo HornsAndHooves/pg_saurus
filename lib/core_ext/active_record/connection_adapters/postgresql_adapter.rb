@@ -5,7 +5,7 @@ module ActiveRecord # :nodoc:
     #   * indexes
     class PostgreSQLAdapter
       # Regex to find columns used in index statements
-      INDEX_COLUMN_EXPRESSION = /ON \w+(?: USING \w+ )?\((.+)\)/
+      INDEX_COLUMN_EXPRESSION = /ON [\w\.]+(?: USING \w+ )?\((.+)\)/
       # Regex to find where clause in index statements
       INDEX_WHERE_EXPRESSION = /WHERE (.+)$/
 
