@@ -7,7 +7,7 @@ module ActiveRecord # :nodoc:
       # Regex to find columns used in index statements
       INDEX_COLUMN_EXPRESSION = /ON \w+(?: USING \w+ )?\((.+)\)/
       # Regex to find where clause in index statements
-      INDEX_WHERE_EXPRESION = /WHERE (.+)$/
+      INDEX_WHERE_EXPRESSION = /WHERE (.+)$/
 
       # Returns the list of all tables in the schema search path or a specified schema.
       #
@@ -122,7 +122,7 @@ module ActiveRecord # :nodoc:
         column_names = columns.values_at(*index[:keys]).compact
 
         if column_names.empty?
-          definition = index[:definition].sub(INDEX_WHERE_EXPRESION, '')
+          definition = index[:definition].sub(INDEX_WHERE_EXPRESSION, '')
           if column_expression = definition.match(INDEX_COLUMN_EXPRESSION)[1]
             column_names = split_expression(column_expression).map do |functional_name|
               remove_type(functional_name)
@@ -165,7 +165,7 @@ module ActiveRecord # :nodoc:
       # @param [Hash] index index attributes
       # @return [String] where statement
       def find_where_statement(index)
-        index[:definition].scan(INDEX_WHERE_EXPRESION).flatten[0]
+        index[:definition].scan(INDEX_WHERE_EXPRESSION).flatten[0]
       end
 
       # Find length of index
