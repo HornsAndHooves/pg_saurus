@@ -99,14 +99,22 @@ module ActiveRecord # :nodoc:
             where   = find_where_statement(index)
             lengths = find_lengths(index)
 
-            PgSaurus::ConnectionAdapters::IndexDefinition.new(table_name, index[:name], index[:unique], column_names, lengths, where, index[:access_method])
+            PgSaurus::ConnectionAdapters::IndexDefinition.new(
+              table_name,
+              index[:name],
+              index[:unique],
+              column_names,
+              lengths,
+              where,
+              index[:access_method]
+            )
           end
         end.compact
       end
 
-      # Find column names from index attributes. If the columns are virtual (ie
+      # Find column names from index attributes. If the columns are virtual (i.e.
       # this is an expression index) then it will try to return the functions
-      # that represent each column
+      # that represent each column.
       #
       # @param [String] table_name the name of the table
       # @param [Hash] index index attributes
