@@ -44,6 +44,14 @@ describe 'Indexes' do
       ActiveRecord::Migration.add_index(:pets, ['upper(name)', 'lower(color)'], opts)
       PgSaurus::Explorer.index_exists?(:pets, ['upper(name)', 'lower(color)'], opts).should be true
     end
+
+    it "should allow compound functional indexes for schema-qualified table names" do
+      opts = { name: 'idx_demography_citizens_on_lower_last_name__lower_first_name' }
+      args = [ "demography.citizens", ["lower(last_name)", "lower(first_name)"], opts ]
+
+      ActiveRecord::Migration.add_index(*args)
+      expect(PgSaurus::Explorer.index_exists?(*args)).to be_truthy
+    end
   end
 
   describe '#remove_index' do

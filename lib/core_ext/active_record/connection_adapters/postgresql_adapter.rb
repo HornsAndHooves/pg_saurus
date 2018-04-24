@@ -116,7 +116,7 @@ module ActiveRecord # :nodoc:
       # this is an expression index) then it will try to return the functions
       # that represent each column.
       #
-      # @param [String] table_name the name of the table
+      # @param [String] table_name the name of the table, possibly schema-qualified
       # @param [Hash] index index attributes
       # @return [Array]
       def find_column_names(table_name, index)
