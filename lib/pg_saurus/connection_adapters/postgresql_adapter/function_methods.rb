@@ -108,12 +108,15 @@ module PgSaurus::ConnectionAdapters::PostgreSQLAdapter::FunctionMethods
   # Retrieve the volatility of the function: volatile, stable, or immutable
   # @return [Symbol]
   def parse_function_volatility(function_str)
-    rows = function_str.split("\n")
+    rows       = function_str.split("\n")
     lang_index = rows.index { |line| line =~ /LANGUAGE/ }
-    def_index = rows.index { |line| line =~ /AS \$function\$/ }
+    def_index  = rows.index { |line| line =~ /AS \$function\$/ }
 
     if lang_index && def_index && def_index - lang_index == 2
-      :"#{rows[def_index - 1].strip.split(" ").first.downcase}"
+      tokens = rows[def_index - 1].strip.downcase.split(" ")
+      token  = tokens.find { |t| %w(volatile stable immutable).include? t }
+
+      token.nil? ? :volatile : token.to_sym
     else
       :volatile
     end
