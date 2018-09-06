@@ -108,6 +108,40 @@ describe PgSaurus::ConnectionAdapters::PostgreSQLAdapter::FunctionMethods do
         END;
       FUNCTION
     end
+
+    specify "set volatility" do
+      sql = <<-SQL.gsub(/^[ ]{8}/, "")
+        CREATE OR REPLACE FUNCTION "public".pets_not_empty()
+          RETURNS boolean
+          LANGUAGE plpgsql
+          STABLE
+        AS $function$
+        BEGIN
+          IF (SELECT COUNT(*) FROM pets) > 0
+          THEN
+            RETURN true;
+          ELSE
+            RETURN false;
+          END IF;
+        END;
+        $function$
+      SQL
+
+      expect(connection).to receive(:execute).with(sql)
+
+      connection.create_function "pets_not_empty()",
+                                 :boolean,
+                                 <<-FUNCTION.gsub(/^[ ]{8}/, ""), schema: "public", volatility: :stable
+        BEGIN
+          IF (SELECT COUNT(*) FROM pets) > 0
+          THEN
+            RETURN true;
+          ELSE
+            RETURN false;
+          END IF;
+        END;
+      FUNCTION
+    end
   end
 
   it ".drop_function" do

@@ -62,11 +62,17 @@ module PgSaurus::ConnectionAdapters::PostgreSQLAdapter::FunctionMethods
                     else
                       'OR REPLACE '
                     end
+    volatility    = case options[:volatility]
+                    when :volatile, :stable, :immutable
+                      "\n  #{options[:volatility].to_s.upcase}"
+                    else
+                      ""
+                    end
 
     sql = <<-SQL.gsub(/^[ ]{6}/, "")
       CREATE #{replace}FUNCTION #{function_name}
         RETURNS #{returning}
-        LANGUAGE #{language}
+        LANGUAGE #{language}#{volatility}
       AS $function$
       #{definition.strip}
       $function$
