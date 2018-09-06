@@ -25,6 +25,23 @@ ActiveRecord::Schema.define(version: 20150714003209) do
   enable_extension "fuzzystrmatch"
   enable_extension "btree_gist"
 
+  create_function 'public.pets_not_empty()', :boolean, <<-FUNCTION_DEFINITION.gsub(/^[ ]{4}/, ''), volatility: :volatile
+    BEGIN
+      IF (SELECT COUNT(*) FROM pets) > 0
+      THEN
+        RETURN true;
+      ELSE
+        RETURN false;
+      END IF;
+    END;
+  FUNCTION_DEFINITION
+
+  create_function 'public.pets_not_empty_trigger_proc()', :trigger, <<-FUNCTION_DEFINITION.gsub(/^[ ]{4}/, ''), volatility: :immutable
+    BEGIN
+      RETURN null;
+    END;
+  FUNCTION_DEFINITION
+
   create_table "breeds", force: :cascade do |t|
     t.string   "name"
     t.datetime "created_at"
@@ -121,23 +138,6 @@ ActiveRecord::Schema.define(version: 20150714003209) do
     citizens.active
    FROM demography.citizens;
   SQL
-
-  create_function 'public.pets_not_empty()', :boolean, <<-FUNCTION_DEFINITION.gsub(/^[ ]{4}/, ''), volatility: :volatile
-    BEGIN
-      IF (SELECT COUNT(*) FROM pets) > 0
-      THEN
-        RETURN true;
-      ELSE
-        RETURN false;
-      END IF;
-    END;
-  FUNCTION_DEFINITION
-
-  create_function 'public.pets_not_empty_trigger_proc()', :trigger, <<-FUNCTION_DEFINITION.gsub(/^[ ]{4}/, ''), volatility: :immutable
-    BEGIN
-      RETURN null;
-    END;
-  FUNCTION_DEFINITION
 
   create_trigger 'pets', 'pets_not_empty_trigger_proc()', 'AFTER INSERT', name: 'trigger_pets_not_empty_trigger_proc', constraint: true, for_each: :row, deferrable: true, initially_deferred: false, schema: 'public', condition: '(new.name::text = \'fluffy\'::text)'
 
