@@ -39,6 +39,7 @@ module PgSaurus::ConnectionAdapters::PostgreSQLAdapter::FunctionMethods
       name       = parse_function_name(function_str)
       language   = parse_function_language(function_str)
       definition = parse_function_definition(function_str)
+      volatility = parse_function_volatility(function_str)
 
       if definition
         buffer << ::PgSaurus::ConnectionAdapters::FunctionDefinition.new(name,
@@ -46,7 +47,8 @@ module PgSaurus::ConnectionAdapters::PostgreSQLAdapter::FunctionMethods
                                                                          definition.strip,
                                                                          function_type,
                                                                          language,
-                                                                         oid)
+                                                                         oid,
+                                                                         volatility)
       end
       buffer
     end
@@ -102,6 +104,21 @@ module PgSaurus::ConnectionAdapters::PostgreSQLAdapter::FunctionMethods
     function_str.split("\n").find { |line| line =~ /LANGUAGE/ }.split(' ').last
   end
   private :parse_function_language
+
+  # Retrieve the volatility of the function: volatile, stable, or immutable
+  # @return [Symbol]
+  def parse_function_volatility(function_str)
+    rows = function_str.split("\n")
+    lang_index = rows.index { |line| line =~ /LANGUAGE/ }
+    def_index = rows.index { |line| line =~ /AS \$function\$/ }
+
+    if lang_index && def_index && def_index - lang_index == 2
+      :"#{rows[def_index - 1].strip.split(" ").first.downcase}"
+    else
+      :volatile
+    end
+  end
+  private :parse_function_volatility
 
   # Retrieve the function definition from the function SQL.
   def parse_function_definition(function_str)

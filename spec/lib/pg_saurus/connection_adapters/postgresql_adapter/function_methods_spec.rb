@@ -150,11 +150,22 @@ describe PgSaurus::ConnectionAdapters::PostgreSQLAdapter::FunctionMethods do
     connection.drop_function "foo_bar()"
   end
 
-  it ".functions" do
-    function = connection.functions.find{ |f| f.name == "public.pets_not_empty()" }
+  context "#functions" do
+    it "volatile function" do
+      function = connection.functions.find { |f| f.name == "public.pets_not_empty()" }
 
-    expect(function).not_to be_nil
-    expect(function.returning).to eq("boolean")
+      expect(function).not_to be_nil
+      expect(function.returning).to eq("boolean")
+      expect(function.volatility).to eq(:volatile)
+    end
+
+    it "immutable function" do
+      function = connection.functions.find { |f| f.name == "public.pets_not_empty_trigger_proc()" }
+
+      expect(function).not_to be_nil
+      expect(function.returning).to eq("trigger")
+      expect(function.volatility).to eq(:immutable)
+    end
   end
 
 end

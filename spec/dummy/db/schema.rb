@@ -122,7 +122,7 @@ ActiveRecord::Schema.define(version: 20150714003209) do
    FROM demography.citizens;
   SQL
 
-  create_function 'public.pets_not_empty()', :boolean, <<-FUNCTION_DEFINITION.gsub(/^[ ]{4}/, '')
+  create_function 'public.pets_not_empty()', :boolean, <<-FUNCTION_DEFINITION.gsub(/^[ ]{4}/, ''), volatility: :volatile
     BEGIN
       IF (SELECT COUNT(*) FROM pets) > 0
       THEN
@@ -133,7 +133,7 @@ ActiveRecord::Schema.define(version: 20150714003209) do
     END;
   FUNCTION_DEFINITION
 
-  create_function 'public.pets_not_empty_trigger_proc()', :trigger, <<-FUNCTION_DEFINITION.gsub(/^[ ]{4}/, '')
+  create_function 'public.pets_not_empty_trigger_proc()', :trigger, <<-FUNCTION_DEFINITION.gsub(/^[ ]{4}/, ''), volatility: :immutable
     BEGIN
       RETURN null;
     END;
