@@ -366,8 +366,8 @@ BEGIN
 END;
 SQL
 
-# Arguments are: function_name, return_type, function_definition, options (currently, only :schema)
-create_function 'pets_not_empty()', :boolean, pets_not_empty_function, schema: 'public'
+# Arguments are: function_name, return_type, function_definition, options (currently, only :schema and :volatility)
+create_function 'pets_not_empty()', :boolean, pets_not_empty_function, schema: 'public', volatility: 'stable'
 ```
 Drop a function:
 

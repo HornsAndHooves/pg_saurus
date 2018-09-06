@@ -5,6 +5,7 @@ module PgSaurus::ConnectionAdapters
                                          :definition,
                                          :function_type,
                                          :language,
-                                         :oid )
+                                         :oid,
+                                         :volatility )
   end
 end

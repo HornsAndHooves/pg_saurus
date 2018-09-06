@@ -63,12 +63,11 @@ describe 'Indexes' do
     end
 
     it 'should remove indexes built with the :where option' do
-      pending "Looks like this isn't supported?"
 
       index_options = {:where => "active"}
 
       ActiveRecord::Migration.add_index(:pets, :name, index_options)
-      ActiveRecord::Migration.remove_index(:pets, :name, index_options)
+      ActiveRecord::Migration.remove_index(:pets, :name)
 
       PgSaurus::Explorer.index_exists?(:pets, :name, index_options).should be false
     end

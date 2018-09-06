@@ -2,7 +2,7 @@ class CreatePetsTrigger < ActiveRecord::Migration
   def change
     create_function "pets_not_empty_trigger_proc()",
                     :trigger,
-                    <<-FUNCTION.gsub(/^[\s]{6}/, ""), schema: "public"
+                    <<-FUNCTION.gsub(/^[\s]{6}/, ""), schema: "public", volatility: :immutable
       BEGIN
         RETURN null;
       END;
