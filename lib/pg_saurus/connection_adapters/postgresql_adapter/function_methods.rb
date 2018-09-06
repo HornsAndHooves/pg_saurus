@@ -105,7 +105,7 @@ module PgSaurus::ConnectionAdapters::PostgreSQLAdapter::FunctionMethods
   end
   private :parse_function_language
 
-  # Retrieve the volatility of the function: volatile, stable, or immutable
+  # Retrieve the volatility of the function: volatile, stable, or immutable.
   # @return [Symbol]
   def parse_function_volatility(function_str)
     rows       = function_str.split("\n")
