@@ -5,6 +5,8 @@ module ActiveRecord
       # function call
       FUNCTIONAL_INDEX_REGEXP = /(\w+)\(((?:'.+'(?:::\w+)?, *)*)(\w+)\)/
 
+      # Regexp used to find the operator name
+      OPERATOR_REGEXP = /(.+)\s(\w+)$/
 
       # Redefine original add_index method to handle :concurrently option.
       #
@@ -132,24 +134,46 @@ module ActiveRecord
       # Override super method to provide support for expression column names.
       def quoted_columns_for_index(column_names, options = {})
         column_names.map do |name|
-          if name =~ FUNCTIONAL_INDEX_REGEXP
-            "#{$1}(#{$2}#{quote_column_name($3)})"
-          else
-            quote_column_name(name)
-          end
+          column_name, operator_name = split_column_name(name)
+
+          result_name = if column_name =~ FUNCTIONAL_INDEX_REGEXP
+                          "#{$1}(#{$2}#{quote_column_name($3)})"
+                        else
+                          quote_column_name(column_name)
+                        end
+          
+          result_name += " " + operator_name if operator_name
+
+          result_name
         end
       end
       protected :quoted_columns_for_index
 
       # Map an expression to a name appropriate for an index.
-      def expression_index_name(column_name)
-        if column_name =~ FUNCTIONAL_INDEX_REGEXP
-          "#{$1.downcase}_#{$3}"
-        else
-          column_name
-        end
+      def expression_index_name(name)
+        column_name, operator_name = split_column_name(name)
+
+        result_name = if column_name =~ FUNCTIONAL_INDEX_REGEXP
+                        "#{$1.downcase}_#{$3}"
+                      else
+                        column_name
+                      end
+
+        result_name += "_" + operator_name if operator_name
+
+        result_name
       end
       private :expression_index_name
+
+      # Split column name to name and operator class if possible.
+      def split_column_name(name)
+        if name =~ OPERATOR_REGEXP
+          return $1, $2
+        else
+          return name, nil
+        end
+      end
+      private :split_column_name
     end
   end
 end
