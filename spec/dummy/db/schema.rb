@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150714003209) do
+ActiveRecord::Schema.define(version: 20190213151821) do
 
   create_schema "demography"
   create_schema "later"
@@ -41,6 +41,14 @@ ActiveRecord::Schema.define(version: 20150714003209) do
       RETURN null;
     END;
   FUNCTION_DEFINITION
+
+  create_table "books", force: :cascade do |t|
+    t.string   "title"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "books", ["title varchar_pattern_ops"], :name => "index_books_on_title_varchar_pattern_ops"
 
   create_table "breeds", force: :cascade do |t|
     t.string   "name"
@@ -140,6 +148,9 @@ ActiveRecord::Schema.define(version: 20150714003209) do
   SQL
 
   create_trigger 'pets', 'pets_not_empty_trigger_proc()', 'AFTER INSERT', name: 'trigger_pets_not_empty_trigger_proc', constraint: true, for_each: :row, deferrable: true, initially_deferred: false, schema: 'public', condition: '(new.name::text = \'fluffy\'::text)'
+
+  set_table_comment 'books', 'Information about books'
+  set_column_comment 'books', 'title', 'Book title'
 
   set_table_comment 'demography.citizens', 'Citizens Info'
   set_column_comment 'demography.citizens', 'country_id', 'Country key'

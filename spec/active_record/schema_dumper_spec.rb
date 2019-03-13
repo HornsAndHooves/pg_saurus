@@ -97,6 +97,10 @@ describe ActiveRecord::SchemaDumper do
           'add_index "pets", ["to_tsvector(\'english\'::regconfig, name)"], :name => "index_pets_on_to_tsvector_name_gist", :using => "gist"'
         ))
       end
+
+      it "dumps indexes with operator name" do
+        @dump.should =~ /add_index "books", \["title varchar_pattern_ops"\]/
+      end
     end
 
     context 'Functions' do
