@@ -71,7 +71,7 @@ module ActiveRecord # :nodoc:
         schemas = schema ? "ARRAY['#{schema}']" : 'current_schemas(false)'
 
         result = query(<<-SQL, name)
-          SELECT distinct i.relname, d.indisunique, d.indkey,  pg_get_indexdef(d.indexrelid), t.oid, am.amname
+          SELECT distinct i.relname, d.indisunique, d.indkey,  pg_get_indexdef(d.indexrelid), t.oid, am.amname, d.indclass
           FROM pg_class t
           INNER JOIN pg_index d ON t.oid = d.indrelid
           INNER JOIN pg_class i ON d.indexrelid = i.oid
@@ -90,10 +90,13 @@ module ActiveRecord # :nodoc:
             :keys          => row[2].split(" "),
             :definition    => row[3],
             :id            => row[4],
-            :access_method => row[5]
+            :access_method => row[5], 
+            :operators     => row[6].split(" ")
           }
 
           column_names = find_column_names(table_name, index)
+
+          operator_names = find_operator_names(column_names, index)
 
           unless column_names.empty?
             where   = find_where_statement(index)
@@ -106,7 +109,8 @@ module ActiveRecord # :nodoc:
               column_names,
               lengths,
               where,
-              index[:access_method]
+              index[:access_method],
+              operator_names
             )
           end
         end.compact
@@ -139,6 +143,29 @@ module ActiveRecord # :nodoc:
         end
 
         column_names
+      end
+
+      # Find non-default operator class names for columns from index.
+      #
+      # @param column_names [Array] List of columns from index.
+      # @param index [Hash] index index attributes
+      # @return [Hash]
+      def find_operator_names(column_names, index)
+        column_names.each_with_index.inject({}) do |class_names, (column_name, column_index)|
+          result = query(<<-SQL, "Classes for columns for index #{index[:name]} for column #{column_name}")
+            SELECT op.opcname, op.opcdefault
+            FROM pg_opclass op
+            WHERE op.oid = #{index[:operators][column_index]};
+          SQL
+
+          row = result.first
+
+          if row && row[1] == "f"
+            class_names[column_name] = row[0]
+          end
+
+          class_names
+        end
       end
 
       # Splits only on commas outside of parens

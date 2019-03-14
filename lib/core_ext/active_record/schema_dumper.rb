@@ -15,9 +15,15 @@ module ActiveRecord #:nodoc:
     def indexes(table, stream)
       if (indexes = @connection.indexes(table)).any?
         add_index_statements = indexes.map do |index|
+          columns = index.columns.map do |column_name|
+            column_name += ' ' +index.operators[column_name] if index.operators.key?(column_name)
+
+            column_name
+          end
+
           statement_parts = [
             ('add_index ' + index.table.inspect),
-            index.columns.inspect,
+            columns.inspect,
             (':name => ' + index.name.inspect),
           ]
           statement_parts << ':unique => true' if index.unique

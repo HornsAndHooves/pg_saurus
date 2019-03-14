@@ -11,6 +11,7 @@ An ActiveRecord extension to get more from PostgreSQL:
 * [Enhancements to the Rails 4.2 foreign key support](#foreign-keys).
 * Use [partial indexes](#partial-indexes).
 * Use [indexes on expressions](#indexes-on-expressions).
+* Use [indexes with custom ops classes](#indexes-with-operator-classes).
 * [Run index creation concurrently](#concurrent-index-creation).
 * Create/drop [views](#views).
 * Create/drop [functions](#functions).
@@ -239,6 +240,18 @@ You can also specify the index access method:
 create_extension 'btree_gist'
 create_extension 'fuzzystrmatch'
 add_index(:comments, 'dmetaphone(author)', using: 'gist')
+```
+
+## Indexes with operator classes
+
+Specifying an [operator class on each column of an index](https://www.postgresql.org/docs/10/indexes-opclass.html) is supported.
+
+### Examples
+
+Add an index with a custom ops class:
+
+```ruby
+add_index(:books, "title varchar_pattern_ops")
 ```
 
 ## Concurrent index creation

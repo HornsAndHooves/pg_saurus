@@ -3,6 +3,6 @@ module PgSaurus::ConnectionAdapters
   # Overrides ActiveRecord::ConnectionAdapters::IndexDefinition
   # with the additional :where parameter.
   class IndexDefinition < Struct.new( :table, :name, :unique, :columns,
-                                      :lengths, :where, :access_method )
+                                      :lengths, :where, :access_method, :operators )
   end
 end
