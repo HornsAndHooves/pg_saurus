@@ -159,7 +159,7 @@ module ActiveRecord
                         column_name
                       end
 
-        result_name += "_" + operator_name if operator_name
+        result_name += "_" + operator_name.parameterize.underscore if operator_name
 
         result_name
       end
