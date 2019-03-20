@@ -2,11 +2,11 @@ module ActiveRecord
   module ConnectionAdapters # :nodoc:
     module SchemaStatements # :nodoc:
       # Regexp used to find the function name and function argument of a
-      # function call
+      # function call:
       FUNCTIONAL_INDEX_REGEXP = /(\w+)\(((?:'.+'(?:::\w+)?, *)*)(\w+)\)/
 
-      # Regexp used to find the operator name
-      OPERATOR_REGEXP = /(.+)\s(\w+)$/
+      # Regexp used to find the operator name (or operator string, e.g. "DESC NULLS LAST"):
+      OPERATOR_REGEXP = /(.+?)\s([\w\s]+)$/
 
       # Redefine original add_index method to handle :concurrently option.
       #
@@ -159,7 +159,7 @@ module ActiveRecord
                         column_name
                       end
 
-        result_name += "_" + operator_name if operator_name
+        result_name += "_" + operator_name.parameterize.underscore if operator_name
 
         result_name
       end
