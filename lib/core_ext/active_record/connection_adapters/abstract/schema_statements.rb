@@ -2,7 +2,7 @@ module ActiveRecord
   module ConnectionAdapters # :nodoc:
     module SchemaStatements # :nodoc:
       # Regexp used to find the function name and function argument of a
-      # function call
+      # function call:
       FUNCTIONAL_INDEX_REGEXP = /(\w+)\(((?:'.+'(?:::\w+)?, *)*)(\w+)\)/
 
       # Regexp used to find the operator name (or operator string, e.g. "DESC NULLS LAST"):
