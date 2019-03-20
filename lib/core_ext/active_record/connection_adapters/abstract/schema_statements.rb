@@ -5,8 +5,8 @@ module ActiveRecord
       # function call
       FUNCTIONAL_INDEX_REGEXP = /(\w+)\(((?:'.+'(?:::\w+)?, *)*)(\w+)\)/
 
-      # Regexp used to find the operator name
-      OPERATOR_REGEXP = /(.+)\s(\w+)$/
+      # Regexp used to find the operator name (or operator string, e.g. "DESC NULLS LAST"):
+      OPERATOR_REGEXP = /(.+?)\s([\w\s]+)$/
 
       # Redefine original add_index method to handle :concurrently option.
       #
