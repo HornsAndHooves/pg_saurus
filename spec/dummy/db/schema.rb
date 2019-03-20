@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190213151821) do
+ActiveRecord::Schema.define(version: 20190320025645) do
 
   create_schema "demography"
   create_schema "later"
@@ -113,6 +113,7 @@ ActiveRecord::Schema.define(version: 20190213151821) do
   add_index "pets", ["breed_id"], :name => "index_pets_on_breed_id"
   add_index "pets", ["color"], :name => "index_pets_on_color"
   add_index "pets", ["country_id"], :name => "index_pets_on_country_id"
+  add_index "pets", ["lower(name) DESC NULLS LAST"], :name => "index_pets_on_lower_name_desc_nulls_last"
   add_index "pets", ["lower(name)"], :name => "index_pets_on_lower_name"
   add_index "pets", ["to_tsvector('english'::regconfig, name)"], :name => "index_pets_on_to_tsvector_name_gist", :using => "gist"
   add_index "pets", ["upper(color)"], :name => "index_pets_on_upper_color", :where => "(name IS NULL)"
