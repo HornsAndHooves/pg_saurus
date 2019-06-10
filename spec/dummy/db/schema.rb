@@ -44,10 +44,12 @@ ActiveRecord::Schema.define(version: 20190320025645) do
 
   create_table "books", force: :cascade do |t|
     t.string   "title"
+    t.json     "tags"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
+  add_index "books", "((((tags -> 'attrs'::text) ->> 'edition'::text))::integer)", :name => "books_tags_json_index", :skip_column_quoting => true
   add_index "books", ["title varchar_pattern_ops"], :name => "index_books_on_title_varchar_pattern_ops"
 
   create_table "breeds", force: :cascade do |t|
