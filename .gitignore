@@ -15,6 +15,11 @@ spec/dummy/tmp/
 
 .idea
 
+TAGS
+ctags
+mtags
+tags
+
 # exclude everything in tmp
 tmp/*
 # except the metric_fu directory
