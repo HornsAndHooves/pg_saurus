@@ -21,9 +21,11 @@ module ActiveRecord #:nodoc:
             column_name
           end
 
+          is_json_index = (columns.count == 1 && columns.first =~ /^(.+->.+)$/)
+
           statement_parts = [
             ('add_index ' + index.table.inspect),
-            columns.inspect,
+            is_json_index ? "\"#{columns.first}\"" : columns.inspect,
             (':name => ' + index.name.inspect),
           ]
           statement_parts << ':unique => true' if index.unique
@@ -36,6 +38,8 @@ module ActiveRecord #:nodoc:
           statement_parts << (':where => ' + index.where.inspect) if index.where
 
           statement_parts << (':using => ' + index.access_method.inspect) unless index.access_method.downcase == 'btree'
+
+          statement_parts << ':skip_column_quoting => true' if is_json_index
 
           '  ' + statement_parts.join(', ')
         end
