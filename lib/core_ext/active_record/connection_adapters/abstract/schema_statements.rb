@@ -27,6 +27,10 @@ module ActiveRecord
       def add_index_with_concurrently(table_name, column_name, options = {})
         creation_method = options.delete(:concurrently) ? 'CONCURRENTLY' : nil
 
+        # Whether to skip the quoting of columns. Used only for expressions like JSON indexes in which
+        # the column is difficult to target for quoting.
+        skip_column_quoting = options.delete(:skip_column_quoting) or false
+
         index_name,
         index_type,
         index_columns,
@@ -59,7 +63,8 @@ module ActiveRecord
         statements << "ON"
         statements << quote_table_name(table_name)
         statements << index_using          if index_using.present?
-        statements << "(#{index_columns})" if index_columns.present?
+        statements << "(#{index_columns})" if index_columns.present? unless skip_column_quoting
+        statements << "(#{column_name})"   if column_name.present? and skip_column_quoting
         statements << index_options        if index_options.present?
 
         sql = statements.join(' ')
@@ -141,7 +146,7 @@ module ActiveRecord
                         else
                           quote_column_name(column_name)
                         end
-          
+
           result_name += " " + operator_name if operator_name
 
           result_name
