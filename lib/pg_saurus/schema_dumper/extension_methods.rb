@@ -2,8 +2,8 @@
 module PgSaurus::SchemaDumper::ExtensionMethods
   # Hook ActiveRecord::SchemaDumper#header method to dump extensions in all
   # schemas except for pg_catalog.
-  def header_with_extensions(stream)
-    header_without_extensions(stream)
+  def header(stream)
+    super(stream)
     dump_extensions(stream)
     stream
   end

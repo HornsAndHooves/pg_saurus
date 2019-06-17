@@ -12,9 +12,20 @@ module PgSaurus
           require ::PgSaurus::Engine.root + 'lib/core_ext/active_record/' + path
         end
 
-        ActiveRecord::SchemaDumper.class_eval { include ::PgSaurus::SchemaDumper }
+        ActiveRecord::SchemaDumper.class_eval do
+          prepend ::PgSaurus::SchemaDumper::SchemaMethods
+          prepend ::PgSaurus::SchemaDumper::ExtensionMethods
+          prepend ::PgSaurus::SchemaDumper::ViewMethods
+          prepend ::PgSaurus::SchemaDumper::FunctionMethods
+          prepend ::PgSaurus::SchemaDumper::CommentMethods
+          prepend ::PgSaurus::SchemaDumper::TriggerMethods
+          prepend ::PgSaurus::SchemaDumper::ForeignKeyMethods
+
+          include ::PgSaurus::SchemaDumper
+        end
 
         ActiveRecord::Migration.class_eval do
+          prepend ::PgSaurus::Migration::SetRoleMethod::Extension
           include ::PgSaurus::Migration::SetRoleMethod
         end
 
@@ -30,7 +41,7 @@ module PgSaurus
           include ::PgSaurus::CreateIndexConcurrently::Migration
         end
         ActiveRecord::Migrator.class_eval do
-          include ::PgSaurus::CreateIndexConcurrently::Migrator
+          prepend PgSaurus::CreateIndexConcurrently::Migrator
         end
         ActiveRecord::MigrationProxy.class_eval do
           include ::PgSaurus::CreateIndexConcurrently::MigrationProxy
@@ -41,6 +52,7 @@ module PgSaurus
         end
 
         ActiveRecord::ConnectionAdapters::AbstractAdapter.module_eval do
+          prepend ::PgSaurus::ConnectionAdapters::AbstractAdapter::SchemaMethods
           include ::PgSaurus::ConnectionAdapters::AbstractAdapter
         end
 
@@ -51,6 +63,9 @@ module PgSaurus
         end
 
         sql_adapter_class.class_eval do
+          prepend ::PgSaurus::ConnectionAdapters::PostgreSQLAdapter::SchemaMethods
+          prepend ::PgSaurus::ConnectionAdapters::PostgreSQLAdapter::ForeignKeyMethods
+
           include ::PgSaurus::ConnectionAdapters::PostgreSQLAdapter
         end
 

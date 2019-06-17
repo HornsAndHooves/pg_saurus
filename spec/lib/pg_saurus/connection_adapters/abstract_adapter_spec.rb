@@ -2,9 +2,6 @@ require 'spec_helper'
 
 describe PgSaurus::ConnectionAdapters::AbstractAdapter do
   class AbstractAdapterStub
-    def self.alias_method_chain(*args)
-    end
-
     include ::PgSaurus::ConnectionAdapters::AbstractAdapter
   end
 

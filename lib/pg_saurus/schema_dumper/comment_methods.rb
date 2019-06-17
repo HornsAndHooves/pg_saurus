@@ -2,8 +2,8 @@
 module PgSaurus::SchemaDumper::CommentMethods
   # Hook ActiveRecord::SchemaDumper#table method to dump comments on
   # table and columns.
-  def tables_with_comments(stream)
-    tables_without_comments(stream)
+  def tables(stream)
+    super(stream)
 
     # Dump table and column comments
     @connection.tables.sort.each do |table_name|

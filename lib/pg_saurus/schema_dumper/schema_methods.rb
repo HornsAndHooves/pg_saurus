@@ -2,8 +2,8 @@
 # and tables from those schemas.
 module PgSaurus::SchemaDumper::SchemaMethods
   # Dump create schema statements
-  def header_with_schemas(stream)
-    header_without_schemas(stream)
+  def header(stream)
+    super(stream)
     schemas(stream)
     stream
   end

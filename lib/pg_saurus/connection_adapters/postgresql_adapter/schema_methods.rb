@@ -35,11 +35,11 @@ module PgSaurus::ConnectionAdapters::PostgreSQLAdapter::SchemaMethods
   end
 
   # Provide :schema option to +drop_table+ method.
-  def drop_table_with_schema_option(table_name, options = {})
+  def drop_table(table_name, options = {})
     options     = options.dup
     schema_name = options.delete(:schema)
     table_name  = "#{schema_name}.#{table_name}" if schema_name
-    drop_table_without_schema_option(table_name, options)
+    super(table_name, options)
   end
 
   # Make method +tables+ return tables not only from public schema.
@@ -51,8 +51,8 @@ module PgSaurus::ConnectionAdapters::PostgreSQLAdapter::SchemaMethods
   #   See: https://github.com/TMXCredit/pg_power/pull/42
   #
   # @return [Array<String>] table names
-  def tables_with_non_public_schema_tables(*args)
-    public_tables = tables_without_non_public_schema_tables(*args)
+  def tables(*args)
+    public_tables = super(*args)
 
     non_public_tables =
       query(<<-SQL, 'SCHEMA').map { |row| row[0] }
@@ -65,14 +65,14 @@ module PgSaurus::ConnectionAdapters::PostgreSQLAdapter::SchemaMethods
   end
 
   # Provide :schema option to +rename_table+ method.
-  def rename_table_with_schema_option(table_name, new_name, options = {})
+  def rename_table(table_name, new_name, options = {})
     schema_name = options[:schema]
     if schema_name
       in_schema schema_name do
-        rename_table_without_schema_option(table_name, new_name)
+        super(table_name, new_name)
       end
     else
-      rename_table_without_schema_option(table_name, new_name)
+      super(table_name, new_name)
     end
   end
 

@@ -1,8 +1,8 @@
 # Extends ActiveRecord::SchemaDumper class to dump views
 module PgSaurus::SchemaDumper::ViewMethods
   # Dump create view statements
-  def tables_with_views(stream)
-    tables_without_views(stream)
+  def tables(stream)
+    super(stream)
     views(stream)
     stream
   end

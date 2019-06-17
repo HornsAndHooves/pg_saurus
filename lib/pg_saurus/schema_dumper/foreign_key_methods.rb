@@ -3,7 +3,7 @@
 module PgSaurus::SchemaDumper::ForeignKeyMethods
 
   # See activerecord/lib/active_record/schema_dumper.rb
-  def foreign_keys_with_indexes(table, stream)
+  def foreign_keys(table, stream)
     if (foreign_keys = @connection.foreign_keys(table)).any?
       add_foreign_key_statements = foreign_keys.map do |foreign_key|
 

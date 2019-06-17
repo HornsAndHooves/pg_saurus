@@ -3,7 +3,6 @@
 # and tables.
 module PgSaurus::SchemaDumper
   extend ActiveSupport::Autoload
-  extend ActiveSupport::Concern
 
   autoload :ExtensionMethods
   autoload :CommentMethods
@@ -20,16 +19,4 @@ module PgSaurus::SchemaDumper
   include ViewMethods
   include FunctionMethods
   include TriggerMethods
-
-  included do
-    alias_method_chain :header, :schemas
-    alias_method_chain :header, :extensions
-
-    alias_method_chain :tables, :views
-    alias_method_chain :tables, :functions
-    alias_method_chain :tables, :triggers
-    alias_method_chain :tables, :comments
-
-    alias_method_chain :foreign_keys, :indexes
-  end
 end

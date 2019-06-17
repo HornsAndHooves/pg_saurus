@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe PgSaurus::ConnectionAdapters::PostgreSQLAdapter::ForeignKeyMethods do
   class PostgreSQLAdapter
-    include ::PgSaurus::ConnectionAdapters::PostgreSQLAdapter::ForeignKeyMethods
+    prepend ::PgSaurus::ConnectionAdapters::PostgreSQLAdapter::ForeignKeyMethods
   end
 
   let(:adapter_stub) { PostgreSQLAdapter.new }

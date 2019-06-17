@@ -146,20 +146,13 @@ module PgSaurus::CreateIndexConcurrently
   # @see ::ActiveRecord::Migrator.migrate
   # @see ::ActiveRecord::Migrator.ddl_transaction
   module Migrator
-    extend ActiveSupport::Concern
-
-    # :nodoc:
-    def self.included(klass)
-      klass.alias_method_chain :ddl_transaction, :postponed_queries
-    end
-
     # Override (see ::ActiveRecord::Migrator.ddl_transaction) to call
     # (see ::PgSaurus::CreateIndexConcurrently::Migration.process_postponed_queries)
     # immediately after transaction.
     #
     # @see ::ActiveRecord::Migrator.ddl_transaction
-    def ddl_transaction_with_postponed_queries(*args, &block)
-      ddl_transaction_without_postponed_queries(*args, &block)
+    def ddl_transaction(*args, &block)
+      super(*args, &block)
 
       # GOTCHA:
       #   This might be a bit tricky, but I've decided that this is the best
