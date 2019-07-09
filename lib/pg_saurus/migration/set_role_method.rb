@@ -40,6 +40,8 @@ module PgSaurus
       self.class.keep_default_role?
     end
 
+    # Module to be prepended into ActiveRecord::Migration which allows
+    # enhancing the exec_migration method.
     module Extension
       # Wrap original `exec_migration` to run migration with set role.
       #
