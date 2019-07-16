@@ -150,8 +150,6 @@ ActiveRecord::Schema.define(version: 20190320025645) do
    FROM demography.citizens;
   SQL
 
-  create_trigger 'pets', 'pets_not_empty_trigger_proc()', 'AFTER INSERT', name: 'trigger_pets_not_empty_trigger_proc', constraint: true, for_each: :row, deferrable: true, initially_deferred: false, schema: 'public', condition: '(new.name::text = \'fluffy\'::text)'
-
   set_table_comment 'books', 'Information about books'
   set_column_comment 'books', 'title', 'Book title'
 
@@ -169,5 +167,7 @@ ActiveRecord::Schema.define(version: 20190320025645) do
 
   set_index_comment 'demography.index_demography_citizens_on_country_id_and_user_id', 'Unique index on active citizens'
   set_index_comment 'index_pets_on_to_tsvector_name_gist', 'Functional index on name'
+
+  create_trigger 'pets', 'pets_not_empty_trigger_proc()', 'AFTER INSERT', name: 'trigger_pets_not_empty_trigger_proc', constraint: true, for_each: :row, deferrable: true, initially_deferred: false, schema: 'public', condition: '(new.name::text = \'fluffy\'::text)'
 
 end

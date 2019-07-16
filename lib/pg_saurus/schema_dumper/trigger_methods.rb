@@ -2,8 +2,8 @@
 module PgSaurus::SchemaDumper::TriggerMethods
 
   # :nodoc
-  def tables_with_triggers(stream)
-    tables_without_triggers(stream)
+  def tables(stream)
+    super(stream)
 
     dump_triggers(stream)
     stream.puts

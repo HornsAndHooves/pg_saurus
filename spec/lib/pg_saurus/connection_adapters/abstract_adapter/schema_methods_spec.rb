@@ -5,9 +5,6 @@ describe PgSaurus::ConnectionAdapters::AbstractAdapter::SchemaMethods do
 
   describe "#create_table_with_schema_option" do
     it "creates table with schema option" do
-      expect(connection).to receive(:create_table_without_schema_option).
-        with("demography.something", {}).and_call_original
-
       connection.create_table("something", schema: "demography")
 
       expect(connection.table_exists?("demography.something")).to be true

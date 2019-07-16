@@ -28,8 +28,6 @@ module PgSaurus
           @keep_default_role
         end
       end
-
-      alias_method_chain :exec_migration, :role
     end
 
     # Get role
@@ -42,33 +40,37 @@ module PgSaurus
       self.class.keep_default_role?
     end
 
-    # Wrap original `exec_migration` to run migration with set role.
-    #
-    # @param conn [ActiveRecord::ConnectionAdapters::PostgreSQLAdapter]
-    # @param direction [Symbol] :up or :down
-    #
-    # @return [void]
-    def exec_migration_with_role(conn, direction)
-      if role
-        begin
-          conn.execute "SET ROLE #{role}"
-          exec_migration_without_role(conn, direction)
-        ensure
-          conn.execute "RESET ROLE"
+    # Module to be prepended into ActiveRecord::Migration which allows
+    # enhancing the exec_migration method.
+    module Extension
+      # Wrap original `exec_migration` to run migration with set role.
+      #
+      # @param conn [ActiveRecord::ConnectionAdapters::PostgreSQLAdapter]
+      # @param direction [Symbol] :up or :down
+      #
+      # @return [void]
+      def exec_migration(conn, direction)
+        if role
+          begin
+            conn.execute "SET ROLE #{role}"
+            super(conn, direction)
+          ensure
+            conn.execute "RESET ROLE"
+          end
+        elsif PgSaurus.config.ensure_role_set && !keep_default_role?
+          msg =
+            "Role for migration #{self.class} is not set\n\n" \
+            "You've configured PgSaurus with ensure_role_set=true. \n" \
+            "That means that every migration must explicitly set role with set_role method.\n\n" \
+            "Example:\n" \
+            "  class CreateNewTable < ActiveRecord::Migration\n" \
+            "    set_role \"superhero\"\n" \
+            "  end\n\n" \
+            "If you want to set ensure_role_set=false, take a look at config/initializers/pg_saurus.rb\n\n"
+          raise PgSaurus::RoleNotSetError, msg
+        else
+          super(conn, direction)
         end
-      elsif PgSaurus.config.ensure_role_set && !keep_default_role?
-        msg =
-          "Role for migration #{self.class} is not set\n\n" \
-          "You've configured PgSaurus with ensure_role_set=true. \n" \
-          "That means that every migration must explicitly set role with set_role method.\n\n" \
-          "Example:\n" \
-          "  class CreateNewTable < ActiveRecord::Migration\n" \
-          "    set_role \"superhero\"\n" \
-          "  end\n\n" \
-          "If you want to set ensure_role_set=false, take a look at config/initializers/pg_saurus.rb\n\n"
-        raise PgSaurus::RoleNotSetError, msg
-      else
-        exec_migration_without_role(conn, direction)
       end
     end
 

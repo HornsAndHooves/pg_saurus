@@ -7,8 +7,6 @@ rails_version = ENV['RAILS_VERSION'] || '~> 4.2'
 # Using 'platforms' is contraindicated because they won't make it into
 # the gemspec correctly.
 version2x = (RUBY_VERSION =~ /^2\.\d/)
-version19 = (RUBY_VERSION =~ /^1\.9/)
-version18 = (RUBY_VERSION =~ /^1\.8/)
 
 # 2017-01-12: Note: The GitHub pg mirror lacks the recent tags appearing in the Bitbucket Hg repo:
 # https://github.com/ged/ruby-pg/blob/master/History.rdoc
@@ -26,18 +24,12 @@ group :development do
   gem 'rspec-rails'
 
   # code metrics:
-  gem 'rcov' if version18
   gem 'yard'
-  gem 'metrical' , :require => false if version18
-  gem 'metric_fu', :require => false unless version18
+  gem 'metric_fu', :require => false
   gem 'jeweler'  , :require => false
 
 
   unless ENV["RM_INFO"]
-    # RubyMine internal debugger conflicts with ruby-debug.
-    # So, require it only when it's run outside of RubyMine:
-    gem "ruby-debug"   if version18
-    gem "ruby-debug19" if version19
     # debugger does not support Ruby 2.x:
     # ref: https://github.com/cldwalker/debugger/issues/125#issuecomment-43353446
     gem "byebug"       if version2x
@@ -50,9 +42,6 @@ group :development, :test do
 end
 
 group :test do
-  # Only load simplecov for Ruby 1.9+, use rcov above for 1.8.
-  unless version18
-    gem 'simplecov'          , :require => false
-    gem 'simplecov-rcov-text', :require => false
-  end
+  gem 'simplecov'          , :require => false
+  gem 'simplecov-rcov-text', :require => false
 end

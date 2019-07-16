@@ -26,16 +26,6 @@ module PgSaurus::ConnectionAdapters::PostgreSQLAdapter
   include TriggerMethods
 
   included do
-    alias_method_chain :tables, :non_public_schema_tables
-    alias_method_chain :add_index, :concurrently
-    alias_method_chain :drop_table, :schema_option
-    alias_method_chain :rename_table, :schema_option
-
-    alias_method_chain :add_foreign_key, :index
-    alias_method_chain :remove_foreign_key, :index
-    alias_method_chain :foreign_key_column_for, :schema
-    alias_method_chain :foreign_keys, :schema
-
     ::ActiveRecord::ConnectionAdapters::ForeignKeyDefinition.module_eval do
       def from_schema
         options[:from_schema] || 'public'

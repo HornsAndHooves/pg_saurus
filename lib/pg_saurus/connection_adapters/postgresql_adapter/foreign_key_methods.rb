@@ -24,7 +24,7 @@ module PgSaurus # :nodoc:
     # See activerecord/lib/active_record/connection_adapters/abstract/schema_statements.rb
     # Creates index on the FK column by default. Pass in the option :exclude_index => true
     # to disable this.
-    def add_foreign_key_with_index(from_table, to_table, options = {})
+    def add_foreign_key(from_table, to_table, options = {})
       exclude_index = (options.has_key?(:exclude_index) ? options.delete(:exclude_index) : false)
       column        = options[:column] || foreign_key_column_for(to_table)
 
@@ -34,7 +34,7 @@ module PgSaurus # :nodoc:
           "  Use :exclude_index => true when adding the foreign key."
       end
 
-      add_foreign_key_without_index from_table, to_table, options
+      super from_table, to_table, options
 
       unless exclude_index
         add_index from_table, column
@@ -42,24 +42,24 @@ module PgSaurus # :nodoc:
     end
 
     # See activerecord/lib/active_record/connection_adapters/abstract/schema_statements.rb
-    def remove_foreign_key_with_index(from_table, options_or_to_table = {})
+    def remove_foreign_key(from_table, options_or_to_table = {})
       if options_or_to_table.is_a?(Hash) && options_or_to_table[:remove_index]
         column = options_or_to_table[:column]
         remove_index from_table, column
       end
 
-      remove_foreign_key_without_index(from_table, options_or_to_table)
+      super(from_table, options_or_to_table)
     end
 
     # See: activerecord/lib/active_record/connection_adapters/abstract/schema_statements.rb
-    def foreign_key_column_for_with_schema(table_name)
+    def foreign_key_column_for(table_name)
       table = table_name.to_s.split('.').last
 
-      foreign_key_column_for_without_schema table
+      super table
     end
 
     # see activerecord/lib/active_record/connection_adapters/postgresql/schema_statements.rb
-    def foreign_keys_with_schema(table_name)
+    def foreign_keys(table_name)
       namespace  = table_name.to_s.split('.').first
       table_name = table_name.to_s.split('.').last
 

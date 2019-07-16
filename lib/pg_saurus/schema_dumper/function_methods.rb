@@ -2,12 +2,12 @@
 module PgSaurus::SchemaDumper::FunctionMethods
 
   # :nodoc
-  def tables_with_functions(stream)
+  def tables(stream)
     # Functions must be dumped before tables.
     # Some indexes may use defined functions.
     dump_functions stream
 
-    tables_without_functions(stream)
+    super(stream)
 
     stream
   end
