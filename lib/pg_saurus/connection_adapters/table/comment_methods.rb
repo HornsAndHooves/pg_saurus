@@ -32,8 +32,8 @@ module PgSaurus::ConnectionAdapters::Table::CommentMethods
   #
   # ===== Example
   # ====== Setting comments on the columns of the phone_numbers table
-  #  t.set_column_comments :npa => 'Numbering Plan Area Code - Allowed ranges: [2-9] for first digit, [0-9] for second and third digit.',
-  #                        :nxx => 'Central Office Number'
+  #  t.set_column_comments npa: 'Numbering Plan Area Code - Allowed ranges: [2-9] for first digit, [0-9] for second and third digit.',
+  #                        nxx: 'Central Office Number'
   def set_column_comments(comments)
     @base.set_column_comments(@name, comments)
   end

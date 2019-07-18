@@ -15,7 +15,7 @@ class CreateUsers < ActiveRecord::Migration
     set_column_comment :users, :name, "User name"
 
     set_column_comments :users,
-      :email        => "Email address",
-      :phone_number => "Phone number"
+      email: "Email address",
+      phone_number: "Phone number"
   end
 end

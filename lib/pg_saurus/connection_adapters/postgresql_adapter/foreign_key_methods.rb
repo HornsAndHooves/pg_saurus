@@ -22,7 +22,7 @@ module PgSaurus # :nodoc:
     end
 
     # See activerecord/lib/active_record/connection_adapters/abstract/schema_statements.rb
-    # Creates index on the FK column by default. Pass in the option :exclude_index => true
+    # Creates index on the FK column by default. Pass in the option exclude_index: true
     # to disable this.
     def add_foreign_key(from_table, to_table, options = {})
       exclude_index = (options.has_key?(:exclude_index) ? options.delete(:exclude_index) : false)
@@ -31,7 +31,7 @@ module PgSaurus # :nodoc:
       if index_exists?(from_table, column) && !exclude_index
         raise PgSaurus::IndexExistsError,
               "The index, #{index_name(from_table, column)}, already exists." \
-          "  Use :exclude_index => true when adding the foreign key."
+          "  Use exclude_index: true when adding the foreign key."
       end
 
       super from_table, to_table, options

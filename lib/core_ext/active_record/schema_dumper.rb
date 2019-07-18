@@ -26,20 +26,20 @@ module ActiveRecord #:nodoc:
           statement_parts = [
             ('add_index ' + index.table.inspect),
             is_json_index ? "\"#{columns.first}\"" : columns.inspect,
-            (':name => ' + index.name.inspect),
+            ('name: ' + index.name.inspect),
           ]
-          statement_parts << ':unique => true' if index.unique
+          statement_parts << 'unique: true' if index.unique
 
           index_lengths = (index.lengths || []).compact
-          statement_parts << (':length => ' + Hash[index.columns.zip(index.lengths)].inspect) unless index_lengths.empty?
+          statement_parts << ('length: ' + Hash[index.columns.zip(index.lengths)].inspect) unless index_lengths.empty?
 
           # Patch
           #  Append :where clause if a partial index
-          statement_parts << (':where => ' + index.where.inspect) if index.where
+          statement_parts << ('where: ' + index.where.inspect) if index.where
 
-          statement_parts << (':using => ' + index.access_method.inspect) unless index.access_method.downcase == 'btree'
+          statement_parts << ('using: ' + index.access_method.inspect) unless index.access_method.downcase == 'btree'
 
-          statement_parts << ':skip_column_quoting => true' if is_json_index
+          statement_parts << 'skip_column_quoting: true' if is_json_index
 
           '  ' + statement_parts.join(', ')
         end

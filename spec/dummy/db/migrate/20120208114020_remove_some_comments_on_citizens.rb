@@ -5,7 +5,7 @@ class RemoveSomeCommentsOnCitizens < ActiveRecord::Migration
 
   def down
     set_column_comments 'demography.citizens',
-      :birthday   => "Birthday",
-      :bio        => "Biography"
+      birthday: "Birthday",
+      bio: "Biography"
   end
 end

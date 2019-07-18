@@ -3,16 +3,16 @@
 module PgSaurus::ConnectionAdapters::PostgreSQLAdapter::ExtensionMethods
   # Default options for {#create_extension} method.
   CREATE_EXTENSION_DEFAULTS = {
-      :if_not_exists => true,
-      :schema_name   => nil,
-      :version       => nil,
-      :old_version   => nil
+      if_not_exists: true,
+      schema_name: nil,
+      version: nil,
+      old_version: nil
   }
 
   # Default options for {#drop_extension} method.
   DROP_EXTENSION_DEFAULTS = {
-      :if_exists => true,
-      :mode      => :restrict
+      if_exists: true,
+      mode: :restrict
   }
 
   # The modes which determine postgresql behavior on DROP EXTENSION operation.
@@ -20,8 +20,8 @@ module PgSaurus::ConnectionAdapters::PostgreSQLAdapter::ExtensionMethods
   # *:restrict* refuse to drop the extension if any objects depend on it
   # *:cascade* automatically drop objects that depend on the extension
   AVAILABLE_DROP_MODES = {
-      :restrict => 'RESTRICT',
-      :cascade  => 'CASCADE'
+      restrict: 'RESTRICT',
+      cascade: 'CASCADE'
   }
 
   # @return [Boolean] if adapter supports postgresql extension manipulation
@@ -106,7 +106,7 @@ module PgSaurus::ConnectionAdapters::PostgreSQLAdapter::ExtensionMethods
   # ===Example
   #
   #   extension # => {
-  #     "fuzzystrmatch" => {:schema_name => "public", :version => "1.0" }
+  #     "fuzzystrmatch" => {schema_name: "public", version: "1.0" }
   #   }
   #
   # @return [Hash{String => Hash{Symbol => String}}] A list of loaded extensions with their options
@@ -127,8 +127,8 @@ module PgSaurus::ConnectionAdapters::PostgreSQLAdapter::ExtensionMethods
       [
           row['ext_name'],
           {
-              :schema_name => row['schema_name'],
-              :version => row['ext_version']
+              schema_name: row['schema_name'],
+              version: row['ext_version']
           }
       ]
     end

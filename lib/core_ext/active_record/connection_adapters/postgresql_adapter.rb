@@ -85,13 +85,13 @@ module ActiveRecord # :nodoc:
 
         result.map do |row|
           index = {
-            :name          => row[0],
-            :unique        => row[1] == 't',
-            :keys          => row[2].split(" "),
-            :definition    => row[3],
-            :id            => row[4],
-            :access_method => row[5], 
-            :operators     => row[6].split(" ")
+            name: row[0],
+            unique: row[1] == 't',
+            keys: row[2].split(" "),
+            definition: row[3],
+            id: row[4],
+            access_method: row[5], 
+            operators: row[6].split(" ")
           }
 
           column_names = find_column_names(table_name, index)

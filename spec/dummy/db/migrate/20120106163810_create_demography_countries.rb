@@ -10,7 +10,7 @@ class CreateDemographyCountries < ActiveRecord::Migration
     set_table_comment 'demography.countries', "Countries"
 
     set_column_comments 'demography.countries',
-      :name => "Country name",
-      :continent => "Continent"
+      name: "Country name",
+      continent: "Continent"
   end
 end

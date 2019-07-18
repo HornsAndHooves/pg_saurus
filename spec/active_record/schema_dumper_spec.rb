@@ -48,8 +48,8 @@ describe ActiveRecord::SchemaDumper do
 
     context "Extensions" do
       it 'dumps loaded extension modules' do
-        @dump.should =~ /create_extension "fuzzystrmatch", :version => "\d+\.\d+"/
-        @dump.should =~ /create_extension "btree_gist", :schema_name => "demography", :version => "\d+\.\d+"/
+        @dump.should =~ /create_extension "fuzzystrmatch", version: "\d+\.\d+"/
+        @dump.should =~ /create_extension "btree_gist", schema_name: "demography", version: "\d+\.\d+"/
       end
     end
 
@@ -72,7 +72,7 @@ describe ActiveRecord::SchemaDumper do
         # foreign key :exclude_index
         @dump.should_not =~ /add_index "demography\.citizens", \["user_id"\]/
         # partial index
-        @dump.should =~ /add_index "demography.citizens", \["country_id", "user_id"\].*:where => "active"/
+        @dump.should =~ /add_index "demography.citizens", \["country_id", "user_id"\].*where: "active"/
       end
 
       # This index is added via add_foreign_key
@@ -85,16 +85,16 @@ describe ActiveRecord::SchemaDumper do
       end
 
       it 'dumps partial functional indexes' do
-        @dump.should =~ /add_index "pets", \["upper\(color\)"\].*:where => "\(name IS NULL\)"/
+        @dump.should =~ /add_index "pets", \["upper\(color\)"\].*where: "\(name IS NULL\)"/
       end
 
       it 'dumps indexes with non-default access method' do
-        @dump.should =~ Regexp.new(Regexp.quote('add_index "pets", ["user_id"], :name => "index_pets_on_user_id_gist", :using => "gist"'))
+        @dump.should =~ Regexp.new(Regexp.quote('add_index "pets", ["user_id"], name: "index_pets_on_user_id_gist", using: "gist"'))
       end
 
       it 'dumps indexes with non-default access method and multiple args' do
         @dump.should =~ Regexp.new(Regexp.quote(
-          'add_index "pets", ["to_tsvector(\'english\'::regconfig, name)"], :name => "index_pets_on_to_tsvector_name_gist", :using => "gist"'
+          'add_index "pets", ["to_tsvector(\'english\'::regconfig, name)"], name: "index_pets_on_to_tsvector_name_gist", using: "gist"'
         ))
       end
 

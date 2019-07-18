@@ -36,8 +36,8 @@ module PgSaurus::SchemaDumper::ForeignKeyMethods
         # Always exclude the index
         #  If an index was created in a migration, it will get dumped to the schema
         #  separately from the foreign key.  This will raise an exception if
-        #  add_foreign_key is run without :exclude_index => true.
-        parts << ":exclude_index => true"
+        #  add_foreign_key is run without exclude_index: true.
+        parts << "exclude_index: true"
 
         "  #{parts.join(', ')}"
       end

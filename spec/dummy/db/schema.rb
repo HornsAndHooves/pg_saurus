@@ -17,8 +17,8 @@ ActiveRecord::Schema.define(version: 20190320025645) do
   create_schema "later"
   create_schema "latest"
 
-  create_extension "fuzzystrmatch", :version => "1.1"
-  create_extension "btree_gist", :schema_name => "demography", :version => "1.2"
+  create_extension "fuzzystrmatch", version: "1.1"
+  create_extension "btree_gist", schema_name: "demography", version: "1.2"
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -49,8 +49,8 @@ ActiveRecord::Schema.define(version: 20190320025645) do
     t.datetime "updated_at"
   end
 
-  add_index "books", "((((tags -> 'attrs'::text) ->> 'edition'::text))::integer)", :name => "books_tags_json_index", :skip_column_quoting => true
-  add_index "books", ["title varchar_pattern_ops"], :name => "index_books_on_title_varchar_pattern_ops"
+  add_index "books", "((((tags -> 'attrs'::text) ->> 'edition'::text))::integer)", name: "books_tags_json_index", skip_column_quoting: true
+  add_index "books", ["title varchar_pattern_ops"], name: "index_books_on_title_varchar_pattern_ops"
 
   create_table "breeds", force: :cascade do |t|
     t.string   "name"
@@ -63,7 +63,7 @@ ActiveRecord::Schema.define(version: 20190320025645) do
     t.integer "name"
   end
 
-  add_index "demography.cities", ["country_id"], :name => "index_demography_cities_on_country_id"
+  add_index "demography.cities", ["country_id"], name: "index_demography_cities_on_country_id"
 
   create_table "demography.citizens", force: :cascade do |t|
     t.integer  "country_id"
@@ -77,7 +77,7 @@ ActiveRecord::Schema.define(version: 20190320025645) do
     t.boolean  "active",     default: false, null: false
   end
 
-  add_index "demography.citizens", ["country_id", "user_id"], :name => "index_demography_citizens_on_country_id_and_user_id", :unique => true, :where => "active"
+  add_index "demography.citizens", ["country_id", "user_id"], name: "index_demography_citizens_on_country_id_and_user_id", unique: true, where: "active"
 
   create_table "demography.countries", force: :cascade do |t|
     t.string   "name"
@@ -112,15 +112,15 @@ ActiveRecord::Schema.define(version: 20190320025645) do
     t.boolean "active",     default: true
   end
 
-  add_index "pets", ["breed_id"], :name => "index_pets_on_breed_id"
-  add_index "pets", ["color"], :name => "index_pets_on_color"
-  add_index "pets", ["country_id"], :name => "index_pets_on_country_id"
-  add_index "pets", ["lower(name) DESC NULLS LAST"], :name => "index_pets_on_lower_name_desc_nulls_last"
-  add_index "pets", ["lower(name)"], :name => "index_pets_on_lower_name"
-  add_index "pets", ["to_tsvector('english'::regconfig, name)"], :name => "index_pets_on_to_tsvector_name_gist", :using => "gist"
-  add_index "pets", ["upper(color)"], :name => "index_pets_on_upper_color", :where => "(name IS NULL)"
-  add_index "pets", ["user_id"], :name => "index_pets_on_user_id"
-  add_index "pets", ["user_id"], :name => "index_pets_on_user_id_gist", :using => "gist"
+  add_index "pets", ["breed_id"], name: "index_pets_on_breed_id"
+  add_index "pets", ["color"], name: "index_pets_on_color"
+  add_index "pets", ["country_id"], name: "index_pets_on_country_id"
+  add_index "pets", ["lower(name) DESC NULLS LAST"], name: "index_pets_on_lower_name_desc_nulls_last"
+  add_index "pets", ["lower(name)"], name: "index_pets_on_lower_name"
+  add_index "pets", ["to_tsvector('english'::regconfig, name)"], name: "index_pets_on_to_tsvector_name_gist", using: "gist"
+  add_index "pets", ["upper(color)"], name: "index_pets_on_upper_color", where: "(name IS NULL)"
+  add_index "pets", ["user_id"], name: "index_pets_on_user_id"
+  add_index "pets", ["user_id"], name: "index_pets_on_user_id_gist", using: "gist"
 
   create_table "users", force: :cascade do |t|
     t.string   "name"
@@ -130,12 +130,12 @@ ActiveRecord::Schema.define(version: 20190320025645) do
     t.datetime "updated_at"
   end
 
-  add_index "users", ["email"], :name => "index_users_on_email"
-  add_index "users", ["name"], :name => "index_users_on_name"
+  add_index "users", ["email"], name: "index_users_on_email"
+  add_index "users", ["name"], name: "index_users_on_name"
 
-  add_foreign_key "demography.cities", "demography.countries", :exclude_index => true
-  add_foreign_key "demography.citizens", "users", :exclude_index => true
-  add_foreign_key "pets", "users", :exclude_index => true
+  add_foreign_key "demography.cities", "demography.countries", exclude_index: true
+  add_foreign_key "demography.citizens", "users", exclude_index: true
+  add_foreign_key "pets", "users", exclude_index: true
   create_view "demography.citizens_view", <<-SQL
      SELECT citizens.id,
     citizens.country_id,

@@ -24,7 +24,7 @@
 #
 #   class AddIndexToNameForUsers < ActiveRecord::Migration
 #     def change
-#       add_index :users, :name, :concurrently => true
+#       add_index :users, :name, concurrently: true
 #     end
 #   end
 #
@@ -32,7 +32,7 @@
 #
 #   class AddForeignKeyToRoleIdForUsers < ActiveRecord::Migration
 #     def change
-#       add_foreign_key :users, :roles, :concurrent_index => true
+#       add_foreign_key :users, :roles, concurrent_index: true
 #     end
 #   end
 #
@@ -133,7 +133,7 @@ module PgSaurus::CreateIndexConcurrently
   module MigrationProxy
     # :nodoc:
     def self.included(klass)
-      klass.delegate :process_postponed_queries, :to => :migration
+      klass.delegate :process_postponed_queries, to: :migration
     end
   end
 

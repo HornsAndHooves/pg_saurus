@@ -8,7 +8,7 @@ class AddForeignKeys < ActiveRecord::Migration
     add_foreign_key 'demography.citizens', 'demography.countries' # This foreign key is removed in RemoveForeignKeys migration
 
     # Add foreign key without an index
-    add_foreign_key 'demography.citizens', 'users', :exclude_index => true
+    add_foreign_key 'demography.citizens', 'users', exclude_index: true
 
   end
 end

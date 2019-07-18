@@ -15,8 +15,8 @@ module ActiveRecord
         # an Array of Symbols.
         #
         # ====== Creating a partial index
-        #  add_index(:accounts, [:branch_id, :party_id], :using => 'BTree'
-        #   :unique => true, :concurrently => true, :where => 'active')
+        #  add_index(:accounts, [:branch_id, :party_id], using: 'BTree'
+        #   unique: true, concurrently: true, where: 'active')
         # generates
         #  CREATE UNIQUE INDEX CONCURRENTLY
         #   index_accounts_on_branch_id_and_party_id
@@ -76,15 +76,15 @@ module ActiveRecord
         #
         # === Examples
         #  # Check that a partial index exists
-        #  index_exists?(:suppliers, :company_id, :where => 'active')
+        #  index_exists?(:suppliers, :company_id, where: 'active')
         #
         #  # GIVEN: 'index_suppliers_on_company_id' UNIQUE, btree (company_id) WHERE active
-        #  index_exists?(:suppliers, :company_id, :unique => true, :where => 'active') => true
-        #  index_exists?(:suppliers, :company_id, :unique => true) => false
+        #  index_exists?(:suppliers, :company_id, unique: true, where: 'active') => true
+        #  index_exists?(:suppliers, :company_id, unique: true) => false
         #
         def index_exists?(table_name, column_name, options = {})
           column_names = Array.wrap(column_name)
-          index_name = options.key?(:name) ? options[:name].to_s : index_name(table_name, :column => column_names)
+          index_name = options.key?(:name) ? options[:name].to_s : index_name(table_name, column: column_names)
 
           # Always compare the index name
           default_comparator = lambda { |index| index.name == index_name }
@@ -133,7 +133,7 @@ module ActiveRecord
               raise ArgumentError, "You must specify the index name"
             end
           else
-            index_name(table_name, :column => options)
+            index_name(table_name, column: options)
           end
         end
 

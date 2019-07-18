@@ -9,7 +9,7 @@ describe 'Foreign keys' do
     end
 
     # AddForeignKeys migration
-    #   add_foreign_key 'demography.citizens', 'users', :exclude_index => true
+    #   add_foreign_key 'demography.citizens', 'users', exclude_index: true
     it 'should not add an index on the foreign key when :exclude_index is true' do
       PgSaurus::Explorer.index_exists?('demography.citizens', :user_id).should == false
     end
@@ -26,7 +26,7 @@ describe 'Foreign keys' do
   describe '#remove_foreign_key' do
     # RemoveForeignKeys migration
     #   remove_foreign_key 'demography.citizens', 'demography.countries'
-    #   remove_foreign_key 'pets', :name => "pets_owner_id_fk"
+    #   remove_foreign_key 'pets', name: "pets_owner_id_fk"
     it 'removes foreign key' do
       PgSaurus::Explorer.has_foreign_key?('demography.citizens', :country_id).should == false
       PgSaurus::Explorer.has_foreign_key?('pets', :owner_id).should == false
@@ -34,15 +34,15 @@ describe 'Foreign keys' do
 
     # RemoveForeignKeys migration
     #   remove_foreign_key 'demography.citizens', 'demography.countries'
-    #   remove_foreign_key 'pets', :name => "pets_owner_id_fk"
+    #   remove_foreign_key 'pets', name: "pets_owner_id_fk"
     it 'removes the index on the foreign key' do
       PgSaurus::Explorer.index_exists?('demography.citizens', :country_id).should == false
       PgSaurus::Explorer.index_exists?('pets', :owner_id).should == false
     end
 
     # RemoveForeignKeys migration
-    #   remove_foreign_key 'pets', 'demography.countries', :exclude_index => true
-    #   remove_foreign_key 'pets', :name => "pets_breed_id_fk", :exclude_index => true
+    #   remove_foreign_key 'pets', 'demography.countries', exclude_index: true
+    #   remove_foreign_key 'pets', name: "pets_breed_id_fk", exclude_index: true
     it 'should remove foreign key but not remove the index when :exclude_index is true' do
       PgSaurus::Explorer.has_foreign_key?('pets', :country_id).should == false
       PgSaurus::Explorer.has_foreign_key?('pets', :breed_id).should == false
@@ -53,7 +53,7 @@ describe 'Foreign keys' do
     it 'should not raise an exception if the index does not exist' do
       expect {
         connection = ActiveRecord::Base::connection
-        connection.add_foreign_key 'pets', 'demography.citizens', :exclude_index => true
+        connection.add_foreign_key 'pets', 'demography.citizens', exclude_index: true
         connection.remove_foreign_key 'pets', 'demography.citizens'
       }.not_to raise_error
     end
