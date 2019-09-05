@@ -12,41 +12,23 @@ module ActiveRecord #:nodoc:
     # == Patch:
     # Append :where clause if there's a partial index
     #
-    def indexes(table, stream)
-      if (indexes = @connection.indexes(table)).any?
-        add_index_statements = indexes.map do |index|
-          columns = index.columns.map do |column_name|
-            column_name += ' ' +index.operators[column_name] if index.operators.key?(column_name)
+    def index_parts(index)
+      is_json_index = index.columns.is_a?(String) && index.columns =~ /^(.+->.+)$/
 
-            column_name
-          end
-
-          is_json_index = (columns.count == 1 && columns.first =~ /^(.+->.+)$/)
-
-          statement_parts = [
-            ('add_index ' + index.table.inspect),
-            is_json_index ? "\"#{columns.first}\"" : columns.inspect,
-            (':name => ' + index.name.inspect),
-          ]
-          statement_parts << ':unique => true' if index.unique
-
-          index_lengths = (index.lengths || []).compact
-          statement_parts << (':length => ' + Hash[index.columns.zip(index.lengths)].inspect) unless index_lengths.empty?
-
-          # Patch
-          #  Append :where clause if a partial index
-          statement_parts << (':where => ' + index.where.inspect) if index.where
-
-          statement_parts << (':using => ' + index.access_method.inspect) unless index.access_method.downcase == 'btree'
-
-          statement_parts << ':skip_column_quoting => true' if is_json_index
-
-          '  ' + statement_parts.join(', ')
-        end
-
-        stream.puts add_index_statements.sort.join("\n")
-        stream.puts
-      end
+      index_parts = [
+        index.columns.inspect,
+        "name: #{index.name.inspect}",
+      ]
+      index_parts << "unique: true" if index.unique
+      index_parts << "length: #{format_index_parts(index.lengths)}" if index.lengths.present?
+      index_parts << "order: #{format_index_parts(index.orders)}" if index.orders.present?
+      index_parts << "opclass: #{format_index_parts(index.opclasses)}" if index.opclasses.present?
+      index_parts << "where: #{index.where.inspect}" if index.where
+      index_parts << "using: #{index.using.inspect}" if !@connection.default_index_type?(index)
+      index_parts << "skip_column_quoting: true" if is_json_index
+      index_parts << "type: #{index.type.inspect}" if index.type
+      index_parts << "comment: #{index.comment.inspect}" if index.comment
+      index_parts
     end
   end
 end

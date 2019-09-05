@@ -29,7 +29,7 @@ module ActiveRecord # :nodoc:
       # == Patch:
       # Search using provided schema if table_name includes schema name.
       #
-      def index_name_exists?(table_name, index_name, default)
+      def index_name_exists?(table_name, index_name, default = nil)
         postgre_sql_name = PostgreSQL::Utils.extract_schema_qualified_name(table_name)
         schema, table = postgre_sql_name.schema, postgre_sql_name.identifier
         schemas = schema ? "ARRAY['#{schema}']" : 'current_schemas(false)'
@@ -65,106 +65,81 @@ module ActiveRecord # :nodoc:
       # Search the postgres indexdef for the where clause and pass the output to
       # the custom {PgSaurus::ConnectionAdapters::IndexDefinition}
       #
-      def indexes(table_name, name = nil)
-        postgre_sql_name = PostgreSQL::Utils.extract_schema_qualified_name(table_name)
-        schema, table = postgre_sql_name.schema, postgre_sql_name.identifier
-        schemas = schema ? "ARRAY['#{schema}']" : 'current_schemas(false)'
+      def indexes(table_name)
+        scope = quoted_scope(table_name)
 
-        result = query(<<-SQL, name)
-          SELECT distinct i.relname, d.indisunique, d.indkey,  pg_get_indexdef(d.indexrelid), t.oid, am.amname, d.indclass
+        result = query(<<-SQL, "SCHEMA")
+          SELECT distinct i.relname, d.indisunique, d.indkey, pg_get_indexdef(d.indexrelid), t.oid,
+                          am.amname, pg_catalog.obj_description(i.oid, 'pg_class') AS comment
           FROM pg_class t
-          INNER JOIN pg_index d ON t.oid = d.indrelid
-          INNER JOIN pg_class i ON d.indexrelid = i.oid
-          INNER JOIN pg_am    am ON i.relam = am.oid
+          INNER JOIN pg_index     d  ON t.oid = d.indrelid
+          INNER JOIN pg_class     i  ON d.indexrelid = i.oid
+          INNER JOIN pg_am        am ON i.relam = am.oid
+          LEFT JOIN  pg_namespace n  ON n.oid = i.relnamespace
           WHERE i.relkind = 'i'
             AND d.indisprimary = 'f'
-            AND t.relname = '#{table}'
-            AND i.relnamespace IN (SELECT oid FROM pg_namespace WHERE nspname = ANY (#{schemas}) )
-         ORDER BY i.relname
+            AND t.relname = #{scope[:name]}
+            AND n.nspname = #{scope[:schema]}
+          ORDER BY i.relname
         SQL
 
         result.map do |row|
-          index = {
-            :name          => row[0],
-            :unique        => row[1] == 't',
-            :keys          => row[2].split(" "),
-            :definition    => row[3],
-            :id            => row[4],
-            :access_method => row[5], 
-            :operators     => row[6].split(" ")
-          }
+          index_name = row[0]
+          unique = row[1]
+          indkey = row[2].split(" ").map(&:to_i)
+          inddef = row[3]
+          oid = row[4]
+          access_method = row[5]
+          comment = row[6]
 
-          column_names = find_column_names(table_name, index)
+          using, expressions, where = inddef.scan(/ USING (\w+?) \((.+?)\)(?: WHERE (.+))?\z/m).flatten
 
-          operator_names = find_operator_names(column_names, index)
+          orders = {}
+          opclasses = {}
 
-          unless column_names.empty?
-            where   = find_where_statement(index)
-            lengths = find_lengths(index)
+          if indkey.include?(0)
+            definition = inddef.sub(INDEX_WHERE_EXPRESSION, '')
 
-            PgSaurus::ConnectionAdapters::IndexDefinition.new(
-              table_name,
-              index[:name],
-              index[:unique],
-              column_names,
-              lengths,
-              where,
-              index[:access_method],
-              operator_names
-            )
-          end
-        end.compact
-      end
+            if column_expression = definition.match(INDEX_COLUMN_EXPRESSION)[1]
+              columns = split_expression(expressions).map do |functional_name|
+                remove_type(functional_name)
+              end
 
-      # Find column names from index attributes. If the columns are virtual (i.e.
-      # this is an expression index) then it will try to return the functions
-      # that represent each column.
-      #
-      # @param [String] table_name the name of the table, possibly schema-qualified
-      # @param [Hash] index index attributes
-      # @return [Array]
-      def find_column_names(table_name, index)
-        columns = Hash[query(<<-SQL, "Columns for index #{index[:name]} on #{table_name}")]
-          SELECT a.attnum, a.attname
-          FROM pg_attribute a
-          WHERE a.attrelid = #{index[:id]}
-          AND a.attnum IN (#{index[:keys].join(",")})
-        SQL
+              columns = columns.size > 1 ? columns : columns[0]
+            end
+          else
+            columns = Hash[query(<<-SQL.strip_heredoc, "SCHEMA")].values_at(*indkey).compact
+              SELECT a.attnum, a.attname
+              FROM pg_attribute a
+              WHERE a.attrelid = #{oid}
+              AND a.attnum IN (#{indkey.join(",")})
+            SQL
 
-        column_names = columns.values_at(*index[:keys]).compact
+            # add info on sort order (only desc order is explicitly specified, asc is the default)
+            # and non-default opclasses
+            expressions.scan(/(?<column>\w+)"?\s?(?<opclass>\w+_ops)?\s?(?<desc>DESC)?\s?(?<nulls>NULLS (?:FIRST|LAST))?/).each do |column, opclass, desc, nulls|
+              opclasses[column] = opclass.to_sym if opclass
 
-        if column_names.empty?
-          definition = index[:definition].sub(INDEX_WHERE_EXPRESSION, '')
-          if column_expression = definition.match(INDEX_COLUMN_EXPRESSION)[1]
-            column_names = split_expression(column_expression).map do |functional_name|
-              remove_type(functional_name)
+              if nulls
+                orders[column] = [desc, nulls].compact.join(" ")
+              else
+                orders[column] = :desc if desc
+              end
             end
           end
-        end
 
-        column_names
-      end
-
-      # Find non-default operator class names for columns from index.
-      #
-      # @param column_names [Array] List of columns from index.
-      # @param index [Hash] index index attributes
-      # @return [Hash]
-      def find_operator_names(column_names, index)
-        column_names.each_with_index.inject({}) do |class_names, (column_name, column_index)|
-          result = query(<<-SQL, "Classes for columns for index #{index[:name]} for column #{column_name}")
-            SELECT op.opcname, op.opcdefault
-            FROM pg_opclass op
-            WHERE op.oid = #{index[:operators][column_index]};
-          SQL
-
-          row = result.first
-
-          if row && row[1] == "f"
-            class_names[column_name] = row[0]
-          end
-
-          class_names
+          PgSaurus::ConnectionAdapters::IndexDefinition.new(
+            table_name,
+            index_name,
+            unique,
+            columns,
+            orders: orders,
+            opclasses: opclasses,
+            where: where,
+            using: using.to_sym,
+            comment: comment.presence,
+            access_method: access_method
+          )
         end
       end
 

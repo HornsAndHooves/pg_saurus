@@ -1,4 +1,4 @@
-class AddForeignKeys < ActiveRecord::Migration
+class AddForeignKeys < ActiveRecord::Migration[5.2]
   def change
     # Add foreign keys with indexes
     add_foreign_key 'pets', 'users'

@@ -1,4 +1,3 @@
-# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -11,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190320025645) do
+ActiveRecord::Schema.define(version: 2019_08_01_025445) do
 
   create_schema "demography"
   create_schema "later"
@@ -21,9 +20,9 @@ ActiveRecord::Schema.define(version: 20190320025645) do
   create_extension "btree_gist", :schema_name => "demography", :version => "1.2"
 
   # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
-  enable_extension "fuzzystrmatch"
   enable_extension "btree_gist"
+  enable_extension "fuzzystrmatch"
+  enable_extension "plpgsql"
 
   create_function 'public.pets_not_empty()', :boolean, <<-FUNCTION_DEFINITION.gsub(/^[ ]{4}/, ''), volatility: :volatile
     BEGIN
@@ -42,48 +41,45 @@ ActiveRecord::Schema.define(version: 20190320025645) do
     END;
   FUNCTION_DEFINITION
 
-  create_table "books", force: :cascade do |t|
-    t.string   "title"
-    t.json     "tags"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+  create_table "books", comment: "Information about books", force: :cascade do |t|
+    t.string "title", comment: "Book title"
+    t.json "tags"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index "((((tags -> 'attrs'::text) ->> 'edition'::text))::integer)", name: "books_tags_json_index", skip_column_quoting: true
+    t.index ["title"], name: "index_books_on_title_varchar_pattern_ops", opclass: :varchar_pattern_ops
   end
 
-  add_index "books", "((((tags -> 'attrs'::text) ->> 'edition'::text))::integer)", :name => "books_tags_json_index", :skip_column_quoting => true
-  add_index "books", ["title varchar_pattern_ops"], :name => "index_books_on_title_varchar_pattern_ops"
-
   create_table "breeds", force: :cascade do |t|
-    t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "demography.cities", force: :cascade do |t|
     t.integer "country_id"
     t.integer "name"
+    t.index ["country_id"], name: "index_demography_cities_on_country_id"
   end
 
-  add_index "demography.cities", ["country_id"], :name => "index_demography_cities_on_country_id"
-
-  create_table "demography.citizens", force: :cascade do |t|
-    t.integer  "country_id"
-    t.integer  "user_id"
-    t.string   "first_name"
-    t.string   "last_name"
-    t.date     "birthday"
-    t.text     "bio"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.boolean  "active",     default: false, null: false
+  create_table "demography.citizens", comment: "Citizens Info", force: :cascade do |t|
+    t.integer "country_id", comment: "Country key"
+    t.integer "user_id"
+    t.string "first_name", comment: "First name"
+    t.string "last_name", comment: "Last name"
+    t.date "birthday"
+    t.text "bio"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "active", default: false, null: false
+    t.index ["country_id", "user_id"], name: "index_demography_citizens_on_country_id_and_user_id", unique: true, where: "active", comment: "Unique index on active citizens"
   end
-
-  add_index "demography.citizens", ["country_id", "user_id"], :name => "index_demography_citizens_on_country_id_and_user_id", :unique => true, :where => "active"
 
   create_table "demography.countries", force: :cascade do |t|
-    t.string   "name"
-    t.string   "continent"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.string "name", comment: "Country name"
+    t.string "continent"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "demography.people", force: :cascade do |t|
@@ -96,46 +92,45 @@ ActiveRecord::Schema.define(version: 20190320025645) do
   end
 
   create_table "owners", force: :cascade do |t|
-    t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "pets", force: :cascade do |t|
-    t.string  "name"
-    t.string  "color"
+    t.string "name"
+    t.string "color"
     t.integer "user_id"
     t.integer "country_id"
     t.integer "citizen_id"
     t.integer "breed_id"
     t.integer "owner_id"
-    t.boolean "active",     default: true
+    t.boolean "active", default: true
+    t.index "lower(name) DESC NULLS LAST", name: "index_pets_on_lower_name_desc_nulls_last"
+    t.index "lower(name)", name: "index_pets_on_lower_name"
+    t.index "to_tsvector('english'::regconfig, name)", name: "index_pets_on_to_tsvector_name_gist", using: :gist, comment: "Functional index on name"
+    t.index "upper(color)", name: "index_pets_on_upper_color", where: "(name IS NULL)"
+    t.index ["breed_id"], name: "index_pets_on_breed_id"
+    t.index ["color"], name: "index_pets_on_color"
+    t.index ["country_id"], name: "index_pets_on_country_id"
+    t.index ["lower(color)", " lower(name)"], name: "index_pets_on_lower_color_and_lower_name"
+    t.index ["user_id"], name: "index_pets_on_user_id"
+    t.index ["user_id"], name: "index_pets_on_user_id_gist", using: :gist
   end
 
-  add_index "pets", ["breed_id"], :name => "index_pets_on_breed_id"
-  add_index "pets", ["color"], :name => "index_pets_on_color"
-  add_index "pets", ["country_id"], :name => "index_pets_on_country_id"
-  add_index "pets", ["lower(name) DESC NULLS LAST"], :name => "index_pets_on_lower_name_desc_nulls_last"
-  add_index "pets", ["lower(name)"], :name => "index_pets_on_lower_name"
-  add_index "pets", ["to_tsvector('english'::regconfig, name)"], :name => "index_pets_on_to_tsvector_name_gist", :using => "gist"
-  add_index "pets", ["upper(color)"], :name => "index_pets_on_upper_color", :where => "(name IS NULL)"
-  add_index "pets", ["user_id"], :name => "index_pets_on_user_id"
-  add_index "pets", ["user_id"], :name => "index_pets_on_user_id_gist", :using => "gist"
-
-  create_table "users", force: :cascade do |t|
-    t.string   "name"
-    t.string   "email"
-    t.string   "phone_number"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+  create_table "users", comment: "Information about users", force: :cascade do |t|
+    t.string "name", comment: "User name"
+    t.string "email", comment: "Email address"
+    t.string "phone_number", comment: "Phone number"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_users_on_email"
+    t.index ["name"], name: "index_users_on_name"
   end
 
-  add_index "users", ["email"], :name => "index_users_on_email"
-  add_index "users", ["name"], :name => "index_users_on_name"
-
-  add_foreign_key "demography.cities", "demography.countries", :exclude_index => true
-  add_foreign_key "demography.citizens", "users", :exclude_index => true
-  add_foreign_key "pets", "users", :exclude_index => true
+  add_foreign_key "demography.cities", "demography.countries", exclude_index: true
+  add_foreign_key "demography.citizens", "users", exclude_index: true
+  add_foreign_key "pets", "users", exclude_index: true
   create_view "demography.citizens_view", <<-SQL
      SELECT citizens.id,
     citizens.country_id,

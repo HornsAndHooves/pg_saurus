@@ -1,4 +1,4 @@
-class RemoveDemographyNationalities < ActiveRecord::Migration
+class RemoveDemographyNationalities < ActiveRecord::Migration[5.2]
   def change
     drop_table 'nationalities', :schema => 'demography'
   end

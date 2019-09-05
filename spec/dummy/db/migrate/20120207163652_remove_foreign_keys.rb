@@ -1,4 +1,4 @@
-class RemoveForeignKeys < ActiveRecord::Migration
+class RemoveForeignKeys < ActiveRecord::Migration[5.2]
   def up
     remove_foreign_key 'demography.citizens', column: :country_id, remove_index: true
     remove_foreign_key 'pets', 'demography.countries'

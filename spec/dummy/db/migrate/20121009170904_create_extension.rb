@@ -1,4 +1,4 @@
-class CreateExtension < ActiveRecord::Migration
+class CreateExtension < ActiveRecord::Migration[5.2]
   def change
     create_extension "fuzzystrmatch"
     drop_extension "fuzzystrmatch", :mode => :cascade

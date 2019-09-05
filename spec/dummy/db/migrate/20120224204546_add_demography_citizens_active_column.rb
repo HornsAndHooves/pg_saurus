@@ -1,4 +1,4 @@
-class AddDemographyCitizensActiveColumn < ActiveRecord::Migration
+class AddDemographyCitizensActiveColumn < ActiveRecord::Migration[5.2]
   def change
     add_column 'demography.citizens', :active, :boolean, :null => false, :default => false
 

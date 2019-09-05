@@ -21,7 +21,7 @@ describe ActiveRecord::ConnectionAdapters::SchemaStatements do
 
     context "creates index for column with operator" do
       let(:expected_query) do
-        'CREATE  INDEX "index_users_on_phone_number_varchar_pattern_ops" ON "users" ("phone_number" varchar_pattern_ops)'
+        'CREATE  INDEX "index_users_on_phone_number_varchar_pattern_ops" ON "users" (phone_number varchar_pattern_ops)'
       end
 
       it 'creates index for column with operator' do
@@ -39,7 +39,7 @@ describe ActiveRecord::ConnectionAdapters::SchemaStatements do
     context "for functional index with longer operator string" do
       let(:expected_query) do
         'CREATE  INDEX "index_users_on_lower_first_name_desc_nulls_last" ' \
-        'ON "users" (lower("first_name") DESC NULLS LAST)'
+        'ON "users" (lower(first_name) DESC NULLS LAST)'
       end
 
       it 'creates functional index for column with longer operator string' do

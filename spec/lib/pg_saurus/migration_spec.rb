@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe ActiveRecord::Migration do
+describe ActiveRecord::Migration[5.2] do
   let(:conn) { double(:connection) }
 
   let(:ensure_role_set) { false }

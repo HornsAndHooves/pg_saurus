@@ -1,4 +1,4 @@
-class CreateRockBandsSchemaIfNotExists < ActiveRecord::Migration
+class CreateRockBandsSchemaIfNotExists < ActiveRecord::Migration[5.2]
   def change
     create_schema_if_not_exists(:rock_bands)
     # Should not raise exception even if the same schema exists

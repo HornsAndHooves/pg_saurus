@@ -1,4 +1,4 @@
-class AddFunctionCountPets < ActiveRecord::Migration
+class AddFunctionCountPets < ActiveRecord::Migration[5.2]
   def change
     create_function 'pets_not_empty()', :boolean, <<-FUNCTION.gsub(/^[\s]{6}/, ""), schema: 'public'
       BEGIN

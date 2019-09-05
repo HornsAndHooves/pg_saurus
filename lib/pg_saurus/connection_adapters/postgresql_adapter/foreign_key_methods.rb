@@ -46,6 +46,7 @@ module PgSaurus # :nodoc:
       if options_or_to_table.is_a?(Hash) && options_or_to_table[:remove_index]
         column = options_or_to_table[:column]
         remove_index from_table, column
+        options_or_to_table.delete(:remove_index)
       end
 
       super(from_table, options_or_to_table)
