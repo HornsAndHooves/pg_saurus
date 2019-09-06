@@ -4,7 +4,7 @@ module PgSaurus::ConnectionAdapters
   # with the additional parameters.
   class IndexDefinition # :nodoc:
     attr_reader :table, :name, :unique, :columns, :lengths, :orders, :opclasses,
-                :where, :type, :using, :comment, :access_method
+                :where, :type, :using, :comment
 
     def initialize(
       table,
@@ -17,8 +17,7 @@ module PgSaurus::ConnectionAdapters
       where: nil,
       type: nil,
       using: nil,
-      comment: nil,
-      access_method: nil
+      comment: nil
     )
       @table = table
       @name = name
@@ -31,7 +30,6 @@ module PgSaurus::ConnectionAdapters
       @type = type
       @using = using
       @comment = comment
-      @access_method = access_method
     end
 
     private
