@@ -33,6 +33,8 @@ module PgSaurus::ConnectionAdapters
     end
 
     private
+      # The options or the first value if there's only one unique value and the number of options is the same
+      # as the number of columns.
       def concise_options(options)
         if columns.size == options.size && options.values.uniq.size == 1
           options.values.first
