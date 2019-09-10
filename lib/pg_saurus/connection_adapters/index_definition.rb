@@ -9,27 +9,27 @@ module PgSaurus::ConnectionAdapters
     def initialize(
       table,
       name,
-      unique = false,
+      unique  = false,
       columns = [],
-      lengths: {},
-      orders: {},
+      lengths:   {},
+      orders:    {},
       opclasses: {},
-      where: nil,
-      type: nil,
-      using: nil,
-      comment: nil
+      where:     nil,
+      type:      nil,
+      using:     nil,
+      comment:   nil
     )
-      @table = table
-      @name = name
-      @unique = unique
-      @columns = columns
-      @lengths = concise_options(lengths)
-      @orders = concise_options(orders)
+      @table     = table
+      @name      = name
+      @unique    = unique
+      @columns   = columns
+      @lengths   = concise_options(lengths)
+      @orders    = concise_options(orders)
       @opclasses = concise_options(opclasses)
-      @where = where
-      @type = type
-      @using = using
-      @comment = comment
+      @where     = where
+      @type      = type
+      @using     = using
+      @comment   = comment
     end
 
     private

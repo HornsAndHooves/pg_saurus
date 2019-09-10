@@ -83,11 +83,11 @@ module ActiveRecord # :nodoc:
             index_name,
             unique,
             columns,
-            orders: orders,
+            orders:    orders,
             opclasses: opclasses,
-            where: where,
-            using: using.to_sym,
-            comment: comment.presence
+            where:     where,
+            using:     using.to_sym,
+            comment:   comment.presence
           )
         end
       end
