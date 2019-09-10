@@ -25,8 +25,8 @@ group :development do
 
   # code metrics:
   gem 'yard'
-  gem 'metric_fu', :require => false
-  gem 'jeweler'  , :require => false
+  gem 'metric_fu', require: false
+  gem 'jeweler'  , require: false
 
 
   unless ENV["RM_INFO"]
@@ -39,9 +39,10 @@ end
 group :development, :test do
   gem "pry"
   gem "pry-byebug"
+  gem "rubocop"
 end
 
 group :test do
-  gem 'simplecov'          , :require => false
-  gem 'simplecov-rcov-text', :require => false
+  gem 'simplecov'          , require: false
+  gem 'simplecov-rcov-text', require: false
 end

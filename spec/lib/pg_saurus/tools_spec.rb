@@ -3,7 +3,7 @@ require 'spec_helper'
 describe PgSaurus::Tools do
   describe '#move_table_to_schema' do
     it 'moves table to another schema' do
-      Pet.create!(:name => "Flaaffy", :color => "#FFAABB")
+      Pet.create!(name: "Flaaffy", color: "#FFAABB")
       PgSaurus::Explorer.table_exists?('public.pets').should == true
 
       # Move table
@@ -17,7 +17,7 @@ describe PgSaurus::Tools do
       PgSaurus::Explorer.table_exists?('demography.pets').should == false
 
       # Make sure data is not lost
-      Pet.where(:name => "Flaaffy", :color => "#FFAABB").size.should == 1
+      Pet.where(name: "Flaaffy", color: "#FFAABB").size.should == 1
     end
   end
 

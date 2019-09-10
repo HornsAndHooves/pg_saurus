@@ -53,7 +53,7 @@ describe 'Foreign keys' do
     it 'should not raise an exception if the index does not exist' do
       expect {
         connection = ActiveRecord::Base::connection
-        connection.add_foreign_key 'pets', 'demography.citizens', :exclude_index => true
+        connection.add_foreign_key 'pets', 'demography.citizens', exclude_index: true
         connection.remove_foreign_key 'pets', 'demography.citizens'
       }.not_to raise_error
     end

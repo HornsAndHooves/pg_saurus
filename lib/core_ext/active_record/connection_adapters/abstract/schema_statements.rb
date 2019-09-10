@@ -85,7 +85,7 @@ module ActiveRecord
         #
         def index_exists?(table_name, column_name, options = {})
           column_names = Array.wrap(column_name)
-          index_name = options.key?(:name) ? options[:name].to_s : index_name(table_name, :column => column_names)
+          index_name = options.key?(:name) ? options[:name].to_s : index_name(table_name, column: column_names)
 
           # Always compare the index name
           default_comparator = lambda { |index| index.name == index_name }
@@ -134,7 +134,7 @@ module ActiveRecord
               raise ArgumentError, "You must specify the index name"
             end
           else
-            index_name(table_name, :column => options)
+            index_name(table_name, column: options)
           end
         end
 

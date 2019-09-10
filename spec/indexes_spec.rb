@@ -3,7 +3,7 @@ require 'spec_helper'
 describe 'Indexes' do
   describe '#add_index' do
     it 'is built with the :where option' do
-      index_options = {:where => "active"}
+      index_options = { where: "active" }
 
       ActiveRecord::Migration.add_index(:pets, :name, index_options)
 
@@ -17,7 +17,7 @@ describe 'Indexes' do
     end
 
     it 'allows indexes with expressions using functions with multiple arguments' do
-      ActiveRecord::Migration.add_index(:pets, "to_tsvector('english', name)", :using => 'gin')
+      ActiveRecord::Migration.add_index(:pets, "to_tsvector('english', name)", using: 'gin')
 
       PgSaurus::Explorer.index_exists?(:pets, "gin(to_tsvector('english', name))" ).should be true
     end
@@ -25,7 +25,7 @@ describe 'Indexes' do
     it 'allows indexes with expressions using functions with multiple arguments as dumped' do
       ActiveRecord::Migration.add_index(:pets,
                                         "to_tsvector('english'::regconfig, name)",
-                                        :using => 'gin')
+                                        using: 'gin')
 
       PgSaurus::Explorer.index_exists?(:pets, "gin(to_tsvector('english', name))" ).should be true
     end
@@ -39,7 +39,7 @@ describe 'Indexes' do
     end
 
     it "allows partial indexes with expressions" do
-      opts = {:where => 'color IS NULL'}
+      opts = { where: 'color IS NULL' }
 
       ActiveRecord::Migration.add_index(:pets, ['upper(name)', 'lower(color)'], opts)
       PgSaurus::Explorer.index_exists?(:pets, ['upper(name)', 'lower(color)'], opts).should be true
@@ -64,7 +64,7 @@ describe 'Indexes' do
 
     it 'removes indexes built with the :where option' do
 
-      index_options = {:where => "active"}
+      index_options = { where: "active" }
 
       ActiveRecord::Migration.add_index(:pets, :name, index_options)
       ActiveRecord::Migration.remove_index(:pets, :name)
@@ -87,7 +87,7 @@ describe 'Indexes' do
     end
 
     it 'is true for a valid set of options' do
-      index_options = {:unique => true, :where => 'active'}
+      index_options = { unique: true, where: 'active'}
       PgSaurus::Explorer.index_exists?('demography.citizens',
                                       [:country_id, :user_id],
                                       index_options
@@ -95,9 +95,9 @@ describe 'Indexes' do
     end
 
     it 'is true for a valid set of options including name' do
-      index_options = { :unique => true,
-                        :where  => 'active',
-                        :name   => 'index_demography_citizens_on_country_id_and_user_id' }
+      index_options = { unique: true,
+                        where: 'active',
+                        name: 'index_demography_citizens_on_country_id_and_user_id' }
       PgSaurus::Explorer.index_exists?('demography.citizens',
                                       [:country_id, :user_id],
                                       index_options
@@ -105,7 +105,7 @@ describe 'Indexes' do
     end
 
     it 'is false for a subset of valid options' do
-      index_options = {:where => 'active'}
+      index_options = { where: 'active' }
       PgSaurus::Explorer.index_exists?('demography.citizens',
                                       [:country_id, :user_id],
                                       index_options
@@ -113,7 +113,7 @@ describe 'Indexes' do
     end
 
     it 'is false for invalid options' do
-      index_options = {:where => 'active'}
+      index_options = { where: 'active' }
       PgSaurus::Explorer.index_exists?('demography.citizens',
                                       [:country_id],
                                       index_options
@@ -121,37 +121,37 @@ describe 'Indexes' do
     end
 
     it 'is true for a :where clause that includes boolean comparison' do
-      index_options = {:where => 'active'}
+      index_options = { where: 'active' }
       ActiveRecord::Migration.add_index(:pets, :name, index_options)
       PgSaurus::Explorer.index_exists?(:pets, :name, index_options).should be true
     end
 
     it 'is true for a :where clause that includes text comparison' do
-      index_options = {:where => "color = 'black'"}
+      index_options = { where: "color = 'black'" }
       ActiveRecord::Migration.add_index(:pets, :name, index_options)
       PgSaurus::Explorer.index_exists?(:pets, :name, index_options).should be true
     end
 
     it 'is true for a :where clause that includes NULL comparison' do
-      index_options = {:where => 'color IS NULL'}
+      index_options = { where: 'color IS NULL' }
       ActiveRecord::Migration.add_index(:pets, :name, index_options)
       PgSaurus::Explorer.index_exists?(:pets, :name, index_options).should be true
     end
 
     it 'is true for a :where clause that includes integer comparison' do
-      index_options = {:where => 'id = 4'}
+      index_options = { where: 'id = 4' }
       ActiveRecord::Migration.add_index(:pets, :name, index_options)
       PgSaurus::Explorer.index_exists?(:pets, :name, index_options).should be true
     end
 
     it 'is true for a compound :where clause' do
-      index_options = {:where => "id = 4 and color = 'black' and active"}
+      index_options = { where: "id = 4 and color = 'black' and active" }
       ActiveRecord::Migration.add_index(:pets, :name, index_options)
       PgSaurus::Explorer.index_exists?(:pets, :name, index_options).should be true
     end
 
     it 'is true for concurrently created index' do
-      index_options = {:concurrently => true}
+      index_options = { concurrently: true }
       PgSaurus::Explorer.index_exists?(:users, :email, index_options).should be true
     end
 
