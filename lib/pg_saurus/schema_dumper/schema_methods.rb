@@ -21,7 +21,7 @@ module PgSaurus::SchemaDumper::SchemaMethods
 
   # Generates code to create schema.
   def schema(schema_name, stream)
-    stream << "  create_schema \"#{schema_name}\"\n"
+    stream << "  create_schema_if_not_exists \"#{schema_name}\"\n"
   end
   private :schema
 end
