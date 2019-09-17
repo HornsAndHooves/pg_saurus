@@ -12,38 +12,22 @@ module PgSaurus
   module Tools
     extend self
 
-    # Creates PostgreSQL schema
-    def create_schema(schema_name)
-      sql = %{CREATE SCHEMA "#{schema_name}"}
-      connection.execute sql
-    end
-
     # Create a schema if it does not exist yet.
     #
     # @note
-    #   CREATE SCHEMA IF EXISTS appeared only in PostgreSQL 9.3
-    #   It is not used here for backward compatibility.
+    #   Supports PostgreSQL 9.3+
     #
     # @return [void]
     def create_schema_if_not_exists(schema_name)
-      unless schemas.include?(schema_name.to_s)
-        create_schema(schema_name)
-      end
+      sql = %{CREATE SCHEMA IF NOT EXISTS "#{schema_name}"}
+      connection.execute sql
     end
 
     # Ensure schema does not exists.
     #
     # @return [void]
     def drop_schema_if_exists(schema_name)
-      if schemas.include?(schema_name.to_s)
-        drop_schema(schema_name)
-      end
-    end
-
-    # Drops PostgreSQL schema
-    def drop_schema(schema_name)
-      sql = %{DROP SCHEMA "#{schema_name}"}
-      connection.execute sql
+      connection.drop_schema(schema_name, if_exists: true)
     end
 
     # Returns an array of existing schemas.

@@ -23,14 +23,14 @@ describe PgSaurus::Tools do
 
   let(:connection) { PgSaurus::Tools.send(:connection) }
 
-  it ".create_schema" do
-    expect(connection).to receive(:execute).with(%{CREATE SCHEMA "someschema"})
-    PgSaurus::Tools.create_schema("someschema")
+  it ".create_schema_if_not_exists" do
+    expect(connection).to receive(:execute).with('CREATE SCHEMA IF NOT EXISTS "someschema"')
+    PgSaurus::Tools.create_schema_if_not_exists("someschema")
   end
 
-  it ".drop_schema" do
-    expect(connection).to receive(:execute).with(%{DROP SCHEMA "someschema"})
-    PgSaurus::Tools.drop_schema("someschema")
+  it ".drop_schema_if_exists" do
+    expect(connection).to receive(:drop_schema).with("someschema", if_exists: true)
+    PgSaurus::Tools.drop_schema_if_exists("someschema")
   end
 
   it ".create_view" do

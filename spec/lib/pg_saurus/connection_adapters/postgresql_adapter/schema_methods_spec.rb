@@ -7,37 +7,23 @@ describe PgSaurus::ConnectionAdapters::PostgreSQLAdapter::SchemaMethods do
 
   let(:adapter_stub) { PostgreSQLAdapter.new }
 
-  describe ".create_schema" do
-    it "refers to tools create_schema" do
-      expect(::PgSaurus::Tools).to receive(:create_schema).with("someschema")
-      adapter_stub.create_schema("someschema")
-    end
-  end
-
   describe ".create_schema_if_not_exists" do
     it "refers to tools create_schema" do
-      expect(::PgSaurus::Tools).to receive(:create_schema).with("someschema")
-      adapter_stub.create_schema("someschema")
+      expect(::PgSaurus::Tools).to receive(:create_schema_if_not_exists).with("someschema")
+      adapter_stub.create_schema_if_not_exists("someschema")
     end
 
     it "doesn't create the schema if it already exists" do
-      PgSaurus::Tools.create_schema "aschema"
-      expect(::PgSaurus::Tools).not_to receive(:create_schema).with("aschema")
-      adapter_stub.create_schema_if_not_exists("aschema")
-    end
-  end
-
-  describe ".drop_schema" do
-    it "refers to tools drop_schema" do
-      expect(::PgSaurus::Tools).to receive(:drop_schema).with("someschema")
-      adapter_stub.drop_schema("someschema")
+      ActiveRecord::Base.connection.create_schema "aschema"
+      expect(::PgSaurus::Tools).to receive(:create_schema_if_not_exists).with("aschema")
+      expect { adapter_stub.create_schema_if_not_exists("aschema") }.not_to raise_error
     end
   end
 
   describe ".drop_schema_if_exists" do
     it "refers to tools drop_schema" do
-      PgSaurus::Tools.create_schema "someschema"
-      expect(::PgSaurus::Tools).to receive(:drop_schema).with("someschema")
+      ActiveRecord::Base.connection.create_schema "someschema"
+      expect(::PgSaurus::Tools).to receive(:drop_schema_if_exists).with("someschema")
       adapter_stub.drop_schema_if_exists("someschema")
     end
 
