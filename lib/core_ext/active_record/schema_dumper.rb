@@ -5,12 +5,8 @@ module ActiveRecord #:nodoc:
   class SchemaDumper #:nodoc:
     # Writes out index-related details to the schema stream
     #
-    # == Patch reason:
-    # {ActiveRecord::SchemaDumper#indexes} does not support writing out
-    # details related to partial indexes.
-    #
     # == Patch:
-    # Append :where clause if there's a partial index
+    # Add support of skip_column_quoting option for json indexes.
     #
     def index_parts(index)
       is_json_index = index.columns.is_a?(String) && index.columns =~ /^(.+->.+)$/

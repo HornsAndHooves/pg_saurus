@@ -2,7 +2,6 @@ module PgSaurus # :nodoc:
   # Provides methods to extend {ActiveRecord::ConnectionAdapters::PostgreSQLAdapter}
   # to support foreign keys feature.
   module ConnectionAdapters::PostgreSQLAdapter::ForeignKeyMethods
-
     # Drop table and optionally disable triggers.
     # Changes adapted from https://github.com/matthuhiggins/foreigner/blob/e72ab9c454c156056d3f037d55e3359cd972af32/lib/foreigner/connection_adapters/sql2003.rb
     # NOTE: Disabling referential integrity requires superuser access in postgres.
@@ -22,7 +21,8 @@ module PgSaurus # :nodoc:
     end
 
     # See activerecord/lib/active_record/connection_adapters/abstract/schema_statements.rb
-    # Creates index on the FK column by default. Pass in the option :exclude_index => true
+    #
+    # Creates index on the FK column by default. Pass in the option exclude_index: true
     # to disable this.
     def add_foreign_key(from_table, to_table, options = {})
       exclude_index = (options.has_key?(:exclude_index) ? options.delete(:exclude_index) : false)
@@ -42,6 +42,8 @@ module PgSaurus # :nodoc:
     end
 
     # See activerecord/lib/active_record/connection_adapters/abstract/schema_statements.rb
+    #
+    # Pass in the option remove_index: true to remove index as well.
     def remove_foreign_key(from_table, options_or_to_table = {})
       if options_or_to_table.is_a?(Hash) && options_or_to_table[:remove_index]
         column = options_or_to_table[:column]
@@ -53,13 +55,17 @@ module PgSaurus # :nodoc:
     end
 
     # See: activerecord/lib/active_record/connection_adapters/abstract/schema_statements.rb
+    #
+    # Removes schema name from table name.
     def foreign_key_column_for(table_name)
       table = table_name.to_s.split('.').last
 
       super table
     end
 
-    # see activerecord/lib/active_record/connection_adapters/postgresql/schema_statements.rb
+    # See activerecord/lib/active_record/connection_adapters/postgresql/schema_statements.rb
+    #
+    # Add from_schema option to foreign key definition options.
     def foreign_keys(table_name)
       namespace  = table_name.to_s.split('.').first
       table_name = table_name.to_s.split('.').last
@@ -100,7 +106,5 @@ module PgSaurus # :nodoc:
         ::ActiveRecord::ConnectionAdapters::ForeignKeyDefinition.new(table_name, row['to_table'], options)
       end
     end
-
-
   end
 end

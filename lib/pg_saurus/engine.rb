@@ -7,7 +7,6 @@ module PgSaurus
         # load monkey patches
         ['schema_dumper',
          'errors',
-         'connection_adapters/postgresql_adapter',
          'connection_adapters/postgresql/schema_statements'].each do |path|
           require ::PgSaurus::Engine.root + 'lib/core_ext/active_record/' + path
         end
