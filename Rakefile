@@ -54,4 +54,6 @@ RSpec::Core::RakeTask.new(:spec) do |spec|
   spec.pattern = 'spec/**/*_spec.rb'
 end
 
+task default: :spec
+
 task 'spec' => ['db:drop', 'db:create', 'db:migrate', 'app:db:test:load']

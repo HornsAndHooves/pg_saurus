@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0".freeze) if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib".freeze]
   s.authors = ["Potapov Sergey".freeze, "Arthur Shagall".freeze, "Artem Ignatyev".freeze, "Matt Dressel".freeze, "Bruce Burdick".freeze, "HornsAndHooves".freeze]
-  s.date = "2019-09-05"
+  s.date = "2019-09-17"
   s.description = "ActiveRecord extensions for PostgreSQL. Provides useful tools for schema, foreign_key, index, function, trigger, comment and extension manipulations in migrations.".freeze
   s.email = ["blake131313@gmail.com".freeze, "arthur.shagall@gmail.com".freeze, "cryo28@gmail.com".freeze, "matt.dressel@gmail.com".freeze, "rubygems.org@bruceburdick.com".freeze]
   s.extra_rdoc_files = [

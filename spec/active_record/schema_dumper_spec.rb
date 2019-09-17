@@ -11,12 +11,12 @@ describe ActiveRecord::SchemaDumper do
 
     context 'Schemas' do
       it 'dumps schemas' do
-        @dump.should =~ /create_schema "demography"/
-        @dump.should =~ /create_schema "later"/
-        @dump.should =~ /create_schema "latest"/
+        @dump.should =~ /create_schema_if_not_exists "demography"/
+        @dump.should =~ /create_schema_if_not_exists "later"/
+        @dump.should =~ /create_schema_if_not_exists "latest"/
       end
       it 'dumps schemas in alphabetical order' do
-        @dump.should =~ /create_schema "demography".*create_schema "later".*create_schema "latest"/m
+        @dump.should =~ /create_schema_if_not_exists "demography".*create_schema_if_not_exists "later".*create_schema_if_not_exists "latest"/m
       end
     end
 
