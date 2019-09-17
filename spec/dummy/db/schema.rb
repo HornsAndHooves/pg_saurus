@@ -13,9 +13,9 @@
 
 ActiveRecord::Schema.define(version: 20190320025645) do
 
-  create_schema "demography"
-  create_schema "later"
-  create_schema "latest"
+  create_schema_if_not_exists "demography"
+  create_schema_if_not_exists "later"
+  create_schema_if_not_exists "latest"
 
   create_extension "fuzzystrmatch", :version => "1.1"
   create_extension "btree_gist", :schema_name => "demography", :version => "1.2"
