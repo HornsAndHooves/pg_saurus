@@ -133,7 +133,7 @@ module PgSaurus::CreateIndexConcurrently
   module MigrationProxy
     # :nodoc:
     def self.included(klass)
-      klass.delegate :process_postponed_queries, :to => :migration
+      klass.delegate :process_postponed_queries, to: :migration
     end
   end
 

@@ -38,9 +38,9 @@ describe PgSaurus::Migration::CommandRecorder do
     it '.invert_create_functions' do
       expect(
         command_recorder_stub.invert_create_function(
-          [ 'pets_not_empty()', :boolean, 'FU', { :schema => 'public' } ]
+          [ 'pets_not_empty()', :boolean, 'FU', { schema: 'public' } ]
         )
-      ).to eq([ :drop_function, [ "pets_not_empty()", { :schema => "public" } ] ])
+      ).to eq([ :drop_function, [ "pets_not_empty()", { schema: "public" } ] ])
     end
 
   end
@@ -73,7 +73,7 @@ describe PgSaurus::Migration::CommandRecorder do
     end
 
     it '.invert_set_column_comments' do
-      command_recorder_stub.invert_set_column_comments([:foo, {:bar => :baz}]).
+      command_recorder_stub.invert_set_column_comments([:foo, { bar: :baz }]).
                             should == [:remove_column_comments, [:foo, :bar]]
     end
 

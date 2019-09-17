@@ -1,10 +1,10 @@
 source "https://rubygems.org"
 
 # To test against different rails versions with TravisCI
-rails_version = ENV['RAILS_VERSION'] || '~> 5.2.3'
+rails_version = ENV["RAILS_VERSION"] || "~> 5.2.3"
 
 # NOTE: This is a Gemfile for a gem.
-# Using 'platforms' is contraindicated because they won't make it into
+# Using "platforms" is contraindicated because they won't make it into
 # the gemspec correctly.
 version2x = (RUBY_VERSION =~ /^2\.\d/)
 
@@ -21,12 +21,12 @@ gem "activerecord",  rails_version
 gem "activesupport", rails_version
 
 group :development do
-  gem 'rspec-rails'
+  gem "rspec-rails"
 
   # code metrics:
-  gem 'yard'
-  gem 'metric_fu', :require => false
-  gem 'jeweler'  , :require => false
+  gem "yard"
+  gem "metric_fu", require: false
+  gem "jeweler"  , require: false
 
 
   unless ENV["RM_INFO"]
@@ -39,9 +39,10 @@ end
 group :development, :test do
   gem "pry"
   gem "pry-byebug"
+  gem "rubocop"
 end
 
 group :test do
-  gem 'simplecov'          , :require => false
-  gem 'simplecov-rcov-text', :require => false
+  gem "simplecov"          , require: false
+  gem "simplecov-rcov-text", require: false
 end
