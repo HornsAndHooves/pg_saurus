@@ -43,6 +43,8 @@ ActiveRecord::Schema.define(version: 20190320025645) do
   FUNCTION_DEFINITION
 
   create_table "books", force: :cascade do |t|
+    t.integer  "author_id"
+    t.integer  "publisher_id"
     t.string   "title"
     t.json     "tags"
     t.datetime "created_at"
@@ -50,6 +52,7 @@ ActiveRecord::Schema.define(version: 20190320025645) do
   end
 
   add_index "books", "((((tags -> 'attrs'::text) ->> 'edition'::text))::integer)", :name => "books_tags_json_index", :skip_column_quoting => true
+  add_index "books", ["author_id DESC NULLS FIRST", "publisher_id DESC NULLS LAST"], :name => "books_author_id_and_publisher_id"
   add_index "books", ["title varchar_pattern_ops"], :name => "index_books_on_title_varchar_pattern_ops"
 
   create_table "breeds", force: :cascade do |t|

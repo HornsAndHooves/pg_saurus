@@ -9,6 +9,12 @@ module ActiveRecord # :nodoc:
       # Regex to find where clause in index statements
       INDEX_WHERE_EXPRESSION = /WHERE (.+)$/
 
+      # Taken from https://github.com/postgres/postgres/blob/master/src/include/catalog/pg_index.h#L75
+      # Values are in reverse order
+      INDOPTION_DESC        = 1
+      # NULLs are first instead of last
+      INDOPTION_NULLS_FIRST = 2
+
       # Returns the list of all tables in the schema search path or a specified schema.
       #
       # == Patch:
@@ -71,7 +77,14 @@ module ActiveRecord # :nodoc:
         schemas = schema ? "ARRAY['#{schema}']" : 'current_schemas(false)'
 
         result = query(<<-SQL, name)
-          SELECT distinct i.relname, d.indisunique, d.indkey,  pg_get_indexdef(d.indexrelid), t.oid, am.amname, d.indclass
+          SELECT distinct i.relname,
+                          d.indisunique,
+                          d.indkey,
+                          pg_get_indexdef(d.indexrelid),
+                          t.oid,
+                          am.amname,
+                          d.indclass,
+                          d.indoption
           FROM pg_class t
           INNER JOIN pg_index d ON t.oid = d.indrelid
           INNER JOIN pg_class i ON d.indexrelid = i.oid
@@ -91,7 +104,8 @@ module ActiveRecord # :nodoc:
             :definition    => row[3],
             :id            => row[4],
             :access_method => row[5], 
-            :operators     => row[6].split(" ")
+            :operators     => row[6].split(" "),
+            :options       => row[7].split(" ").map(&:to_i)
           }
 
           column_names = find_column_names(table_name, index)
@@ -139,6 +153,25 @@ module ActiveRecord # :nodoc:
             column_names = split_expression(column_expression).map do |functional_name|
               remove_type(functional_name)
             end
+          end
+        else
+          # In case if column_names if not empty it contains list of column name taken from pg_attribute table.
+          # So we need to check indoption column and add DESC and NULLS LAST based on its value.
+          # https://stackoverflow.com/questions/18121103/how-to-get-the-index-column-orderasc-desc-nulls-first-from-postgresql/18128457#18128457
+          column_names = column_names.map.with_index do |column_name, column_index|
+            option = index[:options][column_index]
+
+            if option != 0
+              column_name << " DESC" if option & INDOPTION_DESC > 0
+
+              if option & INDOPTION_NULLS_FIRST > 0
+                column_name << " NULLS FIRST"
+              else
+                column_name << " NULLS LAST"
+              end
+            end
+
+            column_name
           end
         end
 
