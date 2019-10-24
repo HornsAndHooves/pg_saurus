@@ -1,4 +1,4 @@
-class CreatePetsTrigger < ActiveRecord::Migration
+class CreatePetsTrigger < ActiveRecord::Migration[5.2]
   def change
     create_function "pets_not_empty_trigger_proc()",
                     :trigger,

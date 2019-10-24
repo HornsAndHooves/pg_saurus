@@ -8,7 +8,7 @@ An ActiveRecord extension to get more from PostgreSQL:
 * Create/drop [schemas](#schemas).
 * Use existing functionality in the context of [schemas](#schemas).
 * Set/remove [comments on columns and tables](#table-and-column-comments).
-* [Enhancements to the Rails 4.2 foreign key support](#foreign-keys).
+* [Enhancements to the Rails 4.2 foreign key support (PgSaurus 3.X)](#foreign-keys).
 * Use [partial indexes](#partial-indexes).
 * Use [indexes on expressions](#indexes-on-expressions).
 * Use [indexes with custom ops classes](#indexes-with-operator-classes).
@@ -33,12 +33,10 @@ PgSaurus is a fork of PgPower.
 
 ## Environment notes
 
-PgSaurus v3 was tested with Rails 4.2, Ruby 2.2.4. For Rails 4.1, use PgSaurus v2.5+.
+PgSaurus v4 was tested with Rails 5.2 and Ruby 2.4. For Rails 4.2, use PgSaurus v3. For Rails 4.1, use PgSaurus v2.5+.
+Older versions of Rails are not supported.
 
-NOTE: JRuby is not supported. The current ActiveRecord JDBC adapter has its own Rails4-compatible
-method named "create_schema" which conflicts with this gem.
-
-NOTE: PgSaurus does not support Rails 3.
+NOTE: JRuby is not supported.
 
 ## Schemas
 
@@ -179,10 +177,26 @@ If you want to remove the index, pass in the `remove_index: true` option.
 remove_foreign_key(:comments, column: :post_id, remove_index: true)
 ```
 
+### Migration notes - upgrading from Rails 4.2
+
+PgSaurus v4.X requires Rails 5. Rails 5.2 is recommended.
+You can use the new Rails 5 semantics to create comments and indexes inline.
+You also need to use the index order options using the Rails 5 semantics.
+
+```ruby
+# THIS FAILS
+add_index :books, ["author_id DESC NULLS FIRST", "publisher_id DESC NULLS LAST"],
+          name: "books_author_id_and_publisher_id"
+
+# DO THIS INSTEAD
+add_index :books, ["author_id", "publisher_id"],
+          name: "books_author_id_and_publisher_id",
+          order: { author_id: "DESC NULLS FIRST", publisher_id: "DESC NULLS LAST" }
+```
 
 ### Migration notes - upgrading from Rails 4.1
 
-PgSaurus v3+ now uses the Rails 4.2 semantics for `add_foreign_key` and `remove_foreign_key`. See http://api.rubyonrails.org/v4.2/classes/ActiveRecord/ConnectionAdapters/SchemaStatements.html
+PgSaurus v3.X now uses the Rails 4.2 semantics for `add_foreign_key` and `remove_foreign_key`. See http://api.rubyonrails.org/v4.2/classes/ActiveRecord/ConnectionAdapters/SchemaStatements.html
 
 A few things have changed. The most breaking change is that the syntax `remove_foreign_key :from_table, :to_table, options` no longer works.
 
@@ -460,9 +474,9 @@ PgSaurus::Tools.index_exists?(table, columns, options)   # => returns true if an
 
 ## TODO
 
-Support for Rails 5+
+Support for Rails 6+
 
-* Rails 5 introduces its own schema support. PgSaurus v4+ will have to drop any conflicting support and modify its other features to accommodate Rails 5's schema support.
+* Rails 6 support has not been tested as of yet.
 
 Possible support for JRuby:
 
@@ -490,6 +504,6 @@ Released under the MIT License.  See the MIT-LICENSE file for more details.
 
 Contributions are welcome.  However, before issuing a pull request, please make sure of the following:
 
-* All specs are passing (under ruby 1.9.3+)
+* All specs are passing (under Ruby 2.4+)
 * Any new features have test coverage.
 * Anything that breaks backward compatibility has a very good reason for doing so.

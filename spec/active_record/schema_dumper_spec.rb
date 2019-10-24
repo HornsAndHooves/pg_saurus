@@ -66,48 +66,46 @@ describe ActiveRecord::SchemaDumper do
     context 'Indexes' do
       it 'dumps indexes' do
         # added via standard add_index
-        @dump.should =~ /add_index "users", \["name"\]/
+        @dump.should =~ /t.index \["name"\], name: "index_users_on_name"/
         # added via foreign key
-        @dump.should =~ /add_index "pets", \["user_id"\]/
+        @dump.should =~ /t.index \["user_id"\], name: "index_pets_on_user_id"/
         # foreign key :exclude_index
-        @dump.should_not =~ /add_index "demography\.citizens", \["user_id"\]/
+        @dump.should_not =~ /t.index \["user_id"\], name: "index_demography_citizens_on_user_id"/
         # partial index
-        @dump.should =~ /add_index "demography.citizens", \["country_id", "user_id"\].*:where => "active"/
+        @dump.should =~ /t.index \["country_id", "user_id"\], name: "index_demography_citizens_on_country_id_and_user_id", unique: true, where: "active", comment: "Unique index on active citizens"/
       end
 
       # This index is added via add_foreign_key
       it 'dumps indexes from non-public schemas' do
-        @dump.should =~ /add_index "demography.cities", \["country_id"\]/
+        @dump.should =~ /t.index \["country_id"\], name: "index_demography_cities_on_country_id"/
       end
 
       it 'dumps functional indexes' do
-        @dump.should =~ /add_index "pets", \["lower\(name\)"\]/
+        @dump.should =~ /t.index "lower\(name\)", name: "index_pets_on_lower_name"/
       end
 
       it 'dumps partial functional indexes' do
-        @dump.should =~ /add_index "pets", \["upper\(color\)"\].*:where => "\(name IS NULL\)"/
+        @dump.should =~ /t.index "upper\(color\)", name: "index_pets_on_upper_color", where: "\(name IS NULL\)"/
       end
 
       it 'dumps indexes with non-default access method' do
-        @dump.should =~ Regexp.new(Regexp.quote('add_index "pets", ["user_id"], :name => "index_pets_on_user_id_gist", :using => "gist"'))
+        @dump.should =~ /t.index \["user_id"\], name: "index_pets_on_user_id_gist", using: :gist/
       end
 
       it 'dumps indexes with non-default access method and multiple args' do
-        @dump.should =~ Regexp.new(Regexp.quote(
-          'add_index "pets", ["to_tsvector(\'english\'::regconfig, name)"], :name => "index_pets_on_to_tsvector_name_gist", :using => "gist"'
-        ))
+        @dump.should =~ /t.index "to_tsvector\(\'english\'::regconfig, name\)", name: "index_pets_on_to_tsvector_name_gist", using: :gist, comment: "Functional index on name"/
       end
 
       it "dumps indexes with operator name" do
-        @dump.should =~ /add_index "books", \["title varchar_pattern_ops"\]/
+        @dump.should =~ /t.index \["title"\], name: "index_books_on_title_varchar_pattern_ops", opclass: :varchar_pattern_ops/
       end
 
       it "dumps indexes with simple columns with an alternate order" do
-        @dump.should =~ /add_index "books", \["author_id DESC NULLS FIRST", "publisher_id DESC NULLS LAST"\]/
+        @dump.should =~ /t.index \["author_id", "publisher_id"\], name: "books_author_id_and_publisher_id", order: { author_id: :desc, publisher_id: "DESC NULLS LAST" }/
       end
 
       it "dumps functional indexes with longer operator strings" do
-        @dump.should =~ /add_index "pets", \["lower\(name\) DESC NULLS LAST"\]/
+        @dump.should =~ /t.index "lower\(name\) DESC NULLS LAST", name: "index_pets_on_lower_name_desc_nulls_last"/
       end
     end
 

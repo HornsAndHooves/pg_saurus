@@ -1,4 +1,4 @@
-class RemoveCommentOnPetsTable < ActiveRecord::Migration
+class RemoveCommentOnPetsTable < ActiveRecord::Migration[5.2]
   def up
     remove_table_comment "pets"
   end

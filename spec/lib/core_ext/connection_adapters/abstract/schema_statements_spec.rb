@@ -14,14 +14,14 @@ describe ActiveRecord::ConnectionAdapters::SchemaStatements do
           query.should == expected_query
         end
 
-        ActiveRecord::Migration.add_index :users, :phone_number, :concurrently => true
+        ActiveRecord::Migration.add_index :users, :phone_number, concurrently: true
         ActiveRecord::Migration.process_postponed_queries
       end
     end
 
     context "creates index for column with operator" do
       let(:expected_query) do
-        'CREATE  INDEX "index_users_on_phone_number_varchar_pattern_ops" ON "users" ("phone_number" varchar_pattern_ops)'
+        'CREATE  INDEX "index_users_on_phone_number_varchar_pattern_ops" ON "users" (phone_number varchar_pattern_ops)'
       end
 
       it 'creates index for column with operator' do
@@ -39,7 +39,7 @@ describe ActiveRecord::ConnectionAdapters::SchemaStatements do
     context "for functional index with longer operator string" do
       let(:expected_query) do
         'CREATE  INDEX "index_users_on_lower_first_name_desc_nulls_last" ' \
-        'ON "users" (lower("first_name") DESC NULLS LAST)'
+        'ON "users" (lower(first_name) DESC NULLS LAST)'
       end
 
       it 'creates functional index for column with longer operator string' do
@@ -58,7 +58,7 @@ describe ActiveRecord::ConnectionAdapters::SchemaStatements do
       expect(ActiveRecord::Base.connection).
         to receive(:index_exists?).once.and_return(true)
 
-      ActiveRecord::Migration.add_index :users, :phone_number, :concurrently => true
+      ActiveRecord::Migration.add_index :users, :phone_number, concurrently: true
 
       expect {
         ActiveRecord::Migration.process_postponed_queries

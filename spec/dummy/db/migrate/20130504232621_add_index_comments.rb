@@ -1,4 +1,4 @@
-class AddIndexComments < ActiveRecord::Migration
+class AddIndexComments < ActiveRecord::Migration[5.2]
   def change
     set_index_comment 'demography.index_demography_citizens_on_country_id_and_user_id', 'Unique index on active citizens'
     set_index_comment 'demography.index_demography_cities_on_country_id', 'Index on country id'

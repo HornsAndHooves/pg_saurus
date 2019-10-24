@@ -15,11 +15,7 @@ module PgSaurus::ConnectionAdapters::PostgreSQLAdapter::TriggerMethods
     for_each   = options[:for_each] || 'ROW'
     constraint = options[:constraint]
 
-    sql = if constraint
-            "CREATE CONSTRAINT TRIGGER #{trigger_name(proc_name, options)}\n  #{event}\n"
-          else
-            "CREATE TRIGGER #{trigger_name(proc_name, options)}\n  #{event}\n"
-          end
+    sql = "CREATE #{!!constraint ? "CONSTRAINT " : ""}TRIGGER #{trigger_name(proc_name, options)}\n  #{event}\n"
 
     sql << "  ON #{quote_table_or_view(table_name, options)}\n"
     if constraint

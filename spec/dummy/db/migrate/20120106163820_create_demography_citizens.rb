@@ -1,4 +1,4 @@
-class CreateDemographyCitizens < ActiveRecord::Migration
+class CreateDemographyCitizens < ActiveRecord::Migration[5.2]
   def change
     create_table 'demography.citizens' do |t|
       t.integer :country_id
@@ -16,9 +16,9 @@ class CreateDemographyCitizens < ActiveRecord::Migration
     set_column_comment 'demography.citizens', :country_id, 'Country key'
 
     set_column_comments 'demography.citizens',
-      :first_name => "First name",
-      :last_name  => "Last name",
-      :birthday   => "Birthday",
-      :bio        => "Biography"
+      first_name: "First name",
+      last_name:  "Last name",
+      birthday:   "Birthday",
+      bio:        "Biography"
   end
 end

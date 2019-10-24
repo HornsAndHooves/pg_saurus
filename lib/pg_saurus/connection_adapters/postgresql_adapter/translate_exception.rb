@@ -12,7 +12,7 @@ module PgSaurus::ConnectionAdapters::PostgreSQLAdapter::TranslateException
     when INSUFFICIENT_PRIVILEGE
       exc_message = exception_result.try(:error_field, PG::Result::PG_DIAG_MESSAGE_PRIMARY)
       exc_message ||= message
-      ::ActiveRecord::InsufficientPrivilege.new(exc_message, exception)
+      ::ActiveRecord::InsufficientPrivilege.new(exc_message)
     else
       super
     end

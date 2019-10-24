@@ -1,4 +1,4 @@
-class CreatePets < ActiveRecord::Migration
+class CreatePets < ActiveRecord::Migration[5.2]
   def change
     create_table :pets do |t|
       t.string :name
@@ -8,7 +8,7 @@ class CreatePets < ActiveRecord::Migration
       t.integer :citizen_id
       t.integer :breed_id
       t.integer :owner_id
-      t.boolean :active, :default => true
+      t.boolean :active, default: true
     end
 
     add_index(:pets, :color)

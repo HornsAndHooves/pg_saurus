@@ -9,6 +9,94 @@ module ActiveRecord
         # Regexp used to find the operator name (or operator string, e.g. "DESC NULLS LAST"):
         OPERATOR_REGEXP = /(.+?)\s([\w\s]+)$/
 
+        # Regex to find columns used in index statements
+        INDEX_COLUMN_EXPRESSION = /ON [\w\.]+(?: USING \w+ )?\((.+)\)/
+
+        # Regex to find where clause in index statements
+        INDEX_WHERE_EXPRESSION = /WHERE (.+)$/
+
+        # Returns an array of indexes for the given table.
+        #
+        # == Patch 1:
+        # Remove type specification from stored Postgres index definitions.
+        #
+        # == Patch 2:
+        # Split compound functional indexes to array.
+        #
+        def indexes(table_name)
+          scope = quoted_scope(table_name)
+
+          result = query(<<-SQL, "SCHEMA")
+            SELECT distinct i.relname, d.indisunique, d.indkey, pg_get_indexdef(d.indexrelid), t.oid,
+                            pg_catalog.obj_description(i.oid, 'pg_class') AS comment
+            FROM pg_class t
+            INNER JOIN pg_index     d  ON t.oid = d.indrelid
+            INNER JOIN pg_class     i  ON d.indexrelid = i.oid
+            LEFT JOIN  pg_namespace n  ON n.oid = i.relnamespace
+            WHERE i.relkind = 'i'
+              AND d.indisprimary = 'f'
+              AND t.relname = #{scope[:name]}
+              AND n.nspname = #{scope[:schema]}
+            ORDER BY i.relname
+          SQL
+
+          result.map do |row|
+            index_name = row[0]
+            unique     = row[1]
+            indkey     = row[2].split(" ").map(&:to_i)
+            inddef     = row[3]
+            oid        = row[4]
+            comment    = row[5]
+
+            using, expressions, where = inddef.scan(/ USING (\w+?) \((.+?)\)(?: WHERE (.+))?\z/m).flatten
+
+            orders = {}
+            opclasses = {}
+
+            if indkey.include?(0)
+              definition = inddef.sub(INDEX_WHERE_EXPRESSION, '')
+
+              if column_expression = definition.match(INDEX_COLUMN_EXPRESSION)[1]
+                columns = split_expression(expressions).map do |functional_name|
+                  remove_type(functional_name)
+                end
+
+                columns = columns.size > 1 ? columns : columns[0]
+              end
+            else
+              columns = Hash[query(<<-SQL.strip_heredoc, "SCHEMA")].values_at(*indkey).compact
+                SELECT a.attnum, a.attname
+                FROM pg_attribute a
+                WHERE a.attrelid = #{oid}
+                AND a.attnum IN (#{indkey.join(",")})
+              SQL
+
+              # add info on sort order (only desc order is explicitly specified, asc is the default)
+              # and non-default opclasses
+              expressions.scan(/(?<column>\w+)"?\s?(?<opclass>\w+_ops)?\s?(?<desc>DESC)?\s?(?<nulls>NULLS (?:FIRST|LAST))?/).each do |column, opclass, desc, nulls|
+                opclasses[column] = opclass.to_sym if opclass
+                if nulls
+                  orders[column] = [desc, nulls].compact.join(" ")
+                else
+                  orders[column] = :desc if desc
+                end
+              end
+            end
+
+            IndexDefinition.new(
+              table_name,
+              index_name,
+              unique,
+              columns,
+              orders:    orders,
+              opclasses: opclasses,
+              where:     where,
+              using:     using.to_sym,
+              comment:   comment.presence
+            )
+          end
+        end
+
         # Redefine original add_index method to handle :concurrently option.
         #
         # Adds a new index to the table.  +column_name+ can be a single Symbol, or
@@ -34,10 +122,11 @@ module ActiveRecord
 
           index_name,
           index_type,
-          index_columns,
+          index_columns_and_opclasses,
           index_options,
           index_algorithm,
-          index_using      = add_index_options(table_name, column_name, options)
+          index_using,
+          comment = add_index_options(table_name, column_name, options)
 
           # GOTCHA:
           #   It ensures that there is no existing index only for the case when the index
@@ -64,7 +153,7 @@ module ActiveRecord
           statements << "ON"
           statements << quote_table_name(table_name)
           statements << index_using          if index_using.present?
-          statements << "(#{index_columns})" if index_columns.present? unless skip_column_quoting
+          statements << "(#{index_columns_and_opclasses})" if index_columns_and_opclasses.present? unless skip_column_quoting
           statements << "(#{column_name})"   if column_name.present? and skip_column_quoting
           statements << index_options        if index_options.present?
 
@@ -84,7 +173,7 @@ module ActiveRecord
         #
         def index_exists?(table_name, column_name, options = {})
           column_names = Array.wrap(column_name)
-          index_name = options.key?(:name) ? options[:name].to_s : index_name(table_name, :column => column_names)
+          index_name = options.key?(:name) ? options[:name].to_s : index_name(table_name, column: column_names)
 
           # Always compare the index name
           default_comparator = lambda { |index| index.name == index_name }
@@ -133,25 +222,30 @@ module ActiveRecord
               raise ArgumentError, "You must specify the index name"
             end
           else
-            index_name(table_name, :column => options)
+            index_name(table_name, column: options)
           end
         end
 
         # Override super method to provide support for expression column names.
-        def quoted_columns_for_index(column_names, options = {})
-          column_names.map do |name|
-            column_name, operator_name = split_column_name(name)
+        def quoted_columns_for_index(column_names, **options)
+          return [column_names] if column_names.is_a?(String)
 
-            result_name = if column_name =~ FUNCTIONAL_INDEX_REGEXP
-                            "#{$1}(#{$2}#{quote_column_name($3)})"
-                          else
-                            quote_column_name(column_name)
-                          end
+          quoted_columns = Hash[
+            column_names.map do |name|
+              column_name, operator_name = split_column_name(name)
 
-            result_name += " " + operator_name if operator_name
+              result_name = if column_name =~ FUNCTIONAL_INDEX_REGEXP
+                              _name = "#{$1}(#{$2}#{quote_column_name($3)})"
+                              _name += " #{operator_name}"
+                              _name
+                            else
+                              quote_column_name(column_name).dup
+                            end
+              [column_name.to_sym, result_name]
+            end
+          ]
 
-            result_name
-          end
+          add_options_for_index_columns(quoted_columns, options).values
         end
         protected :quoted_columns_for_index
 
@@ -180,6 +274,47 @@ module ActiveRecord
           end
         end
         private :split_column_name
+
+        # Splits only on commas outside of parens
+        def split_expression(expression)
+          result = []
+          parens = 0
+          buffer = ""
+
+          expression.chars do |char|
+            case char
+            when ','
+              if parens == 0
+                result.push(buffer)
+                buffer = ""
+                next
+              end
+            when '('
+              parens += 1
+            when ')'
+              parens -= 1
+            end
+
+            buffer << char
+          end
+
+          result << buffer unless buffer.empty?
+          result
+        end
+        private :split_expression
+
+        # Remove type specification from stored Postgres index definitions
+        #
+        # @param [String] column_with_type the name of the column with type
+        # @return [String]
+        #
+        # @example
+        #   remove_type("((col)::text")
+        #   => "col"
+        def remove_type(column_with_type)
+          column_with_type.sub(/\((\w+)\)::\w+/, '\1')
+        end
+        private :remove_type
       end
     end
   end

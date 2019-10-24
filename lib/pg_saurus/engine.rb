@@ -2,14 +2,11 @@ module PgSaurus
   # :nodoc:
   class Engine < Rails::Engine
 
-    initializer 'pg_saurus' do
+    initializer "pg_saurus" do
       ActiveSupport.on_load(:active_record) do
         # load monkey patches
-        ['schema_dumper',
-         'errors',
-         'connection_adapters/postgresql_adapter',
-         'connection_adapters/abstract/schema_statements'].each do |path|
-          require ::PgSaurus::Engine.root + 'lib/core_ext/active_record/' + path
+        %w(schema_dumper errors connection_adapters/postgresql/schema_statements).each do |path|
+          require ::PgSaurus::Engine.root + "lib/core_ext/active_record/" + path
         end
 
         ActiveRecord::SchemaDumper.class_eval do
@@ -35,14 +32,16 @@ module PgSaurus
           end
         end
 
-        # Follow three include statements add support for concurrently
-        #   index creation in migrations.
+        # The following three include statements add support for concurrently
+        #   creating indexes in migrations.
         ActiveRecord::Migration.class_eval do
           include ::PgSaurus::CreateIndexConcurrently::Migration
         end
+
         ActiveRecord::Migrator.class_eval do
           prepend PgSaurus::CreateIndexConcurrently::Migrator
         end
+
         ActiveRecord::MigrationProxy.class_eval do
           include ::PgSaurus::CreateIndexConcurrently::MigrationProxy
         end
@@ -56,13 +55,7 @@ module PgSaurus
           include ::PgSaurus::ConnectionAdapters::AbstractAdapter
         end
 
-        if defined?(ActiveRecord::ConnectionAdapters::JdbcAdapter)
-          sql_adapter_class = ActiveRecord::ConnectionAdapters::JdbcAdapter
-        else
-          sql_adapter_class = ActiveRecord::ConnectionAdapters::PostgreSQLAdapter
-        end
-
-        sql_adapter_class.class_eval do
+        ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
           prepend ::PgSaurus::ConnectionAdapters::PostgreSQLAdapter::SchemaMethods
           prepend ::PgSaurus::ConnectionAdapters::PostgreSQLAdapter::ForeignKeyMethods
 

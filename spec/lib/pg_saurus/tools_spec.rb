@@ -3,7 +3,7 @@ require 'spec_helper'
 describe PgSaurus::Tools do
   describe '#move_table_to_schema' do
     it 'moves table to another schema' do
-      Pet.create!(:name => "Flaaffy", :color => "#FFAABB")
+      Pet.create!(name: "Flaaffy", color: "#FFAABB")
       PgSaurus::Explorer.table_exists?('public.pets').should == true
 
       # Move table
@@ -17,20 +17,20 @@ describe PgSaurus::Tools do
       PgSaurus::Explorer.table_exists?('demography.pets').should == false
 
       # Make sure data is not lost
-      Pet.where(:name => "Flaaffy", :color => "#FFAABB").size.should == 1
+      Pet.where(name: "Flaaffy", color: "#FFAABB").size.should == 1
     end
   end
 
   let(:connection) { PgSaurus::Tools.send(:connection) }
 
-  it ".create_schema" do
-    expect(connection).to receive(:execute).with(%{CREATE SCHEMA "someschema"})
-    PgSaurus::Tools.create_schema("someschema")
+  it ".create_schema_if_not_exists" do
+    expect(connection).to receive(:execute).with('CREATE SCHEMA IF NOT EXISTS "someschema"')
+    PgSaurus::Tools.create_schema_if_not_exists("someschema")
   end
 
-  it ".drop_schema" do
-    expect(connection).to receive(:execute).with(%{DROP SCHEMA "someschema"})
-    PgSaurus::Tools.drop_schema("someschema")
+  it ".drop_schema_if_exists" do
+    expect(connection).to receive(:drop_schema).with("someschema", if_exists: true)
+    PgSaurus::Tools.drop_schema_if_exists("someschema")
   end
 
   it ".create_view" do

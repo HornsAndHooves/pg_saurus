@@ -1,4 +1,4 @@
-class CreateCitiesTable < ActiveRecord::Migration
+class CreateCitiesTable < ActiveRecord::Migration[5.2]
   def change
     create_table 'demography.cities' do |t|
       t.integer :country_id
