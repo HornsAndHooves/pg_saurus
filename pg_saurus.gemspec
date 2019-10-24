@@ -11,17 +11,17 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0".freeze) if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib".freeze]
   s.authors = ["Potapov Sergey".freeze, "Arthur Shagall".freeze, "Artem Ignatyev".freeze, "Matt Dressel".freeze, "Bruce Burdick".freeze, "HornsAndHooves".freeze]
-  s.date = "2019-09-17"
+  s.date = "2019-10-24"
   s.description = "ActiveRecord extensions for PostgreSQL. Provides useful tools for schema, foreign_key, index, function, trigger, comment and extension manipulations in migrations.".freeze
   s.email = ["blake131313@gmail.com".freeze, "arthur.shagall@gmail.com".freeze, "cryo28@gmail.com".freeze, "matt.dressel@gmail.com".freeze, "rubygems.org@bruceburdick.com".freeze]
+  s.executables = ["rails".freeze]
   s.extra_rdoc_files = [
     "README.markdown"
   ]
   s.files = [
     "README.markdown",
     "lib/colorized_text.rb",
-    "lib/core_ext/active_record/connection_adapters/abstract/schema_statements.rb",
-    "lib/core_ext/active_record/connection_adapters/postgresql_adapter.rb",
+    "lib/core_ext/active_record/connection_adapters/postgresql/schema_statements.rb",
     "lib/core_ext/active_record/errors.rb",
     "lib/core_ext/active_record/schema_dumper.rb",
     "lib/generators/pg_saurus/install/install_generator.rb",
@@ -37,7 +37,6 @@ Gem::Specification.new do |s|
     "lib/pg_saurus/connection_adapters/abstract_adapter/trigger_methods.rb",
     "lib/pg_saurus/connection_adapters/foreign_key_definition.rb",
     "lib/pg_saurus/connection_adapters/function_definition.rb",
-    "lib/pg_saurus/connection_adapters/index_definition.rb",
     "lib/pg_saurus/connection_adapters/postgresql_adapter.rb",
     "lib/pg_saurus/connection_adapters/postgresql_adapter/comment_methods.rb",
     "lib/pg_saurus/connection_adapters/postgresql_adapter/extension_methods.rb",
@@ -78,7 +77,7 @@ Gem::Specification.new do |s|
   ]
   s.homepage = "https://github.com/HornsAndHooves/pg_saurus".freeze
   s.licenses = ["MIT".freeze]
-  s.rubygems_version = "3.0.4".freeze
+  s.rubygems_version = "2.7.9".freeze
   s.summary = "ActiveRecord extensions for PostgreSQL.".freeze
 
   if s.respond_to? :specification_version then
@@ -97,6 +96,7 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<byebug>.freeze, [">= 0"])
       s.add_development_dependency(%q<pry>.freeze, [">= 0"])
       s.add_development_dependency(%q<pry-byebug>.freeze, [">= 0"])
+      s.add_development_dependency(%q<rubocop>.freeze, [">= 0"])
     else
       s.add_dependency(%q<pg>.freeze, [">= 0"])
       s.add_dependency(%q<railties>.freeze, ["~> 5.2.3"])
@@ -110,6 +110,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<byebug>.freeze, [">= 0"])
       s.add_dependency(%q<pry>.freeze, [">= 0"])
       s.add_dependency(%q<pry-byebug>.freeze, [">= 0"])
+      s.add_dependency(%q<rubocop>.freeze, [">= 0"])
     end
   else
     s.add_dependency(%q<pg>.freeze, [">= 0"])
@@ -124,6 +125,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<byebug>.freeze, [">= 0"])
     s.add_dependency(%q<pry>.freeze, [">= 0"])
     s.add_dependency(%q<pry-byebug>.freeze, [">= 0"])
+    s.add_dependency(%q<rubocop>.freeze, [">= 0"])
   end
 end
 

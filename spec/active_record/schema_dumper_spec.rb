@@ -100,6 +100,10 @@ describe ActiveRecord::SchemaDumper do
         @dump.should =~ /t.index \["title"\], name: "index_books_on_title_varchar_pattern_ops", opclass: :varchar_pattern_ops/
       end
 
+      it "dumps indexes with simple columns with an alternate order" do
+        @dump.should =~ /t.index \["author_id", "publisher_id"\], name: "books_author_id_and_publisher_id", order: { author_id: :desc, publisher_id: "DESC NULLS LAST" }/
+      end
+
       it "dumps functional indexes with longer operator strings" do
         @dump.should =~ /t.index "lower\(name\) DESC NULLS LAST", name: "index_pets_on_lower_name_desc_nulls_last"/
       end

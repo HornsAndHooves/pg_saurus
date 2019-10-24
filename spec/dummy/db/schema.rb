@@ -42,11 +42,14 @@ ActiveRecord::Schema.define(version: 2019_08_01_025445) do
   FUNCTION_DEFINITION
 
   create_table "books", comment: "Information about books", force: :cascade do |t|
+    t.integer "author_id"
+    t.integer "publisher_id"
     t.string "title", comment: "Book title"
     t.json "tags"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index "((((tags -> 'attrs'::text) ->> 'edition'::text))::integer)", name: "books_tags_json_index", skip_column_quoting: true
+    t.index ["author_id", "publisher_id"], name: "books_author_id_and_publisher_id", order: { author_id: :desc, publisher_id: "DESC NULLS LAST" }
     t.index ["title"], name: "index_books_on_title_varchar_pattern_ops", opclass: :varchar_pattern_ops
   end
 

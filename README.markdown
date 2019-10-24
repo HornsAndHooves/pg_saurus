@@ -181,6 +181,18 @@ remove_foreign_key(:comments, column: :post_id, remove_index: true)
 
 PgSaurus v4.X requires Rails 5. Rails 5.2 is recommended.
 You can use the new Rails 5 semantics to create comments and indexes inline.
+You also need to use the index order options using the Rails 5 semantics.
+
+```ruby
+# THIS FAILS
+add_index :books, ["author_id DESC NULLS FIRST", "publisher_id DESC NULLS LAST"],
+          name: "books_author_id_and_publisher_id"
+
+# DO THIS INSTEAD
+add_index :books, ["author_id", "publisher_id"],
+          name: "books_author_id_and_publisher_id",
+          order: { author_id: "DESC NULLS FIRST", publisher_id: "DESC NULLS LAST" }
+```
 
 ### Migration notes - upgrading from Rails 4.1
 

@@ -42,11 +42,11 @@ module ActiveRecord
 
           result.map do |row|
             index_name = row[0]
-            unique = row[1]
-            indkey = row[2].split(" ").map(&:to_i)
-            inddef = row[3]
-            oid = row[4]
-            comment = row[5]
+            unique     = row[1]
+            indkey     = row[2].split(" ").map(&:to_i)
+            inddef     = row[3]
+            oid        = row[4]
+            comment    = row[5]
 
             using, expressions, where = inddef.scan(/ USING (\w+?) \((.+?)\)(?: WHERE (.+))?\z/m).flatten
 
