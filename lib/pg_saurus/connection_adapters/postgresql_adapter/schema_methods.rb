@@ -40,16 +40,18 @@ module PgSaurus::ConnectionAdapters::PostgreSQLAdapter::SchemaMethods
   #
   # @return [Array<String>] table names
   def tables(*args)
-    public_tables = super(*args)
+    tables = super(*args)
+    quoted_table_names = tables.map{|t| "'#{t}'"}.join(",")
 
-    non_public_tables =
-      query(<<-SQL, 'SCHEMA').map { |row| row[0] }
-        SELECT schemaname || '.' || tablename AS table
-        FROM pg_tables
-        WHERE schemaname NOT IN ('pg_catalog', 'information_schema', 'public')
-      SQL
-
-    public_tables + non_public_tables
+    query(<<-SQL, 'SCHEMA').map { |row| row[0] }
+      SELECT
+        CASE
+          WHEN schemaname = 'public' THEN tablename
+          ELSE schemaname || '.' || tablename
+        END AS table
+      FROM pg_tables
+      WHERE tablename IN (#{quoted_table_names})
+    SQL
   end
 
   # Provide :schema option to +rename_table+ method.
