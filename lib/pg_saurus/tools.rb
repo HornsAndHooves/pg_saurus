@@ -19,8 +19,10 @@ module PgSaurus
     #
     # @return [void]
     def create_schema_if_not_exists(schema_name)
-      sql = %{CREATE SCHEMA IF NOT EXISTS "#{schema_name}"}
-      connection.execute sql
+      unless schemas.include?(schema_name.to_s)
+        sql = %{CREATE SCHEMA "#{schema_name}"}
+        connection.execute sql
+      end
     end
 
     # Ensure schema does not exists.
