@@ -24,7 +24,7 @@ describe PgSaurus::Tools do
   let(:connection) { PgSaurus::Tools.send(:connection) }
 
   it ".create_schema_if_not_exists" do
-    expect(connection).to receive(:execute).with('CREATE SCHEMA IF NOT EXISTS "someschema"')
+    expect(connection).to receive(:execute).with('CREATE SCHEMA "someschema"')
     PgSaurus::Tools.create_schema_if_not_exists("someschema")
   end
 
