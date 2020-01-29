@@ -28,6 +28,7 @@ begin
     gem.authors     = ["Potapov Sergey", "Arthur Shagall", "Artem Ignatyev",
                        "Matt Dressel", "Bruce Burdick", "HornsAndHooves"]
     gem.files       = Dir["{app,config,db,lib}/**/*"] + Dir['Rakefie', 'README.markdown']
+    gem.executables = []
     # Need to explicitly specify version here so gemspec:validate task doesn't whine.
     gem.version     = PgSaurus::VERSION
     gem.homepage    = "https://github.com/HornsAndHooves/pg_saurus"
