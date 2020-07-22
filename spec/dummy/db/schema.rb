@@ -16,8 +16,8 @@ ActiveRecord::Schema.define(version: 2019_08_01_025445) do
   create_schema_if_not_exists "later"
   create_schema_if_not_exists "latest"
 
-  create_extension "fuzzystrmatch", :version => "1.1"
-  create_extension "btree_gist", :schema_name => "demography", :version => "1.2"
+  create_extension "fuzzystrmatch", version: "1.1"
+  create_extension "btree_gist", schema_name: "demography", version: "1.2"
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
