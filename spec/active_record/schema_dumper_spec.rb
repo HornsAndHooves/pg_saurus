@@ -48,8 +48,8 @@ describe ActiveRecord::SchemaDumper do
 
     context "Extensions" do
       it 'dumps loaded extension modules' do
-        @dump.should =~ /create_extension "fuzzystrmatch", :version => "\d+\.\d+"/
-        @dump.should =~ /create_extension "btree_gist", :schema_name => "demography", :version => "\d+\.\d+"/
+        @dump.should =~ /create_extension "fuzzystrmatch", version: "\d+\.\d+"/
+        @dump.should =~ /create_extension "btree_gist", schema_name: "demography", version: "\d+\.\d+"/
       end
     end
 

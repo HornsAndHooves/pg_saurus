@@ -39,7 +39,7 @@ describe ActiveRecord::ConnectionAdapters::SchemaStatements do
     context "for functional index with longer operator string" do
       let(:expected_query) do
         'CREATE  INDEX "index_users_on_lower_first_name_desc_nulls_last" ' \
-        'ON "users" (lower(first_name) DESC NULLS LAST)'
+        'ON "users" (trim(lower(first_name)) DESC NULLS LAST)'
       end
 
       it 'creates functional index for column with longer operator string' do
@@ -49,7 +49,7 @@ describe ActiveRecord::ConnectionAdapters::SchemaStatements do
           query.should == expected_query
         end
 
-        ActiveRecord::Migration.add_index :users, "lower(first_name) DESC NULLS LAST"
+        ActiveRecord::Migration.add_index :users, "trim(lower(first_name)) DESC NULLS LAST"
         ActiveRecord::Migration.process_postponed_queries
       end
     end
