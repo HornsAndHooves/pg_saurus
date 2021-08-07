@@ -72,7 +72,7 @@ module PgSaurus::CreateIndexConcurrently
     def add_index(table_name, column_name, options = {}, &block)
       table_name = proper_table_name(table_name)
       # GOTCHA:
-      #   checks if index should be created concurretnly then put it into
+      #   checks if index should be created concurrently then put it into
       #   the queue to wait till queue processing will be called (should be
       #   happended after closing transaction).
       #   Otherwise just delegate call to PgSaurus's `add_index`.
