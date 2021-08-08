@@ -156,23 +156,7 @@ module ActiveRecord
                   "column can not be created concurrently, because such index already exists."
           end
 
-          # statements = []
-          # statements << "CREATE #{index_type} INDEX"
-          # statements << creation_method      if creation_method.present?
-          # statements << index_algorithm      if index_algorithm.present?
-          # statements << quote_column_name(index_name)
-          # statements << "ON"
-          # statements << quote_table_name(table_name)
-          # statements << index_using          if index_using.present?
-          # statements << "(#{index_columns_and_opclasses})" if index_columns_and_opclasses.present? unless skip_column_quoting
-          # statements << "(#{column_name})"   if column_name.present? and skip_column_quoting
-          # statements << index_options        if index_options.present?
-
-          # sql = statements.join(' ')
-          # if sql =~ /state_province/
-          #   binding.pry
-          # end
-          schema_creation.accept(create_index)
+          execute schema_creation.accept(create_index)
         end
 
         # Check to see if an index exists on a table for a given index definition.
@@ -244,24 +228,23 @@ module ActiveRecord
         def quoted_columns_for_index(column_names, **options)
           return [column_names] if column_names.is_a?(String)
 
-          quoted_columns =
-            column_names.to_h do |name|
+          quoted_columns = Hash[
+            column_names.map do |name|
               column_name, operator_name = split_column_name(name)
 
-              result_name =
-                if column_name =~ FUNCTIONAL_INDEX_REGEXP
-                  _name  = "#{$1}(#{$2}#{quote_column_name($3)})"
-                  _name += " #{operator_name}"
-                  _name
-                else
-                  quote_column_name(column_name).dup
-                end
+              result_name = if column_name =~ FUNCTIONAL_INDEX_REGEXP
+                              _name = "#{$1}(#{$2}#{quote_column_name($3)})"
+                              _name += " #{operator_name}"
+                              _name
+                            else
+                              quote_column_name(column_name).dup
+                            end
               [column_name.to_sym, result_name]
             end
+          ]
 
           add_options_for_index_columns(quoted_columns, **options).values.join(", ")
         end
-        # protected :quoted_columns_for_index
 
         # Map an expression to a name appropriate for an index.
         def expression_index_name(name)
@@ -280,6 +263,8 @@ module ActiveRecord
         private :expression_index_name
 
 
+        # == Patch 1:
+        # Remove schema name part from table name when sequence name doesn't include it.
         def new_column_from_field(table_name, field)
           column_name, type, default, notnull, oid, fmod, collation, comment = field
           type_metadata = fetch_type_metadata(column_name, type, oid.to_i, fmod.to_i)
