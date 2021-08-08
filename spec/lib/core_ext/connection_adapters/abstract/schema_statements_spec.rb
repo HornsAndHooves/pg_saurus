@@ -4,14 +4,14 @@ describe ActiveRecord::ConnectionAdapters::SchemaStatements do
   describe '#add_index' do
     context "concurrently creates index" do
       let(:expected_query) do
-        'CREATE  INDEX CONCURRENTLY "index_users_on_phone_number" ON "users" ("phone_number")'
+        ["CREATE", "INDEX", "CONCURRENTLY", %("index_users_on_phone_number"), "ON", %("users"), %{("phone_number")}]
       end
 
       it 'concurrently creates index' do
         ActiveRecord::Migration.clear_queue
 
         expect(ActiveRecord::Base.connection).to receive(:execute) do |query|
-          query.should == expected_query
+          query.split(" ").should == expected_query
         end
 
         ActiveRecord::Migration.add_index :users, :phone_number, concurrently: true
@@ -21,14 +21,14 @@ describe ActiveRecord::ConnectionAdapters::SchemaStatements do
 
     context "creates index for column with operator" do
       let(:expected_query) do
-        'CREATE  INDEX "index_users_on_phone_number_varchar_pattern_ops" ON "users" (phone_number varchar_pattern_ops)'
+        ["CREATE", "INDEX", %("index_users_on_phone_number_varchar_pattern_ops"), "ON", %("users"), %{(phone_number}, %{varchar_pattern_ops)}]
       end
 
       it 'creates index for column with operator' do
         ActiveRecord::Migration.clear_queue
 
         expect(ActiveRecord::Base.connection).to receive(:execute) do |query|
-          query.should == expected_query
+          query.split(" ").should == expected_query
         end
 
         ActiveRecord::Migration.add_index :users, "phone_number varchar_pattern_ops"
@@ -38,15 +38,15 @@ describe ActiveRecord::ConnectionAdapters::SchemaStatements do
 
     context "for functional index with longer operator string" do
       let(:expected_query) do
-        'CREATE  INDEX "index_users_on_lower_first_name_desc_nulls_last" ' \
-        'ON "users" (lower(first_name) DESC NULLS LAST)'
+        ["CREATE", "INDEX", %("index_users_on_lower_first_name_desc_nulls_last"), "ON", %("users"),
+         %{(lower(first_name)}, "DESC", "NULLS", "LAST)"]
       end
 
       it 'creates functional index for column with longer operator string' do
         ActiveRecord::Migration.clear_queue
 
         expect(ActiveRecord::Base.connection).to receive(:execute) do |query|
-          query.should == expected_query
+          query.split(" ").should == expected_query
         end
 
         ActiveRecord::Migration.add_index :users, "lower(first_name) DESC NULLS LAST"

@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 # To test against different rails versions with TravisCI
-rails_version = ENV["RAILS_VERSION"] || "~> 5.2.3"
+rails_version = ENV["RAILS_VERSION"] || "~> 6"
 
 # NOTE: This is a Gemfile for a gem.
 # Using "platforms" is contraindicated because they won't make it into
@@ -12,8 +12,8 @@ version2x = (RUBY_VERSION =~ /^2\.\d/)
 # https://github.com/ged/ruby-pg/blob/master/History.rdoc
 # https://bitbucket.org/ged/ruby-pg/wiki/Home
 
-# pg >= 1.0.0 doesn't work with Rails at the moment. It's a Rails bug.
 gem "pg"
+gem "psych", "~> 3"
 
 gem "railties",      rails_version
 gem "activemodel",   rails_version

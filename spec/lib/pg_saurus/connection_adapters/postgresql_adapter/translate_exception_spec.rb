@@ -15,7 +15,7 @@ describe PgSaurus::ConnectionAdapters::PostgreSQLAdapter::TranslateException do
         end
       end
 
-      translated = connection.send(:translate_exception, exception, "")
+      translated = connection.send(:translate_exception, exception, message: "", sql: "", binds: [])
       expect(translated).to be_an_instance_of(ActiveRecord::InsufficientPrivilege)
     end
   end
