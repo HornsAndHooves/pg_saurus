@@ -9,21 +9,26 @@ module PgSaurus::ConnectionAdapters::PostgreSQLAdapter::FunctionMethods
     true
   end
 
-  # Retrieve Postgres version number.
-  # Logic in #functions will change slightly for Postgres 11 and over.
+  # Retrieve Postgres full version number as a string.
   #
-  # @return [Float]
+  # @return [String]
   def self._pg_version
     @@_pg_version ||=
-      ::ActiveRecord::Base.connection.execute("SHOW server_version;").
-        values.first.first.match(/(?<vnum>(\d+)(\.\d+)?)/)["vnum"].to_f
+      ::ActiveRecord::Base.connection.execute("SHOW server_version;").values.first.first
+  end
+
+  # Parse out Postgres major version number.
+  #
+  # @return [Integer]
+  def self._pg_major
+    @@_pg_major ||= PgSaurus::ConnectionAdapters::PostgreSQLAdapter::FunctionMethods.split(".").first.to_i
   end
 
   # Return a list of defined DB functions. Ignore function definitions that can't be parsed.
   def functions
-    _pg_version = PgSaurus::ConnectionAdapters::PostgreSQLAdapter::FunctionMethods._pg_version
+    _pg_major = PgSaurus::ConnectionAdapters::PostgreSQLAdapter::FunctionMethods._pg_major
     line1, line2 =
-      if _pg_version >= 11
+      if _pg_major >= 11
         ["p.prokind = 'w'", "p.prokind <> 'a'"]
       else
         ["p.proiswindow", "p.proisagg <> TRUE"]
