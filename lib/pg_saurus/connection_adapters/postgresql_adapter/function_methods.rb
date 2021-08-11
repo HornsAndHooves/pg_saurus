@@ -9,14 +9,31 @@ module PgSaurus::ConnectionAdapters::PostgreSQLAdapter::FunctionMethods
     true
   end
 
+  # Retrieve Postgres version number.
+  # Logic in #functions will change slightly for Postgres 11 and over.
+  #
+  # @return [Float]
+  def self._pg_version
+    @@_pg_version ||=
+      ::ActiveRecord::Base.connection.execute("SHOW server_version;").
+        values.first.first.match(/(?<vnum>(\d+)(\.\d+)?)/)["vnum"].to_f
+  end
+
   # Return a list of defined DB functions. Ignore function definitions that can't be parsed.
   def functions
+    _pg_version = PgSaurus::ConnectionAdapters::PostgreSQLAdapter::FunctionMethods._pg_version
+    line1, line2 =
+      if _pg_version >= 11
+        ["p.prokind = 'w'", "p.prokind <> 'a'"]
+      else
+        ["p.proiswindow", "p.proisagg <> TRUE"]
+      end
     res = select_all <<-SQL
       SELECT n.nspname AS "Schema",
         p.proname AS "Name",
         pg_catalog.pg_get_function_result(p.oid) AS "Returning",
        CASE
-        WHEN p.proiswindow                                           THEN 'window'
+        WHEN #{line1}                                                THEN 'window'
         WHEN p.prorettype = 'pg_catalog.trigger'::pg_catalog.regtype THEN 'trigger'
         ELSE 'normal'
        END   AS "Type",
@@ -26,7 +43,7 @@ module PgSaurus::ConnectionAdapters::PostgreSQLAdapter::FunctionMethods
       WHERE pg_catalog.pg_function_is_visible(p.oid)
             AND n.nspname <> 'pg_catalog'
             AND n.nspname <> 'information_schema'
-            AND p.proisagg <> TRUE
+            AND #{line2}
       ORDER BY 1, 2, 3, 4;
     SQL
     res.inject([]) do |buffer, row|
