@@ -21,7 +21,7 @@ module PgSaurus::ConnectionAdapters::PostgreSQLAdapter::FunctionMethods
   #
   # @return [Integer]
   def self._pg_major
-    @@_pg_major ||= PgSaurus::ConnectionAdapters::PostgreSQLAdapter::FunctionMethods.split(".").first.to_i
+    @@_pg_major ||= PgSaurus::ConnectionAdapters::PostgreSQLAdapter::FunctionMethods._pg_version.split(".").first.to_i
   end
 
   # Return a list of defined DB functions. Ignore function definitions that can't be parsed.
