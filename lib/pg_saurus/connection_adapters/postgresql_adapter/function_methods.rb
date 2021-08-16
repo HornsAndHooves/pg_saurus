@@ -27,19 +27,13 @@ module PgSaurus::ConnectionAdapters::PostgreSQLAdapter::FunctionMethods
   # Return a list of defined DB functions. Ignore function definitions that can't be parsed.
   def functions
     _pg_major = PgSaurus::ConnectionAdapters::PostgreSQLAdapter::FunctionMethods._pg_major
-    line1, line2 =
-      if _pg_major >= 11
-        ["p.prokind = 'w'", "p.prokind <> 'a'"]
-      else
-        ["p.proiswindow", "p.proisagg <> TRUE"]
-      end
     res = select_all <<-SQL
       SELECT n.nspname AS "Schema",
         p.proname AS "Name",
         pg_catalog.pg_get_function_result(p.oid) AS "Returning",
        CASE
-        WHEN #{line1}                                                THEN 'window'
-        WHEN p.prorettype = 'pg_catalog.trigger'::pg_catalog.regtype THEN 'trigger'
+        WHEN #{_pg_major >= 11 ? "p.prokind = 'w'" : "p.proiswindow"} THEN 'window'
+        WHEN p.prorettype = 'pg_catalog.trigger'::pg_catalog.regtype  THEN 'trigger'
         ELSE 'normal'
        END   AS "Type",
        p.oid AS "Oid"
@@ -48,7 +42,7 @@ module PgSaurus::ConnectionAdapters::PostgreSQLAdapter::FunctionMethods
       WHERE pg_catalog.pg_function_is_visible(p.oid)
             AND n.nspname <> 'pg_catalog'
             AND n.nspname <> 'information_schema'
-            AND #{line2}
+            AND #{_pg_major >= 11 ? "p.prokind <> 'a'" : "p.proisagg <> TRUE"}
       ORDER BY 1, 2, 3, 4;
     SQL
     res.inject([]) do |buffer, row|
