@@ -18,7 +18,7 @@ module PgSaurus::ConnectionAdapters::PostgreSQLAdapter::FunctionMethods
         pg_catalog.pg_get_function_result(p.oid) AS "Returning",
        CASE
         WHEN #{pg_major >= 11 ? "p.prokind = 'w'" : "p.proiswindow"} THEN 'window'
-        WHEN p.prorettype = 'pg_catalog.trigger'::pg_catalog.regtype  THEN 'trigger'
+        WHEN p.prorettype = 'pg_catalog.trigger'::pg_catalog.regtype THEN 'trigger'
         ELSE 'normal'
        END   AS "Type",
        p.oid AS "Oid"
