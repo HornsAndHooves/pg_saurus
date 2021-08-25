@@ -12,8 +12,8 @@ version2x = (RUBY_VERSION =~ /^2\.\d/)
 # https://github.com/ged/ruby-pg/blob/master/History.rdoc
 # https://bitbucket.org/ged/ruby-pg/wiki/Home
 
-# pg >= 1.0.0 doesn't work with Rails at the moment. It's a Rails bug.
 gem "pg"
+gem "psych", "~> 3"
 
 gem "railties",      rails_version
 gem "activemodel",   rails_version
