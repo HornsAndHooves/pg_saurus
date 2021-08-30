@@ -2,6 +2,16 @@ module PgSaurus
   # :nodoc:
   class Engine < Rails::Engine
 
+    # Postgres server version.
+    #
+    # @return [Array<Integer>]
+    def self.pg_server_version
+      @pg_server_version ||=
+        ::ActiveRecord::Base.connection.
+          select_value('SHOW SERVER_VERSION').
+          split('.')[0..1].map(&:to_i)
+    end
+
     initializer "pg_saurus" do
       ActiveSupport.on_load(:active_record) do
         # load monkey patches
