@@ -48,8 +48,8 @@ describe ActiveRecord::SchemaDumper do
 
     context "Extensions" do
       it 'dumps loaded extension modules' do
-        @dump.should =~ /create_extension "fuzzystrmatch", :version => "\d+\.\d+"/
-        @dump.should =~ /create_extension "btree_gist", :schema_name => "demography", :version => "\d+\.\d+"/
+        @dump.should =~ /create_extension "fuzzystrmatch", version: "\d+\.\d+"/
+        @dump.should =~ /create_extension "btree_gist", schema_name: "demography", version: "\d+\.\d+"/
       end
     end
 
@@ -105,7 +105,7 @@ describe ActiveRecord::SchemaDumper do
       end
 
       it "dumps functional indexes with longer operator strings" do
-        @dump.should =~ /t.index "lower\(name\) DESC NULLS LAST", name: "index_pets_on_lower_name_desc_nulls_last"/
+        @dump.should =~ /t.index "btrim\(lower\(name\)\) DESC NULLS LAST", name: "index_pets_on_lower_name_desc_nulls_last"/
       end
     end
 
