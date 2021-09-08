@@ -95,7 +95,7 @@ module PgSaurus::ConnectionAdapters::PostgreSQLAdapter::TriggerMethods
 
   # Parse the condition from the trigger definition.
   def parse_condition(trigger_definition)
-    trigger_definition[/WHEN[\s](.*?)[\s]EXECUTE[\s]PROCEDURE/m, 1]
+    trigger_definition[/WHEN[\s](.*?)[\s]EXECUTE[\s](FUNCTION|PROCEDURE)/m, 1]
   end
   private :parse_condition
 
@@ -107,7 +107,7 @@ module PgSaurus::ConnectionAdapters::PostgreSQLAdapter::TriggerMethods
 
   # Parse the procedure name from the trigger definition.
   def parse_proc_name(trigger_definition)
-    trigger_definition[/EXECUTE[\s]PROCEDURE[\s](.*?)$/m,1]
+    trigger_definition[/EXECUTE[\s](FUNCTION|PROCEDURE)[\s](.*?)$/m, 2]
   end
   private :parse_proc_name
 
