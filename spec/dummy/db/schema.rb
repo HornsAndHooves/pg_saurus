@@ -16,8 +16,8 @@ ActiveRecord::Schema.define(version: 2019_08_01_025445) do
   create_schema_if_not_exists "later"
   create_schema_if_not_exists "latest"
 
-  create_extension "fuzzystrmatch", :version => "1.1"
-  create_extension "btree_gist", :schema_name => "demography", :version => "1.5"
+  create_extension "fuzzystrmatch", version: "1.1"
+  create_extension "btree_gist", schema_name: "demography", version: "1.5"
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
@@ -109,7 +109,7 @@ ActiveRecord::Schema.define(version: 2019_08_01_025445) do
     t.integer "breed_id"
     t.integer "owner_id"
     t.boolean "active", default: true
-    t.index "lower(name) DESC NULLS LAST", name: "index_pets_on_lower_name_desc_nulls_last"
+    t.index "btrim(lower(name)) DESC NULLS LAST", name: "index_pets_on_lower_name_desc_nulls_last"
     t.index "lower(name)", name: "index_pets_on_lower_name"
     t.index "to_tsvector('english'::regconfig, name)", name: "index_pets_on_to_tsvector_name_gist", using: :gist, comment: "Functional index on name"
     t.index "upper(color)", name: "index_pets_on_upper_color", where: "(name IS NULL)"

@@ -29,7 +29,7 @@ module ActiveRecord
               WHERE schemaname = ANY (ARRAY['public'])
           SQL
         end
-        
+
         # Returns an array of indexes for the given table.
         #
         # == Patch 1:
@@ -233,7 +233,7 @@ module ActiveRecord
               column_name, operator_name = split_column_name(name)
 
               result_name = if column_name =~ FUNCTIONAL_INDEX_REGEXP
-                              _name = "#{$1}(#{$2}#{quote_column_name($3)})"
+                              _name = column_name.gsub(/\b#{$3}\b/, quote_column_name($3))
                               _name += " #{operator_name}"
                               _name
                             else
