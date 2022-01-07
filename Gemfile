@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 # To test against different rails versions with TravisCI
-rails_version = ENV["RAILS_VERSION"] || "~> 5.2.3"
+rails_version = ENV["RAILS_VERSION"] || "~> 6.0"
 
 # NOTE: This is a Gemfile for a gem.
 # Using "platforms" is contraindicated because they won't make it into
