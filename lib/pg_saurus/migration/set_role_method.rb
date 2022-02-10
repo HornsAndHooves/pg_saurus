@@ -13,11 +13,53 @@ module PgSaurus
         #
         # @param role [String]
         def set_role(role)
+          if const_defined?("SeedMigrator".to_s) && self.ancestors.include?(SeedMigrator)
+            msg = <<~MSG
+              Use keep_default_role instead of set_role for data change migration #{self}\n
+              Example:\n
+                class PopulateExample < ActiveRecord::Migration
+                  include #{self.ancestors[1]}
+
+                  keep_default_role
+
+                  def up
+                    apply_update "populate_example_data_update"
+                  end
+
+                  def down
+                    revert_update "populate_example_data_update"
+                  end
+                end\n
+            MSG
+
+            raise PgSaurus::UseKeepDefaultRoleError, msg
+          end
+
           @role = role
         end
 
         # Prevents raising exception when ensure_role_set=true and no role is set.
         def keep_default_role
+          if const_defined?("SeedMigrator".to_s) && !self.ancestors.include?(SeedMigrator)
+            msg = <<~MSG
+              Use set_role instead of keep_default_role for structure migration #{self}\n
+              Example:\n
+                class CreateExamples < ActiveRecord::Migration
+                  set_role "superhero"
+
+                  def up
+                    ...
+                  end
+
+                  def down
+                    ...
+                  end
+                end\n
+            MSG
+
+            raise PgSaurus::UseSetRoleError, msg
+          end
+
           @keep_default_role = true
         end
 

@@ -30,6 +30,20 @@ describe ActiveRecord::Migration[5.2] do
 
         migration.exec_migration(conn, :up)
       end
+
+      context "for data change migration" do
+        it "raises an error" do
+          expect {
+            module SeedMigrator; end
+
+            class TestMigration < described_class
+              include SeedMigrator
+
+              set_role "mikki"
+            end
+          }.to raise_error(PgSaurus::UseKeepDefaultRoleError)
+        end
+      end
     end
 
     context "role is not set" do
@@ -49,17 +63,33 @@ describe ActiveRecord::Migration[5.2] do
 
         context "keep_default_role was called" do
           before do
+            module SeedMigrator; end
+
             class TestMigration < described_class
+              include SeedMigrator
+
               keep_default_role
             end
           end
 
-        it "executes migrations" do
-          migration = TestMigration.new
+          it "executes migrations" do
+            migration = TestMigration.new
 
-          expect(migration).to receive(:up)
-          migration.exec_migration(conn, :up)
-        end
+            expect(migration).to receive(:up)
+            migration.exec_migration(conn, :up)
+          end
+
+          context "for structure change migration" do
+            it "raises an error" do
+              expect {
+                module SeedMigrator; end
+
+                class TestMigrations < described_class
+                  keep_default_role
+                end
+              }.to raise_error(PgSaurus::UseSetRoleError)
+            end
+          end
         end
       end
 
