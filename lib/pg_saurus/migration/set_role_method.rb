@@ -13,7 +13,7 @@ module PgSaurus
         #
         # @param role [String]
         def set_role(role)
-          if const_defined?("SeedMigrator".to_s) && self.ancestors.include?(SeedMigrator)
+          if const_defined?("SeedMigrator") && self.ancestors.include?(SeedMigrator)
             msg = <<~MSG
               Use keep_default_role instead of set_role for data change migration #{self}
 
