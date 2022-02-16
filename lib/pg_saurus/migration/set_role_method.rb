@@ -42,7 +42,7 @@ module PgSaurus
 
         # Prevents raising exception when ensure_role_set=true and no role is set.
         def keep_default_role
-          if const_defined?("SeedMigrator".to_s) && !self.ancestors.include?(SeedMigrator)
+          if const_defined?("SeedMigrator") && !self.ancestors.include?(SeedMigrator)
             msg = <<~MSG
               Use set_role instead of keep_default_role for structure migration #{self}
 
