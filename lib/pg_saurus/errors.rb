@@ -7,4 +7,10 @@ module PgSaurus
 
   # Raised if config.ensure_role_set = true, but migration have no role set.
   class RoleNotSetError < Error; end
+
+  # Raised if set_role used for data change migration.
+  class UseKeepDefaultRoleError < Error; end
+
+  # Raised if keep_default_role used for structure change migration.
+  class UseSetRoleError < Error; end
 end
