@@ -34,7 +34,7 @@ module PgSaurus # :nodoc:
           "  Use :exclude_index => true when adding the foreign key."
       end
 
-      super from_table, to_table, options
+      super from_table, to_table, **options
 
       unless exclude_index
         add_index from_table, column
@@ -51,7 +51,7 @@ module PgSaurus # :nodoc:
         options_or_to_table.delete(:remove_index)
       end
 
-      super(from_table, options_or_to_table)
+      super(from_table, **options_or_to_table)
     end
 
     # See: activerecord/lib/active_record/connection_adapters/abstract/schema_statements.rb

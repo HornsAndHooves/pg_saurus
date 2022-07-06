@@ -225,7 +225,7 @@ module ActiveRecord
         end
 
         # Override super method to provide support for expression column names.
-        def quoted_columns_for_index(column_names, **options)
+        def quoted_columns_for_index(column_names, options = {})
           return [column_names] if column_names.is_a?(String)
 
           quoted_columns = Hash[

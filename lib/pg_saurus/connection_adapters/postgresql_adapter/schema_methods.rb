@@ -27,7 +27,7 @@ module PgSaurus::ConnectionAdapters::PostgreSQLAdapter::SchemaMethods
     options     = options.dup
     schema_name = options.delete(:schema)
     table_name  = "#{schema_name}.#{table_name}" if schema_name
-    super(table_name, options)
+    super(table_name, **options)
   end
 
   # Make method +tables+ return tables not only from public schema.
