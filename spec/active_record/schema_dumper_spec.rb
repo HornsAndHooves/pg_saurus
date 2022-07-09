@@ -113,6 +113,10 @@ describe ActiveRecord::SchemaDumper do
       it 'dumps function definitions' do
         @dump.should =~ /create_function 'public.pets_not_empty\(\)'/
       end
+
+      it "dumps function definitions returning result sets" do
+        @dump.should =~ / create_function 'public.select_authors\(\)', 'TABLE\(author_id integer\)'/
+      end
     end
 
     context 'Triggers' do
