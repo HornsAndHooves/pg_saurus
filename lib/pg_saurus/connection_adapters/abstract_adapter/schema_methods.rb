@@ -10,8 +10,8 @@ module PgSaurus::ConnectionAdapters::AbstractAdapter::SchemaMethods
 
   # Provide :schema option to +drop_table+ method.
   def drop_table(table_name, options = {})
-    options = extract_table_options(table_name, options)
-    super(options[0], **options[1])
+    table_name, options = extract_table_options(table_name, options)
+    super(table_name, **options)
   end
 
   def extract_table_options(table_name, options)

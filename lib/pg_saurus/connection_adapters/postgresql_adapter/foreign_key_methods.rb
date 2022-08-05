@@ -44,14 +44,14 @@ module PgSaurus # :nodoc:
     # See activerecord/lib/active_record/connection_adapters/abstract/schema_statements.rb
     #
     # Pass in the option remove_index: true to remove index as well.
-    def remove_foreign_key(from_table, options_or_to_table = {})
-      if options_or_to_table.is_a?(Hash) && options_or_to_table[:remove_index]
-        column = options_or_to_table[:column]
+    def remove_foreign_key(from_table, to_table = nil, **options)
+      if options[:remove_index]
+        column = options[:column]
         remove_index from_table, column
-        options_or_to_table.delete(:remove_index)
+        options.delete(:remove_index)
       end
 
-      super(from_table, **options_or_to_table)
+      super(from_table, to_table, **options)
     end
 
     # See: activerecord/lib/active_record/connection_adapters/abstract/schema_statements.rb
