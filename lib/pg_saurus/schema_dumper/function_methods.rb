@@ -15,7 +15,7 @@ module PgSaurus::SchemaDumper::FunctionMethods
   # Writes out a command to create each detected function.
   def dump_functions(stream)
     @connection.functions.each do |function|
-      statement = "  create_function '#{function.name}', :#{function.returning}, <<-FUNCTION_DEFINITION.gsub(/^[\s]{4}/, ''), volatility: :#{function.volatility}"
+      statement = "  create_function '#{function.name}', '#{function.returning}', <<-FUNCTION_DEFINITION.gsub(/^[\s]{4}/, ''), volatility: :#{function.volatility}"
       statement << "\n#{function.definition.split("\n").map{|line| "    #{line}" }.join("\n")}"
       statement << "\n  FUNCTION_DEFINITION\n\n"
 

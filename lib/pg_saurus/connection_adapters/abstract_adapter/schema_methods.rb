@@ -14,6 +14,7 @@ module PgSaurus::ConnectionAdapters::AbstractAdapter::SchemaMethods
     super(table_name, **options)
   end
 
+  # Extract the table-specific options for the given table name from the options.
   def extract_table_options(table_name, options)
     options     = options.dup
     schema_name = options.delete(:schema)

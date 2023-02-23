@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_01_025445) do
+ActiveRecord::Schema.define(version: 2022_07_09_040946) do
 
   create_schema_if_not_exists "demography"
   create_schema_if_not_exists "later"
@@ -24,7 +24,7 @@ ActiveRecord::Schema.define(version: 2019_08_01_025445) do
   enable_extension "fuzzystrmatch"
   enable_extension "plpgsql"
 
-  create_function 'public.pets_not_empty()', :boolean, <<-FUNCTION_DEFINITION.gsub(/^[ ]{4}/, ''), volatility: :volatile
+  create_function 'public.pets_not_empty()', 'boolean', <<-FUNCTION_DEFINITION.gsub(/^[ ]{4}/, ''), volatility: :volatile
     BEGIN
       IF (SELECT COUNT(*) FROM pets) > 0
       THEN
@@ -35,9 +35,17 @@ ActiveRecord::Schema.define(version: 2019_08_01_025445) do
     END;
   FUNCTION_DEFINITION
 
-  create_function 'public.pets_not_empty_trigger_proc()', :trigger, <<-FUNCTION_DEFINITION.gsub(/^[ ]{4}/, ''), volatility: :immutable
+  create_function 'public.pets_not_empty_trigger_proc()', 'trigger', <<-FUNCTION_DEFINITION.gsub(/^[ ]{4}/, ''), volatility: :immutable
     BEGIN
       RETURN null;
+    END;
+  FUNCTION_DEFINITION
+
+  create_function 'public.select_authors()', 'TABLE(author_id integer)', <<-FUNCTION_DEFINITION.gsub(/^[ ]{4}/, ''), volatility: :volatile
+    BEGIN
+      RETURN query (
+        SELECT author_id FROM books
+      );
     END;
   FUNCTION_DEFINITION
 
