@@ -5,12 +5,13 @@ module PgSaurus::ConnectionAdapters::AbstractAdapter::SchemaMethods
   # Provide :schema option to +create_table+ method.
   def create_table(table_name, options = {}, &block)
     table_name, options = extract_table_options(table_name, options)
-    super(table_name, options, &block)
+    super(table_name, **options, &block)
   end
 
   # Provide :schema option to +drop_table+ method.
   def drop_table(table_name, options = {})
-    super(*extract_table_options(table_name, options))
+    table_name, options = extract_table_options(table_name, options)
+    super(table_name, **options)
   end
 
   # Extract the table-specific options for the given table name from the options.
