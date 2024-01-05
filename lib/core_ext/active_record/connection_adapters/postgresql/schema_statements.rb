@@ -135,9 +135,13 @@ module ActiveRecord
           # the column is difficult to target for quoting.
           skip_column_quoting = options.delete(:skip_column_quoting) or false
 
-          index, algorithm, if_not_exists = add_index_options(table_name, column_name, **options)
-          algorithm = creation_method || algorithm
-          create_index = CreateIndexDefinition.new(index, algorithm, if_not_exists)
+          index_name,
+          index_type,
+          index_columns_and_opclasses,
+          index_options,
+          index_algorithm,
+          index_using,
+          comment = add_index_options(table_name, column_name, **options)
 
           # GOTCHA:
           #   It ensures that there is no existing index only for the case when the index
@@ -150,13 +154,26 @@ module ActiveRecord
           #   indexes. But note that this handles only one of the cases when index
           #   creation can fail!!! All other case should be procesed manually.
           #   -- zekefast 2012-09-25
-          if creation_method.present? && index_exists?(table_name, column_name, options)
+          if creation_method.present? && index_exists?(table_name, column_name, **options)
             raise ::PgSaurus::IndexExistsError,
                   "Index #{index.name} for `#{table_name}.#{column_name}` " \
                   "column can not be created concurrently, because such index already exists."
           end
 
-          execute schema_creation.accept(create_index)
+          statements = []
+          statements << "CREATE #{index_type} INDEX"
+          statements << creation_method      if creation_method.present?
+          statements << index_algorithm      if index_algorithm.present?
+          statements << quote_column_name(index_name)
+          statements << "ON"
+          statements << quote_table_name(table_name)
+          statements << index_using          if index_using.present?
+          statements << "(#{index_columns_and_opclasses})" if index_columns_and_opclasses.present? unless skip_column_quoting
+          statements << "(#{column_name})"   if column_name.present? and skip_column_quoting
+          statements << index_options        if index_options.present?
+
+          sql = statements.join(' ')
+          execute(sql)
         end
 
         # Check to see if an index exists on a table for a given index definition.
@@ -243,7 +260,7 @@ module ActiveRecord
             end
           ]
 
-          add_options_for_index_columns(quoted_columns, **options).values.join(", ")
+          add_options_for_index_columns(quoted_columns, **options).values
         end
 
         # Map an expression to a name appropriate for an index.
