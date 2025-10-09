@@ -136,6 +136,7 @@ module ActiveRecord
           skip_column_quoting = options.delete(:skip_column_quoting) or false
 
           index, algorithm, if_not_exists = add_index_options(table_name, column_name, **options)
+          index.instance_variable_set(:@name, index.name.tr(".", "_"))
           algorithm = creation_method || algorithm
           create_index = CreateIndexDefinition.new(index, algorithm, if_not_exists)
 
@@ -265,7 +266,7 @@ module ActiveRecord
 
         # == Patch 1:
         # Remove schema name part from table name when sequence name doesn't include it.
-        def new_column_from_field(table_name, field)
+        def new_column_from_field(table_name, field, _definitions)
           column_name, type, default, notnull, oid, fmod, collation, comment = field
           type_metadata = fetch_type_metadata(column_name, type, oid.to_i, fmod.to_i)
           default_value = extract_value_from_default(default)

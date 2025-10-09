@@ -24,9 +24,9 @@ module PgSaurus # :nodoc:
     #
     # Creates index on the FK column by default. Pass in the option exclude_index: true
     # to disable this.
-    def add_foreign_key(from_table, to_table, options = {})
+    def add_foreign_key(from_table, to_table, **options)
       exclude_index = (options.has_key?(:exclude_index) ? options.delete(:exclude_index) : false)
-      column        = options[:column] || foreign_key_column_for(to_table)
+      column        = options[:column] || foreign_key_column_for(to_table, "id")
 
       if index_exists?(from_table, column) && !exclude_index
         raise PgSaurus::IndexExistsError,
@@ -57,10 +57,10 @@ module PgSaurus # :nodoc:
     # See: activerecord/lib/active_record/connection_adapters/abstract/schema_statements.rb
     #
     # Removes schema name from table name.
-    def foreign_key_column_for(table_name)
+    def foreign_key_column_for(table_name, column_name)
       table = table_name.to_s.split('.').last
 
-      super table
+      super table, column_name
     end
 
     # See activerecord/lib/active_record/connection_adapters/postgresql/schema_statements.rb
