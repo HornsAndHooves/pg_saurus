@@ -23,7 +23,7 @@ module PgSaurus
           require ::PgSaurus::Engine.root + "lib/core_ext/active_record/" + path
         end
 
-        ActiveRecord::SchemaDumper.class_eval do
+        ActiveRecord::ConnectionAdapters::PostgreSQL::SchemaDumper.class_eval do
           prepend ::PgSaurus::SchemaDumper::SchemaMethods
           prepend ::PgSaurus::SchemaDumper::ExtensionMethods
           prepend ::PgSaurus::SchemaDumper::ViewMethods
