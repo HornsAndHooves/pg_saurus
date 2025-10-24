@@ -57,4 +57,4 @@ end
 
 task default: :spec
 
-task 'spec' => ['db:drop', 'db:create', 'db:migrate', 'app:db:test:load']
+task 'spec' => ['db:drop', 'db:create', 'db:migrate', 'app:db:test:load_schema']

@@ -10,14 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_07_09_040946) do
-
+ActiveRecord::Schema[7.2].define(version: 2022_07_09_040946) do
   create_schema_if_not_exists "demography"
   create_schema_if_not_exists "later"
   create_schema_if_not_exists "latest"
 
-  create_extension "fuzzystrmatch", version: "1.1"
-  create_extension "btree_gist", schema_name: "demography", version: "1.5"
+  create_extension "fuzzystrmatch", version: "1.2"
+  create_extension "btree_gist", schema_name: "demography", version: "1.7"
+
+  create_schema_if_not_exists "demography"
+  create_schema_if_not_exists "later"
+  create_schema_if_not_exists "latest"
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
@@ -54,8 +57,8 @@ ActiveRecord::Schema.define(version: 2022_07_09_040946) do
     t.integer "publisher_id"
     t.string "title", comment: "Book title"
     t.json "tags"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index "((((tags -> 'attrs'::text) ->> 'edition'::text))::integer)", name: "books_tags_json_index", skip_column_quoting: true
     t.index ["author_id", "publisher_id"], name: "books_author_id_and_publisher_id", order: { author_id: :desc, publisher_id: "DESC NULLS LAST" }
     t.index ["title"], name: "index_books_on_title_varchar_pattern_ops", opclass: :varchar_pattern_ops
@@ -63,8 +66,8 @@ ActiveRecord::Schema.define(version: 2022_07_09_040946) do
 
   create_table "breeds", force: :cascade do |t|
     t.string "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
   create_table "demography.cities", force: :cascade do |t|
@@ -80,8 +83,8 @@ ActiveRecord::Schema.define(version: 2022_07_09_040946) do
     t.string "last_name", comment: "Last name"
     t.date "birthday"
     t.text "bio"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.boolean "active", default: false, null: false
     t.index ["country_id", "user_id"], name: "index_demography_citizens_on_country_id_and_user_id", unique: true, where: "active", comment: "Unique index on active citizens"
   end
@@ -89,8 +92,8 @@ ActiveRecord::Schema.define(version: 2022_07_09_040946) do
   create_table "demography.countries", force: :cascade do |t|
     t.string "name", comment: "Country name"
     t.string "continent"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
   create_table "demography.people", force: :cascade do |t|
@@ -104,8 +107,8 @@ ActiveRecord::Schema.define(version: 2022_07_09_040946) do
 
   create_table "owners", force: :cascade do |t|
     t.string "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
   create_table "pets", force: :cascade do |t|
@@ -117,7 +120,7 @@ ActiveRecord::Schema.define(version: 2022_07_09_040946) do
     t.integer "breed_id"
     t.integer "owner_id"
     t.boolean "active", default: true
-    t.index "btrim(lower(name)) DESC NULLS LAST", name: "index_pets_on_lower_name_desc_nulls_last"
+    t.index "TRIM(BOTH FROM lower(name)) DESC NULLS LAST", name: "index_pets_on_trim_lower_name_desc_nulls_last"
     t.index "lower(name)", name: "index_pets_on_lower_name"
     t.index "to_tsvector('english'::regconfig, name)", name: "index_pets_on_to_tsvector_name_gist", using: :gist, comment: "Functional index on name"
     t.index "upper(color)", name: "index_pets_on_upper_color", where: "(name IS NULL)"
@@ -133,8 +136,8 @@ ActiveRecord::Schema.define(version: 2022_07_09_040946) do
     t.string "name", comment: "User name"
     t.string "email", comment: "Email address"
     t.string "phone_number", comment: "Phone number"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["email"], name: "index_users_on_email"
     t.index ["name"], name: "index_users_on_name"
   end
@@ -143,16 +146,16 @@ ActiveRecord::Schema.define(version: 2022_07_09_040946) do
   add_foreign_key "demography.citizens", "users", exclude_index: true
   add_foreign_key "pets", "users", exclude_index: true
   create_view "demography.citizens_view", <<-SQL
-     SELECT citizens.id,
-    citizens.country_id,
-    citizens.user_id,
-    citizens.first_name,
-    citizens.last_name,
-    citizens.birthday,
-    citizens.bio,
-    citizens.created_at,
-    citizens.updated_at,
-    citizens.active
+     SELECT id,
+    country_id,
+    user_id,
+    first_name,
+    last_name,
+    birthday,
+    bio,
+    created_at,
+    updated_at,
+    active
    FROM demography.citizens;
   SQL
 

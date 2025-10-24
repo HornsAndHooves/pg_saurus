@@ -55,7 +55,7 @@ describe PgSaurus::Tools do
     end
 
     expect(result).not_to be_nil
-    expect(result['view_definition']).to match(/SELECT 1;/)
+    expect(result['view_definition']).to include(%(SELECT 1 AS "?column?";))
 
     PgSaurus::Tools.drop_view("someview")
   end

@@ -5,7 +5,7 @@ describe ActiveRecord::SchemaDumper do
   describe '.dump' do
     before(:all) do
       stream = StringIO.new
-      ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection, stream)
+      ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection_pool, stream)
       @dump = stream.string
     end
 
@@ -29,16 +29,16 @@ describe ActiveRecord::SchemaDumper do
 
         @dump.should =~
           /create_view#{s}"demography.citizens_view",#{s}<<-SQL#{s}
-            \s?SELECT#{s}citizens.id,#{s}\
-              citizens.country_id,#{s}
-              citizens.user_id,#{s}
-              citizens.first_name,#{s}
-              citizens.last_name,#{s}
-              citizens.birthday,#{s}
-              citizens.bio,#{s}
-              citizens.created_at,#{s}
-              citizens.updated_at,#{s}
-              citizens.active#{s}
+            \s?SELECT#{s}id,#{s}\
+              country_id,#{s}
+              user_id,#{s}
+              first_name,#{s}
+              last_name,#{s}
+              birthday,#{s}
+              bio,#{s}
+              created_at,#{s}
+              updated_at,#{s}
+              active#{s}
           FROM#{s}demography.citizens;
           #{s}SQL/x
 
@@ -105,7 +105,7 @@ describe ActiveRecord::SchemaDumper do
       end
 
       it "dumps functional indexes with longer operator strings" do
-        @dump.should =~ /t.index "btrim\(lower\(name\)\) DESC NULLS LAST", name: "index_pets_on_lower_name_desc_nulls_last"/
+        @dump.should =~ /t.index "TRIM\(BOTH FROM lower\(name\)\) DESC NULLS LAST", name: "index_pets_on_trim_lower_name_desc_nulls_last"/
       end
     end
 
