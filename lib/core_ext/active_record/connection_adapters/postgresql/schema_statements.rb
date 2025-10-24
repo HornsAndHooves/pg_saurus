@@ -265,7 +265,7 @@ module ActiveRecord
 
         # == Patch 1:
         # Remove schema name part from table name when sequence name doesn't include it.
-        def new_column_from_field(table_name, field, _definitions)
+        def new_column_from_field(table_name, field, ...)
           column_name, type, default, notnull, oid, fmod, collation, comment = field
           type_metadata = fetch_type_metadata(column_name, type, oid.to_i, fmod.to_i)
           default_value = extract_value_from_default(default)
