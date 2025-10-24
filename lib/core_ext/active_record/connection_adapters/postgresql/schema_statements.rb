@@ -136,8 +136,6 @@ module ActiveRecord
           skip_column_quoting = options.delete(:skip_column_quoting) or false
 
           index, algorithm, if_not_exists = add_index_options(table_name, column_name, **options)
-          index_name = index.name.gsub(/\W/, "_").gsub(/_*$/, "").gsub(/_{2,}/, "_").downcase
-          index.instance_variable_set(:@name, index_name)
           algorithm = creation_method || algorithm
           create_index = CreateIndexDefinition.new(index, algorithm, if_not_exists)
 

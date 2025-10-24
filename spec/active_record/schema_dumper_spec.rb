@@ -105,7 +105,7 @@ describe ActiveRecord::SchemaDumper do
       end
 
       it "dumps functional indexes with longer operator strings" do
-        @dump.should =~ /t.index "TRIM\(BOTH FROM lower\(name\)\) DESC NULLS LAST", name: "index_pets_on_trim_lower_name_desc_nulls_last"/
+        @dump.should =~ /t.index "TRIM\(BOTH FROM lower\(name\)\) DESC NULLS LAST", name: "index_pets_on_lower_name_desc_nulls_last"/
       end
     end
 

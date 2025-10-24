@@ -120,7 +120,7 @@ ActiveRecord::Schema[7.2].define(version: 2022_07_09_040946) do
     t.integer "breed_id"
     t.integer "owner_id"
     t.boolean "active", default: true
-    t.index "TRIM(BOTH FROM lower(name)) DESC NULLS LAST", name: "index_pets_on_trim_lower_name_desc_nulls_last"
+    t.index "TRIM(BOTH FROM lower(name)) DESC NULLS LAST", name: "index_pets_on_lower_name_desc_nulls_last"
     t.index "lower(name)", name: "index_pets_on_lower_name"
     t.index "to_tsvector('english'::regconfig, name)", name: "index_pets_on_to_tsvector_name_gist", using: :gist, comment: "Functional index on name"
     t.index "upper(color)", name: "index_pets_on_upper_color", where: "(name IS NULL)"
