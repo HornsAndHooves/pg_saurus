@@ -342,6 +342,19 @@ module ActiveRecord
           column_with_type.sub(/\((\w+)\)::\w+/, '\1')
         end
         private :remove_type
+
+        # Override to only check table name, not schema and table name.
+        #
+        # https://github.com/rails/rails/blob/v7.2.2.2/activerecord/lib/active_record/connection_adapters/abstract/schema_statements.rb#L1787
+        def validate_table_length!(table_name)
+          max_table_name_length = 64
+          if table_name.to_s.split(".").last.length > max_table_name_length
+            raise ArgumentError, <<~MSG.squish
+              Table name '#{table_name}' is too long (#{table_name.length} characters); the limit is
+              #{max_table_name_length} characters
+            MSG
+          end
+        end
       end
     end
   end
