@@ -1,6 +1,17 @@
 # Methods to extend {ActiveRecord::ConnectionAdapters::PostgreSQLAdapter}
 # to support database functions.
 module PgSaurus::ConnectionAdapters::PostgreSQLAdapter::FunctionMethods
+  # Struct definition for a DB function.
+  FunctionDefinition = Struct.new(
+    :name,
+    :returning,
+    :definition,
+    :function_type,
+    :language,
+    :oid,
+    :volatility
+  )
+
   # Regular expression used in function signature parsing:
   FUNCTION_PARSE_REGEXP = /^CREATE[\s\S]+FUNCTION /
 
@@ -43,13 +54,15 @@ module PgSaurus::ConnectionAdapters::PostgreSQLAdapter::FunctionMethods
       volatility = parse_function_volatility(function_str)
 
       if definition
-        buffer << ::PgSaurus::ConnectionAdapters::FunctionDefinition.new(name,
-                                                                         returning,
-                                                                         definition.strip,
-                                                                         function_type,
-                                                                         language,
-                                                                         oid,
-                                                                         volatility)
+        buffer << FunctionDefinition.new(
+          name,
+          returning,
+          definition.strip,
+          function_type,
+          language,
+          oid,
+          volatility
+        )
       end
       buffer
     end

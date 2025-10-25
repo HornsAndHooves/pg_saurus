@@ -43,10 +43,6 @@ module PgSaurus
           end
         end
 
-        ActiveRecord::ConnectionAdapters::Table.module_eval do
-          include ::PgSaurus::ConnectionAdapters::Table
-        end
-
         ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
           prepend ::PgSaurus::ConnectionAdapters::PostgreSQLAdapter::SchemaMethods
           prepend ::PgSaurus::ConnectionAdapters::PostgreSQLAdapter::ForeignKeyMethods
