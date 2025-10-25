@@ -28,6 +28,7 @@ module PgSaurus
           prepend ::PgSaurus::SchemaDumper::FunctionMethods
           prepend ::PgSaurus::SchemaDumper::TriggerMethods
           prepend ::PgSaurus::SchemaDumper::ForeignKeyMethods
+          prepend ::PgSaurus::SchemaDumper::SchemaMethods
 
           include ::PgSaurus::SchemaDumper
         end
@@ -44,10 +45,6 @@ module PgSaurus
 
         ActiveRecord::ConnectionAdapters::Table.module_eval do
           include ::PgSaurus::ConnectionAdapters::Table
-        end
-
-        ActiveRecord::ConnectionAdapters::AbstractAdapter.module_eval do
-          include ::PgSaurus::ConnectionAdapters::AbstractAdapter
         end
 
         ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do

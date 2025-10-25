@@ -1,27 +1,15 @@
 # Extends ActiveRecord::SchemaDumper class to dump schemas other than "public"
 # and tables from those schemas.
 module PgSaurus::SchemaDumper::SchemaMethods
-  # Dump create schema statements
-  def header(stream)
-    super(stream)
-    schemas(stream)
-    stream
-  end
-
   # Generates code to create schemas.
-  def schemas(stream)
-    # Don't create "public" schema since it exists by default.
-    schema_names = PgSaurus::Tools.schemas - ["public", "information_schema"]
-    schema_names.each do |schema_name|
-      schema(schema_name, stream)
-    end
-    stream << "\n"
-  end
-  private :schemas
+  private def schemas(stream)
+    schema_names = @connection.schema_names - ["public"]
 
-  # Generates code to create schema.
-  def schema(schema_name, stream)
-    stream << "  create_schema_if_not_exists \"#{schema_name}\"\n"
+    if schema_names.any?
+      schema_names.sort.each do |name|
+        stream.puts "  create_schema #{name.inspect}, if_not_exists: true"
+      end
+      stream.puts
+    end
   end
-  private :schema
 end

@@ -1,7 +1,6 @@
 module PgSaurus::ConnectionAdapters # :nodoc:
   extend ActiveSupport::Autoload
 
-  autoload :AbstractAdapter
   autoload :PostgreSQLAdapter,  'pg_saurus/connection_adapters/postgresql_adapter'
   autoload :Table
   autoload :FunctionDefinition, 'pg_saurus/connection_adapters/function_definition'

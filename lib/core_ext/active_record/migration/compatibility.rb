@@ -11,6 +11,7 @@ module ActiveRecord
             super
           end
         end
+
         # Override https://github.com/rails/rails/blob/v7.2.2.2/activerecord/lib/active_record/migration/compatibility.rb#L102
         def add_index(...)
           super
