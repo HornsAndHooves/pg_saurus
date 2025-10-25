@@ -3,10 +3,8 @@
 module PgSaurus::ConnectionAdapters::Table
   extend ActiveSupport::Autoload
 
-  autoload :CommentMethods
   autoload :TriggerMethods
 
-  include CommentMethods
   include TriggerMethods
 
 end

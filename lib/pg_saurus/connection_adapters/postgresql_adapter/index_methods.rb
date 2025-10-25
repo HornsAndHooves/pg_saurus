@@ -16,6 +16,6 @@ module PgSaurus::ConnectionAdapters::PostgreSQLAdapter::IndexMethods
   #  CREATE INDEX "index_demography.citizens_on_country_id" ON "demography"."citizens" ("country_id")
   #
   def index_name(table_name, options) #:nodoc:
-    super.gsub('.','_')
+    super.gsub('.','_').downcase
   end
 end

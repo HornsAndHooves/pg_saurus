@@ -16,7 +16,6 @@ module PgSaurus
       ActiveSupport.on_load(:active_record) do
         # load monkey patches
         %w[
-          schema_dumper
           errors
           connection_adapters/postgresql/schema_statements
           migration/compatibility
@@ -25,11 +24,8 @@ module PgSaurus
         end
 
         ActiveRecord::ConnectionAdapters::PostgreSQL::SchemaDumper.class_eval do
-          prepend ::PgSaurus::SchemaDumper::SchemaMethods
-          prepend ::PgSaurus::SchemaDumper::ExtensionMethods
-          prepend ::PgSaurus::SchemaDumper::ViewMethods
+          prepend ::PgSaurus::SchemaDumper::ViewMethods  # create_view
           prepend ::PgSaurus::SchemaDumper::FunctionMethods
-          prepend ::PgSaurus::SchemaDumper::CommentMethods
           prepend ::PgSaurus::SchemaDumper::TriggerMethods
           prepend ::PgSaurus::SchemaDumper::ForeignKeyMethods
 
@@ -37,7 +33,6 @@ module PgSaurus
         end
 
         ActiveRecord::Migration.class_eval do
-          prepend ::PgSaurus::Migration::SetRoleMethod::Extension
           include ::PgSaurus::Migration::SetRoleMethod
         end
 
@@ -47,26 +42,11 @@ module PgSaurus
           end
         end
 
-        # The following three include statements add support for concurrently
-        #   creating indexes in migrations.
-        ActiveRecord::Migration.class_eval do
-          include ::PgSaurus::CreateIndexConcurrently::Migration
-        end
-
-        ActiveRecord::Migrator.class_eval do
-          prepend PgSaurus::CreateIndexConcurrently::Migrator
-        end
-
-        ActiveRecord::MigrationProxy.class_eval do
-          include ::PgSaurus::CreateIndexConcurrently::MigrationProxy
-        end
-
         ActiveRecord::ConnectionAdapters::Table.module_eval do
           include ::PgSaurus::ConnectionAdapters::Table
         end
 
         ActiveRecord::ConnectionAdapters::AbstractAdapter.module_eval do
-          prepend ::PgSaurus::ConnectionAdapters::AbstractAdapter::SchemaMethods
           include ::PgSaurus::ConnectionAdapters::AbstractAdapter
         end
 

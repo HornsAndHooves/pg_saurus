@@ -4,16 +4,12 @@
 module PgSaurus::SchemaDumper
   extend ActiveSupport::Autoload
 
-  autoload :ExtensionMethods
-  autoload :CommentMethods
   autoload :SchemaMethods
   autoload :ForeignKeyMethods
   autoload :ViewMethods
   autoload :FunctionMethods
   autoload :TriggerMethods
 
-  include ExtensionMethods
-  include CommentMethods
   include SchemaMethods
   include ForeignKeyMethods
   include ViewMethods

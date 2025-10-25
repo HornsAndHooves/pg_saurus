@@ -1,6 +1,6 @@
 class CreatePets < ActiveRecord::Migration[5.2]
   def change
-    create_table :pets do |t|
+    create_table :pets, comment: "Pets" do |t|
       t.string :name
       t.string :color
       t.integer :user_id
@@ -12,7 +12,5 @@ class CreatePets < ActiveRecord::Migration[5.2]
     end
 
     add_index(:pets, :color)
-
-    set_table_comment :pets, "Pets"
   end
 end

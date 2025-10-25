@@ -1,27 +1,6 @@
 # Provides methods to extend {ActiveRecord::ConnectionAdapters::PostgreSQLAdapter}
 # to support schemas feature.
 module PgSaurus::ConnectionAdapters::PostgreSQLAdapter::SchemaMethods
-  # Move table to another schema
-  # @param [String] table table name. Can be with schema prefix e.g. "demography.people"
-  # @param [String] schema schema where table should be moved to.
-  def move_table_to_schema(table, schema)
-    ::PgSaurus::Tools.move_table_to_schema(table, schema)
-  end
-
-  # Create schema if it does not exist yet.
-  #
-  # @param schema_name [String]
-  def create_schema_if_not_exists(schema_name)
-    ::PgSaurus::Tools.create_schema_if_not_exists(schema_name)
-  end
-
-  # Drop schema if it exists.
-  #
-  # @param schema_name [String]
-  def drop_schema_if_exists(schema_name)
-    ::PgSaurus::Tools.drop_schema_if_exists(schema_name)
-  end
-
   # Provide :schema option to +drop_table+ method.
   def drop_table(table_name, options = {})
     options     = options.dup

@@ -15,7 +15,6 @@ module PgSaurus
   autoload :Tools
   autoload :Migration
   autoload :ConnectionAdapters
-  autoload :CreateIndexConcurrently
 
   mattr_accessor :config
   self.config = PgSaurus::Config.new
