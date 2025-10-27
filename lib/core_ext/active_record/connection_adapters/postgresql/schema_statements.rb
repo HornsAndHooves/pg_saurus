@@ -263,13 +263,20 @@ module ActiveRecord
         private :expression_index_name
 
 
+        # Overrides https://github.com/rails/rails/blob/v7.2.2.2/activerecord/lib/active_record/connection_adapters/postgresql/schema_statements.rb#L923
+        #
         # == Patch 1:
         # Remove schema name part from table name when sequence name doesn't include it.
         def new_column_from_field(table_name, field, ...)
-          column_name, type, default, notnull, oid, fmod, collation, comment = field
+          column_name, type, default, notnull, oid, fmod, collation, comment, identity, attgenerated = field
           type_metadata = fetch_type_metadata(column_name, type, oid.to_i, fmod.to_i)
           default_value = extract_value_from_default(default)
-          default_function = extract_default_function(default_value, default)
+
+          if attgenerated.present?
+            default_function = default
+          else
+            default_function = extract_default_function(default_value, default)
+          end
 
           if match = default_function&.match(/\Anextval\('"?(?<sequence_name>.+_(?<suffix>seq\d*))"?'::regclass\)\z/)
             sequence_name = match[:sequence_name]
@@ -287,7 +294,9 @@ module ActiveRecord
             default_function,
             collation: collation,
             comment: comment.presence,
-            serial: serial
+            serial: serial,
+            identity: identity.presence,
+            generated: attgenerated
           )
         end
         private :new_column_from_field
