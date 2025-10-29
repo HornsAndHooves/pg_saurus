@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 # To test against different rails versions with TravisCI
-rails_version = ENV["RAILS_VERSION"] || "~> 6.0"
+rails_version = ENV["RAILS_VERSION"] || "< 8"
 
 # NOTE: This is a Gemfile for a gem.
 # Using "platforms" is contraindicated because they won't make it into
@@ -13,7 +13,7 @@ version2x = (RUBY_VERSION =~ /^2\.\d/)
 # https://bitbucket.org/ged/ruby-pg/wiki/Home
 
 gem "pg"
-gem "psych", "~> 3"
+gem "psych"
 
 gem "railties",      rails_version
 gem "activemodel",   rails_version

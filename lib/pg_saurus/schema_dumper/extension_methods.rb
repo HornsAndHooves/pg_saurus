@@ -1,17 +1,11 @@
 # Extends ActiveRecord::SchemaDumper class to dump comments on tables and columns.
 module PgSaurus::SchemaDumper::ExtensionMethods
-  # Hook ActiveRecord::SchemaDumper#header method to dump extensions in all
-  # schemas except for pg_catalog.
-  def header(stream)
-    super(stream)
-    dump_extensions(stream)
-    stream
-  end
-
-# Dump current database extensions recreation commands to the given stream.
-#
-# @param [#puts] stream Stream to write to
-  def dump_extensions(stream)
+  # Overrides https://github.com/rails/rails/blob/v7.2.2.2/activerecord/lib/active_record/connection_adapters/postgresql/schema_dumper.rb#L8
+  #
+  # Dump current database extensions recreation commands to the given stream.
+  #
+  # @param [#puts] stream Stream to write to
+  def extensions(stream)
     extensions = @connection.pg_extensions
     commands   = extensions.map do |extension_name, options|
       result = [%Q|create_extension "#{extension_name}"|]
@@ -25,5 +19,7 @@ module PgSaurus::SchemaDumper::ExtensionMethods
     end
 
     stream.puts
+
+    super
   end
 end

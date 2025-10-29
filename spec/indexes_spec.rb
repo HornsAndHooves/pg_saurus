@@ -46,7 +46,7 @@ describe 'Indexes' do
     end
 
     it "allows compound functional indexes for schema-qualified table names" do
-      opts = { name: 'idx_demography_citizens_on_lower_last_name__lower_first_name' }
+      opts = { name: 'idx_demography_citizens_on_lower_last_name_lower_first_name' }
       args = [ "demography.citizens", ["lower(last_name)", "lower(first_name)"], opts ]
 
       ActiveRecord::Migration.add_index(*args)
