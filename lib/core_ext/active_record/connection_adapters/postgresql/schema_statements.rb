@@ -286,12 +286,24 @@ module ActiveRecord
             serial = sequence_name_from_parts(_table_name, column_name, match[:suffix]) == sequence_name
           end
 
-          PostgreSQL::Column.new(
+          column_args = [
             column_name,
             default_value,
             type_metadata,
             !notnull,
             default_function,
+          ]
+
+          if Rails.gem_version >= "8.1"
+            # https://github.com/rails/rails/pull/54333
+            column_args.insert(
+              1,
+              get_oid_type(oid.to_i, fmod.to_i, column_name, type),
+            )
+          end
+
+          PostgreSQL::Column.new(
+            *column_args,
             collation: collation,
             comment: comment.presence,
             serial: serial,
