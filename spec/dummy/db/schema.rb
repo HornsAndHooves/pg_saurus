@@ -10,18 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2022_07_09_040946) do
+ActiveRecord::Schema[8.1].define(version: 2022_07_09_040946) do
   create_schema_if_not_exists "demography"
   create_schema_if_not_exists "later"
   create_schema_if_not_exists "latest"
 
   create_extension "fuzzystrmatch", version: "1.2"
-  create_extension "btree_gist", schema_name: "demography", version: "1.7"
+  create_extension "btree_gist", schema_name: "demography", version: "1.8"
 
   # These are extensions that must be enabled in order to support this database
-  enable_extension "btree_gist"
+  enable_extension "demography.btree_gist"
   enable_extension "fuzzystrmatch"
-  enable_extension "plpgsql"
+  enable_extension "pg_catalog.plpgsql"
 
   create_function 'public.pets_not_empty()', 'boolean', <<-FUNCTION_DEFINITION.gsub(/^[ ]{4}/, ''), volatility: :volatile
     BEGIN
@@ -50,10 +50,10 @@ ActiveRecord::Schema[7.2].define(version: 2022_07_09_040946) do
 
   create_table "books", comment: "Information about books", force: :cascade do |t|
     t.integer "author_id"
-    t.integer "publisher_id"
-    t.string "title", comment: "Book title"
-    t.json "tags"
     t.datetime "created_at", precision: nil, null: false
+    t.integer "publisher_id"
+    t.json "tags"
+    t.string "title", comment: "Book title"
     t.datetime "updated_at", precision: nil, null: false
     t.index "((((tags -> 'attrs'::text) ->> 'edition'::text))::integer)", name: "books_tags_json_index", skip_column_quoting: true
     t.index ["author_id", "publisher_id"], name: "books_author_id_and_publisher_id", order: { author_id: :desc, publisher_id: "DESC NULLS LAST" }
@@ -61,8 +61,8 @@ ActiveRecord::Schema[7.2].define(version: 2022_07_09_040946) do
   end
 
   create_table "breeds", force: :cascade do |t|
-    t.string "name"
     t.datetime "created_at", precision: nil, null: false
+    t.string "name"
     t.datetime "updated_at", precision: nil, null: false
   end
 
@@ -73,22 +73,22 @@ ActiveRecord::Schema[7.2].define(version: 2022_07_09_040946) do
   end
 
   create_table "demography.citizens", comment: "Citizens Info", force: :cascade do |t|
+    t.boolean "active", default: false, null: false
+    t.text "bio"
+    t.date "birthday"
     t.integer "country_id", comment: "Country key"
-    t.integer "user_id"
+    t.datetime "created_at", precision: nil, null: false
     t.string "first_name", comment: "First name"
     t.string "last_name", comment: "Last name"
-    t.date "birthday"
-    t.text "bio"
-    t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
-    t.boolean "active", default: false, null: false
+    t.integer "user_id"
     t.index ["country_id", "user_id"], name: "index_demography_citizens_on_country_id_and_user_id", unique: true, where: "active", comment: "Unique index on active citizens"
   end
 
   create_table "demography.countries", force: :cascade do |t|
-    t.string "name", comment: "Country name"
     t.string "continent"
     t.datetime "created_at", precision: nil, null: false
+    t.string "name", comment: "Country name"
     t.datetime "updated_at", precision: nil, null: false
   end
 
@@ -97,25 +97,25 @@ ActiveRecord::Schema[7.2].define(version: 2022_07_09_040946) do
   end
 
   create_table "demography.population_statistics", force: :cascade do |t|
-    t.integer "year"
     t.integer "population"
+    t.integer "year"
   end
 
   create_table "owners", force: :cascade do |t|
-    t.string "name"
     t.datetime "created_at", precision: nil, null: false
+    t.string "name"
     t.datetime "updated_at", precision: nil, null: false
   end
 
   create_table "pets", force: :cascade do |t|
-    t.string "name"
-    t.string "color"
-    t.integer "user_id"
-    t.integer "country_id"
-    t.integer "citizen_id"
-    t.integer "breed_id"
-    t.integer "owner_id"
     t.boolean "active", default: true
+    t.integer "breed_id"
+    t.integer "citizen_id"
+    t.string "color"
+    t.integer "country_id"
+    t.string "name"
+    t.integer "owner_id"
+    t.integer "user_id"
     t.index "TRIM(BOTH FROM lower(name)) DESC NULLS LAST", name: "index_pets_on_lower_name_desc_nulls_last"
     t.index "lower(name)", name: "index_pets_on_lower_name"
     t.index "to_tsvector('english'::regconfig, name)", name: "index_pets_on_to_tsvector_name_gist", using: :gist, comment: "Functional index on name"
@@ -129,10 +129,10 @@ ActiveRecord::Schema[7.2].define(version: 2022_07_09_040946) do
   end
 
   create_table "users", comment: "Information about users", force: :cascade do |t|
-    t.string "name", comment: "User name"
-    t.string "email", comment: "Email address"
-    t.string "phone_number", comment: "Phone number"
     t.datetime "created_at", precision: nil, null: false
+    t.string "email", comment: "Email address"
+    t.string "name", comment: "User name"
+    t.string "phone_number", comment: "Phone number"
     t.datetime "updated_at", precision: nil, null: false
     t.index ["email"], name: "index_users_on_email"
     t.index ["name"], name: "index_users_on_name"
