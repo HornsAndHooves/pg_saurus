@@ -166,8 +166,8 @@ ActiveRecord::Schema[8.1].define(version: 2022_07_09_040946) do
   set_column_comment 'demography.countries', 'name', 'Country name'
 
   set_table_comment 'users', 'Information about users'
-  set_column_comment 'users', 'name', 'User name'
   set_column_comment 'users', 'email', 'Email address'
+  set_column_comment 'users', 'name', 'User name'
   set_column_comment 'users', 'phone_number', 'Phone number'
 
   set_index_comment 'demography.index_demography_citizens_on_country_id_and_user_id', 'Unique index on active citizens'
