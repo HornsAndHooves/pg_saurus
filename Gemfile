@@ -1,12 +1,9 @@
 source "https://rubygems.org"
 
 # To test against different rails versions with TravisCI
-rails_version = ENV["RAILS_VERSION"] || "< 8"
+rails_version = ENV.fetch("RAILS_VERSION", "~> 8")
 
 # NOTE: This is a Gemfile for a gem.
-# Using "platforms" is contraindicated because they won't make it into
-# the gemspec correctly.
-version2x = (RUBY_VERSION =~ /^2\.\d/)
 
 # 2017-01-12: Note: The GitHub pg mirror lacks the recent tags appearing in the Bitbucket Hg repo:
 # https://github.com/ged/ruby-pg/blob/master/History.rdoc
@@ -28,12 +25,6 @@ group :development do
   gem "metric_fu", require: false
   gem "jeweler"  , require: false
 
-
-  unless ENV["RM_INFO"]
-    # debugger does not support Ruby 2.x:
-    # ref: https://github.com/cldwalker/debugger/issues/125#issuecomment-43353446
-    gem "byebug"       if version2x
-  end
 end
 
 group :development, :test do

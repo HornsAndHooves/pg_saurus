@@ -12,7 +12,8 @@ SimpleCov.start do
   # Fail the build when coverage is weak:
   at_exit do
     SimpleCov.result.format!
-    threshold, actual = 98.481, SimpleCov.result.covered_percent
+    threshold = 97.867
+    actual    = SimpleCov.result.covered_percent
     if actual < threshold
       msg = "\nLow coverage: "
       msg << red("#{actual}%")

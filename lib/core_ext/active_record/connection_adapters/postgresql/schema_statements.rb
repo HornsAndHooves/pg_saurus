@@ -264,9 +264,6 @@ module ActiveRecord
 
 
         # Overrides https://github.com/rails/rails/blob/v7.2.2.2/activerecord/lib/active_record/connection_adapters/postgresql/schema_statements.rb#L923
-        #
-        # == Patch 1:
-        # Remove schema name part from table name when sequence name doesn't include it.
         def new_column_from_field(table_name, field, ...)
           column_name, type, default, notnull, oid, fmod, collation, comment, identity, attgenerated = field
           type_metadata = fetch_type_metadata(column_name, type, oid.to_i, fmod.to_i)
@@ -279,19 +276,35 @@ module ActiveRecord
           end
 
           if match = default_function&.match(/\Anextval\('"?(?<sequence_name>.+_(?<suffix>seq\d*))"?'::regclass\)\z/)
+            # Begin patch
+            # Remove schema name part from table name when sequence name doesn't include it.
             sequence_name = match[:sequence_name]
             is_schema_name_included = sequence_name.split(".").size > 1
             _table_name = is_schema_name_included ? table_name : table_name.split(".").last
 
             serial = sequence_name_from_parts(_table_name, column_name, match[:suffix]) == sequence_name
+            # End patch
           end
 
-          PostgreSQL::Column.new(
+          column_args = [
             column_name,
             default_value,
             type_metadata,
             !notnull,
             default_function,
+          ]
+
+          if Rails.gem_version >= "8.1"
+            # https://github.com/rails/rails/pull/54333
+            # https://github.com/rails/rails/blob/v8.1.3/activerecord/lib/active_record/connection_adapters/postgresql/schema_statements.rb#L1020
+            column_args.insert(
+              1,
+              get_oid_type(oid.to_i, fmod.to_i, column_name, type),
+            )
+          end
+
+          PostgreSQL::Column.new(
+            *column_args,
             collation: collation,
             comment: comment.presence,
             serial: serial,
